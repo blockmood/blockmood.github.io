@@ -149,77 +149,6 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-es6之数组扩展" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/08/es6之数组扩展/">es6之数组扩展</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/08/es6之数组扩展/" class="archive-article-date">
-  	<time datetime="2017-06-08T11:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Array-from"><a href="#Array-from" class="headerlink" title="Array.from()"></a>Array.from()</h3><p>Array.from方法用于将两类对象转为真正的数组：类似数组的对象（array-like object）和可遍历（iterable）的对象（包括ES6新增的数据结构Set和Map）。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">let</span> arrayLike = &#123;</div><div class="line">    <span class="string">'0'</span>: <span class="string">'a'</span>,</div><div class="line">    <span class="string">'1'</span>: <span class="string">'b'</span>,</div><div class="line">    <span class="string">'2'</span>: <span class="string">'c'</span>,</div><div class="line">    length: 3</div><div class="line">&#125;;</div><div class="line"></div><div class="line">// ES5的写法</div><div class="line">var arr1 = [].slice.call(arrayLike); // [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>]</div><div class="line"></div><div class="line">// ES6的写法</div><div class="line"><span class="built_in">let</span> arr2 = Array.from(arrayLike); // [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>]</div></pre></td></tr></table></figure></p>
-<p>Array.from方法则是还支持类似数组的对象。所谓类似数组的对象，本质特征只有一点，即必须有length属性。因此，任何有length属性的对象，都可以通过Array.from方法转为数组，而此时扩展运算符就无法转换。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Array.from(&#123; length: 3 &#125;);</div><div class="line">// [ undefined, undefined, undefinded ]</div></pre></td></tr></table></figure></p>
-<p>上面代码中，Array.from返回了一个具有三个成员的数组，每个位置的值都是undefined。扩展运算符转换不了这个对象。Array.from还可以接受第二个参数，作用类似于数组的map方法，用来对每个元素进行处理，将处理后的值放入返回的数组。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Array.from(arrayLike, x =&gt; x * x);</div><div class="line">// 等同于</div><div class="line">Array.from(arrayLike).map(x =&gt; x * x);</div><div class="line"></div><div class="line">Array.from([1, 2, 3], (x) =&gt; x * x)</div><div class="line">// [1, 4, 9]</div></pre></td></tr></table></figure></p>
-<h3 id="Array-of"><a href="#Array-of" class="headerlink" title="Array.of()"></a>Array.of()</h3><p>Array.of方法用于将一组值，转换为数组。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Array.of(3, 11, 8) // [3,11,8]</div><div class="line">Array.of(3) // [3]</div><div class="line">Array.of(3).length // 1</div></pre></td></tr></table></figure></p>
-<p>这个方法的主要目的，是弥补数组构造函数Array()的不足。因为参数个数的不同，会导致Array()的行为有差异。Array.of总是返回参数值组成的数组。如果没有参数，就返回一个空数组。Array.of基本上可以用来替代Array()或new Array()，并且不存在由于参数不同而导致的重载。它的行为非常统一。</p>
-<h3 id="数组实例的copyWithin"><a href="#数组实例的copyWithin" class="headerlink" title="数组实例的copyWithin()"></a>数组实例的copyWithin()</h3><p>数组实例的copyWithin方法，在当前数组内部，将指定位置的成员复制到其他位置（会覆盖原有成员），然后返回当前数组。也就是说，使用这个方法，会修改当前数组。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Array.prototype.copyWithin(target, start = 0, end = this.length)</div></pre></td></tr></table></figure></p>
-<p>它接受三个参数。</p>
-<p>target（必需）：从该位置开始替换数据。<br>start（可选）：从该位置开始读取数据，默认为0。如果为负值，表示倒数。<br>end（可选）：到该位置前停止读取数据，默认等于数组长度。如果为负值，表示倒数。<br>这三个参数都应该是数值，如果不是，会自动转为数值。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[1, 2, 3, 4, 5].copyWithin(0, 3)</div><div class="line">// [4, 5, 3, 4, 5]</div></pre></td></tr></table></figure></p>
-<p>上面代码表示将从3号位直到数组结束的成员（4和5），复制到从0号位开始的位置，结果覆盖了原来的1和2。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[].copyWithin.call(new Int32Array([1, 2, 3, 4, 5]), 0, 3, 4);</div><div class="line">// Int32Array [4, 2, 3, 4, 5]</div></pre></td></tr></table></figure></p>
-<h3 id="数组实例的find-和findIndex"><a href="#数组实例的find-和findIndex" class="headerlink" title="数组实例的find()和findIndex()"></a>数组实例的find()和findIndex()</h3><p>数组实例的find方法，用于找出第一个符合条件的数组成员。它的参数是一个回调函数，所有数组成员依次执行该回调函数，直到找出第一个返回值为true的成员，然后返回该成员。如果没有符合条件的成员，则返回undefined。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[1, 4, -5, 10].find((n) =&gt; n &lt; 0)</div><div class="line">// -5</div></pre></td></tr></table></figure></p>
-<p>上面代码找出数组中第一个小于0的成员。数组实例的findIndex方法的用法与find方法非常类似，返回第一个符合条件的数组成员的位置，如果所有成员都不符合条件，则返回-1。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[1, 5, 10, 15].findIndex(<span class="keyword">function</span>(value, index, arr) &#123;</div><div class="line">  <span class="built_in">return</span> value &gt; 9;</div><div class="line">&#125;) </div><div class="line">// 2</div></pre></td></tr></table></figure></p>
-<h3 id="数组实例的fill"><a href="#数组实例的fill" class="headerlink" title="数组实例的fill()"></a>数组实例的fill()</h3><p>fill方法使用给定值，填充一个数组。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>].fill(7)</div><div class="line">// [7, 7, 7]</div><div class="line"></div><div class="line">new Array(3).fill(7)</div><div class="line">// [7, 7, 7]</div></pre></td></tr></table></figure></p>
-<p>上面代码表明，fill方法用于空数组的初始化非常方便。数组中已有的元素，会被全部抹去。<br>ES6提供三个新的方法——entries()，keys()和values()——用于遍历数组。它们都返回一个遍历器对象（详见《Iterator》一章），可以用for…of循环进行遍历，唯一的区别是keys()是对键名的遍历、values()是对键值的遍历，entries()是对键值对的遍历。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="built_in">let</span> index of [<span class="string">'a'</span>, <span class="string">'b'</span>].keys()) &#123;</div><div class="line">  console.log(index);</div><div class="line">&#125;</div><div class="line">// 0</div><div class="line">// 1</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="built_in">let</span> elem of [<span class="string">'a'</span>, <span class="string">'b'</span>].values()) &#123;</div><div class="line">  console.log(elem);</div><div class="line">&#125;</div><div class="line">// <span class="string">'a'</span></div><div class="line">// <span class="string">'b'</span></div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="built_in">let</span> [index, elem] of [<span class="string">'a'</span>, <span class="string">'b'</span>].entries()) &#123;</div><div class="line">  console.log(index, elem);</div><div class="line">&#125;</div><div class="line">// 0 <span class="string">"a"</span></div><div class="line">// 1 <span class="string">"b"</span></div></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">es6</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/08/es6之数组扩展/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
     <article id="post-es6之Promise" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -377,9 +306,70 @@
 
 
   
+    <article id="post-JavaScript之FileReader接口" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/06/JavaScript之FileReader接口/">JavaScript之FileReader接口</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/06/JavaScript之FileReader接口/" class="archive-article-date">
+  	<time datetime="2017-06-06T07:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>记得以前做网站时，曾经需要实现一个图片上传到服务器前，先预览的功能。当时用html的file标签一直实现不了，最后舍弃了这个标签，使用了其他方式来实现了这个功能。今天无意发现了一个知识点，用html的file标签就能实现图片上传前预览，感觉很棒，记录一下！就是通过file标签和js的FileReader接口，把选择的图片文件调用readAsDataURL方法，把图片数据转成base64字符串形式显示在页面上。</p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">&lt;div style=<span class="string">"border:2px dashed red;"</span>&gt;</div><div class="line">          &lt;p&gt;</div><div class="line">              图片上传前预览：&lt;input <span class="built_in">type</span>=<span class="string">"file"</span> id=<span class="string">"xdaTanFileImg"</span> onchange=<span class="string">"xmTanUploadImg(this)"</span>/&gt;</div><div class="line">          &lt;/p&gt;</div><div class="line">          &lt;img id=<span class="string">"xmTanImg"</span>/&gt;</div><div class="line">          &lt;div id=<span class="string">"xmTanDiv"</span>&gt;&lt;/div&gt;</div><div class="line">      &lt;/div&gt;</div><div class="line">      &lt;hr /&gt;</div><div class="line">      &lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span>&gt;            </div><div class="line">          //判断浏览器是否支持FileReader接口</div><div class="line">          <span class="keyword">if</span> (typeof FileReader == <span class="string">'undefined'</span>) &#123;</div><div class="line">              document.getElementById(<span class="string">"xmTanDiv"</span>).InnerHTML = <span class="string">"&lt;h1&gt;当前浏览器不支持FileReader接口&lt;/h1&gt;"</span>;</div><div class="line">              //使选择控件不可操作</div><div class="line">              document.getElementById(<span class="string">"xdaTanFileImg"</span>).setAttribute(<span class="string">"disabled"</span>, <span class="string">"disabled"</span>);</div><div class="line">          &#125;</div><div class="line"></div><div class="line">          //选择图片</div><div class="line">          <span class="keyword">function</span> xmTanUploadImg(obj) &#123;</div><div class="line">              var file = obj.files[0];</div><div class="line">              </div><div class="line">              console.log(obj);console.log(file);</div><div class="line">              console.log(<span class="string">"file.size = "</span> + file.size);  //file.size 单位为byte</div><div class="line"></div><div class="line">              var reader = new FileReader();</div><div class="line"></div><div class="line">              //读取文件过程方法</div><div class="line">              reader.onloadstart = <span class="keyword">function</span> (e) &#123;</div><div class="line">                  console.log(<span class="string">"开始读取...."</span>);</div><div class="line">              &#125;</div><div class="line">              reader.onprogress = <span class="keyword">function</span> (e) &#123;</div><div class="line">                  console.log(<span class="string">"正在读取中...."</span>);</div><div class="line">              &#125;</div><div class="line">              reader.onabort = <span class="keyword">function</span> (e) &#123;</div><div class="line">                  console.log(<span class="string">"中断读取...."</span>);</div><div class="line">              &#125;</div><div class="line">              reader.onerror = <span class="keyword">function</span> (e) &#123;</div><div class="line">                  console.log(<span class="string">"读取异常...."</span>);</div><div class="line">              &#125;</div><div class="line">              reader.onload = <span class="keyword">function</span> (e) &#123;</div><div class="line">                  console.log(<span class="string">"成功读取...."</span>);</div><div class="line"></div><div class="line">                  var img = document.getElementById(<span class="string">"xmTanImg"</span>);</div><div class="line">                  img.src = e.target.result;</div><div class="line">                  //或者 img.src = this.result;  //e.target == this</div><div class="line">              &#125;</div><div class="line">		//图片数据转成base64字符串形式。</div><div class="line">              reader.readAsDataURL(file)</div><div class="line">          &#125;</div><div class="line">      &lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>另外 FileReader除了有函数readAsDataURL，另外还有另外两个函数readAsBinaryString 和 readAsText，分别可以将选择的文件读取成二进制和文本格式 </p>
+<h3 id="代码实现-1"><a href="#代码实现-1" class="headerlink" title="代码实现"></a>代码实现</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line">&lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span>&gt;</div><div class="line">            //判断浏览器是否支持FileReader接口</div><div class="line">            <span class="keyword">if</span> (typeof FileReader == <span class="string">'undefined'</span>) &#123;</div><div class="line">                document.getElementById(<span class="string">"xmTanContentDiv"</span>).InnerHTML = <span class="string">"&lt;p&gt;当前浏览器不支持FileReader接口！&lt;/p&gt;"</span>;</div><div class="line">                document.getElementById(<span class="string">"xmTanFile"</span>).setAttribute(<span class="string">"disabled"</span>, <span class="string">"disabled"</span>);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            //选择文件</div><div class="line">            <span class="keyword">function</span> xmTanUploadFile(obj)&#123;</div><div class="line">                <span class="keyword">if</span> (obj.files.length &lt; 1) <span class="built_in">return</span>;</div><div class="line"></div><div class="line">                var file = obj.files[0];</div><div class="line">                </div><div class="line">                <span class="keyword">if</span> (file.size &gt; 1024 * 1024) &#123;</div><div class="line">                    alert(<span class="string">"文件大于1M， 太大了，小点吧！"</span>);</div><div class="line">                    obj.value = <span class="string">""</span>;</div><div class="line">                    <span class="built_in">return</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            //读取文件为二进制</div><div class="line">            <span class="keyword">function</span> <span class="function"><span class="title">readAsBinaryString</span></span>() &#123;</div><div class="line">                var obj = document.getElementById(<span class="string">"xmTanFile"</span>);</div><div class="line">                <span class="keyword">if</span> (obj.files.length &lt; 1) <span class="built_in">return</span>;</div><div class="line"></div><div class="line">                var file = obj.files[0];</div><div class="line">                var reader = new FileReader();</div><div class="line"></div><div class="line">                //将文件以二进制形式读入页面</div><div class="line">                reader.readAsBinaryString(file);</div><div class="line">                reader.onload = <span class="keyword">function</span> (f) &#123;</div><div class="line">                    document.getElementById(<span class="string">"xmTanContentDiv"</span>).innerHTML = this.result;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            //读取文件为文本</div><div class="line">            <span class="keyword">function</span> <span class="function"><span class="title">readAsText</span></span>() &#123;</div><div class="line">                var obj = document.getElementById(<span class="string">"xmTanFile"</span>);</div><div class="line">                <span class="keyword">if</span> (obj.files.length &lt; 1) <span class="built_in">return</span>;</div><div class="line"></div><div class="line">                var file = obj.files[0];</div><div class="line">                var reader = new FileReader();</div><div class="line"></div><div class="line">                //将文件以文本形式读入页面</div><div class="line">                reader.readAsText(file);</div><div class="line">                reader.onload = <span class="keyword">function</span> (f) &#123;</div><div class="line">                    document.getElementById(<span class="string">"xmTanContentDiv"</span>).innerHTML = this.result;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &lt;/script&gt;</div><div class="line">        &lt;div style=<span class="string">"border: 2px dashed red; padding: 20px 0px;"</span>&gt;</div><div class="line">            &lt;label&gt;选择文件：&lt;/label&gt;</div><div class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"file"</span> id=<span class="string">"xmTanFile"</span> accept=<span class="string">".html,.js,.css,.txt,.cs,.xml"</span> onchange=<span class="string">"xmTanUploadFile(this)"</span>/&gt;</div><div class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"button"</span> value=<span class="string">"读取成二进制数据"</span> onclick=<span class="string">"readAsBinaryString()"</span> /&gt;</div><div class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"button"</span> value=<span class="string">"读取成文本数据"</span> onclick=<span class="string">"readAsText()"</span> /&gt;</div><div class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"button"</span> value=<span class="string">"隐藏读取内容"</span> onclick=<span class="string">"document.getElementById('xmTanContentDiv').style.display = 'none';"</span>/&gt;</div><div class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"button"</span> value=<span class="string">"显示读取内容"</span> onclick=<span class="string">"document.getElementById('xmTanContentDiv').style.display = 'block';"</span>/&gt;</div><div class="line">            &lt;div id=<span class="string">"xmTanContentDiv"</span>&gt;&lt;/div&gt;</div><div class="line">        &lt;/div&gt;</div></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/06/JavaScript之FileReader接口/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/11/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/13/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/11/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/13/">Next &raquo;</a>
     </nav>
   
 

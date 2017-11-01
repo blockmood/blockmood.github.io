@@ -149,139 +149,6 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-axios" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/27/axios/">axios</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/27/axios/" class="archive-article-date">
-  	<time datetime="2017-07-27T05:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><ul>
-<li><p>1、 发送一个GET请求</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">//通过给定的ID来发送请求</div><div class="line">axios.get(<span class="string">'/user?ID=12345'</span>)</div><div class="line">  .<span class="keyword">then</span>(<span class="keyword">function</span>(response)&#123;</div><div class="line">    console.log(response);</div><div class="line">  &#125;)</div><div class="line">  .catch(<span class="keyword">function</span>(err)&#123;</div><div class="line">    console.log(err);</div><div class="line">  &#125;);</div><div class="line">//以上请求也可以通过这种方式来发送</div><div class="line">axios.get(<span class="string">'/user'</span>,&#123;</div><div class="line">  params:&#123;</div><div class="line">    ID:12345</div><div class="line">  &#125;</div><div class="line">&#125;)</div><div class="line">.<span class="keyword">then</span>(<span class="keyword">function</span>(response)&#123;</div><div class="line">  console.log(response);</div><div class="line">&#125;)</div><div class="line">.catch(<span class="keyword">function</span>(err)&#123;</div><div class="line">  console.log(err);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-<li><p>2、 发送一个POST请求</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">axios.post(<span class="string">'/user'</span>,&#123;</div><div class="line">  firstName:<span class="string">'Fred'</span>,</div><div class="line">  lastName:<span class="string">'Flintstone'</span></div><div class="line">&#125;)</div><div class="line">.<span class="keyword">then</span>(<span class="keyword">function</span>(res)&#123;</div><div class="line">  console.log(res);</div><div class="line">&#125;)</div><div class="line">.catch(<span class="keyword">function</span>(err)&#123;</div><div class="line">  console.log(err);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-<li><p>3、 一次性并发多个请求</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">getUserAccount</span></span>()&#123;</div><div class="line">  <span class="built_in">return</span> axios.get(<span class="string">'/user/12345'</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">getUserPermissions</span></span>()&#123;</div><div class="line">  <span class="built_in">return</span> axios.get(<span class="string">'/user/12345/permissions'</span>);</div><div class="line">&#125;</div><div class="line">axios.all([getUserAccount(),getUserPermissions()])</div><div class="line">  .<span class="keyword">then</span>(axios.spread(<span class="keyword">function</span>(acct,perms)&#123;</div><div class="line">    //当这两个请求都完成的时候会触发这个函数，两个参数分别代表返回的结果</div><div class="line">  &#125;))</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="axios的API"><a href="#axios的API" class="headerlink" title="axios的API"></a>axios的API</h3><h4 id="（一）-axios可以通过配置（config）来发送请求"><a href="#（一）-axios可以通过配置（config）来发送请求" class="headerlink" title="（一） axios可以通过配置（config）来发送请求"></a>（一） axios可以通过配置（config）来发送请求</h4><ul>
-<li><p>1、 axios(config)</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">//发送一个`POST`请求</div><div class="line">axios(&#123;</div><div class="line">    method:<span class="string">"POST"</span>,</div><div class="line">    url:<span class="string">'/user/12345'</span>,</div><div class="line">    data:&#123;</div><div class="line">        firstName:<span class="string">"Fred"</span>,</div><div class="line">        lastName:<span class="string">"Flintstone"</span></div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-<li><p>2、 axios(url[,config])</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//发送一个`GET`请求（默认的请求方式）</div><div class="line">axios(<span class="string">'/user/12345'</span>);</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="（二）、-请求方式的别名，这里对所有已经支持的请求方式都提供了方便的别名"><a href="#（二）、-请求方式的别名，这里对所有已经支持的请求方式都提供了方便的别名" class="headerlink" title="（二）、 请求方式的别名，这里对所有已经支持的请求方式都提供了方便的别名"></a>（二）、 请求方式的别名，这里对所有已经支持的请求方式都提供了方便的别名</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">axios.request(config);</div><div class="line"></div><div class="line">axios.get(url[,config]);</div><div class="line"></div><div class="line">axios.delete(url[,config]);</div><div class="line"></div><div class="line">axios.head(url[,config]);</div><div class="line"></div><div class="line">axios.post(url[,data[,config]]);</div><div class="line"></div><div class="line">axios.put(url[,data[,config]])</div><div class="line"></div><div class="line">axios.patch(url[,data[,config]])</div></pre></td></tr></table></figure>
-<p>注意：当我们在使用别名方法的时候，url,method,data这几个参数不需要在配置中声明</p>
-<h4 id="（三）、并发请求（concurrency）-即是帮助处理并发请求的辅助函数"><a href="#（三）、并发请求（concurrency）-即是帮助处理并发请求的辅助函数" class="headerlink" title="（三）、并发请求（concurrency）,即是帮助处理并发请求的辅助函数"></a>（三）、并发请求（concurrency）,即是帮助处理并发请求的辅助函数</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">//iterable是一个可以迭代的参数如数组等</div><div class="line">axios.all(iterable)</div><div class="line">//callback要等到所有请求都完成才会执行</div><div class="line">axios.spread(callback)</div></pre></td></tr></table></figure>
-<h4 id="（四）、创建一个axios实例，并且可以自定义其配置"><a href="#（四）、创建一个axios实例，并且可以自定义其配置" class="headerlink" title="（四）、创建一个axios实例，并且可以自定义其配置"></a>（四）、创建一个axios实例，并且可以自定义其配置</h4><ul>
-<li><p>1、 axios.create([config])</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">var instance = axios.create(&#123;</div><div class="line">  baseURL:<span class="string">"https://some-domain.com/api/"</span>,</div><div class="line">  timeout:1000,</div><div class="line">  headers: &#123;<span class="string">'X-Custom-Header'</span>:<span class="string">'foobar'</span>&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-<li><p>2、 实例的方法</p>
-<ul>
-<li>一下是实例方法，注意已经定义的配置将和利用create创建的实例的配置合并<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">axios<span class="comment">#request(config)</span></div><div class="line"></div><div class="line">axios<span class="comment">#get(url[,config])</span></div><div class="line"></div><div class="line">axios<span class="comment">#delete(url[,config])</span></div><div class="line"></div><div class="line">axios<span class="comment">#head(url[,config])</span></div><div class="line"></div><div class="line">axios<span class="comment">#post(url[,data[,config]])</span></div><div class="line"></div><div class="line">axios<span class="comment">#put(url[,data[,config]])</span></div><div class="line"></div><div class="line">axios<span class="comment">#patch(url[,data[,config]])</span></div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="四、请求的配置（request-config）"><a href="#四、请求的配置（request-config）" class="headerlink" title="四、请求的配置（request config）"></a>四、请求的配置（request config）</h3><p>以下就是请求的配置选项，只有url选项是必须的，如果method选项未定义，那么它默认是以GET的方式发出请求</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  //`url`是请求的服务器地址</div><div class="line">  url:<span class="string">'/user'</span>,</div><div class="line">  //`method`是请求资源的方式</div><div class="line">  method:<span class="string">'get'</span>//default</div><div class="line">  //如果`url`不是绝对地址，那么`baseURL`将会加到`url`的前面</div><div class="line">  //当`url`是相对地址的时候，设置`baseURL`会非常的方便</div><div class="line">  baseURL:<span class="string">'https://some-domain.com/api/'</span>,</div><div class="line">  //`transformRequest`选项允许我们在请求发送到服务器之前对请求的数据做出一些改动</div><div class="line">  //该选项只适用于以下请求方式：`put/post/patch`</div><div class="line">  //数组里面的最后一个函数必须返回一个字符串、-一个`ArrayBuffer`或者`Stream`</div><div class="line">  transformRequest:[<span class="keyword">function</span>(data)&#123;</div><div class="line">    //在这里根据自己的需求改变数据</div><div class="line">    <span class="built_in">return</span> data;</div><div class="line">  &#125;],</div><div class="line">  //`transformResponse`选项允许我们在数据传送到`<span class="keyword">then</span>/catch`方法之前对数据进行改动</div><div class="line">  transformResponse:[<span class="keyword">function</span>(data)&#123;</div><div class="line">    //在这里根据自己的需求改变数据</div><div class="line">    <span class="built_in">return</span> data;</div><div class="line">  &#125;],</div><div class="line">  //`headers`选项是需要被发送的自定义请求头信息</div><div class="line">  headers: &#123;<span class="string">'X-Requested-With'</span>:<span class="string">'XMLHttpRequest'</span>&#125;,</div><div class="line">  //`params`选项是要随请求一起发送的请求参数----一般链接在URL后面</div><div class="line">  //他的类型必须是一个纯对象或者是URLSearchParams对象</div><div class="line">  params: &#123;</div><div class="line">    ID:12345</div><div class="line">  &#125;,</div><div class="line">  //`paramsSerializer`是一个可选的函数，起作用是让参数（params）序列化</div><div class="line">  //例如(https://www.npmjs.com/package/qs,http://api.jquery.com/jquery.param)</div><div class="line">  paramsSerializer: <span class="keyword">function</span>(params)&#123;</div><div class="line">    <span class="built_in">return</span> Qs.stringify(params,&#123;arrayFormat:<span class="string">'brackets'</span>&#125;)</div><div class="line">  &#125;,</div><div class="line">  //`data`选项是作为一个请求体而需要被发送的数据</div><div class="line">  //该选项只适用于方法：`put/post/patch`</div><div class="line">  //当没有设置`transformRequest`选项时dada必须是以下几种类型之一</div><div class="line">  //string/plain/object/ArrayBuffer/ArrayBufferView/URLSearchParams</div><div class="line">  //仅仅浏览器：FormData/File/Bold</div><div class="line">  //仅node:Stream</div><div class="line">  data &#123;</div><div class="line">    firstName:<span class="string">"Fred"</span></div><div class="line">  &#125;,</div><div class="line">  //`timeout`选项定义了请求发出的延迟毫秒数</div><div class="line">  //如果请求花费的时间超过延迟的时间，那么请求会被终止</div><div class="line"></div><div class="line">  timeout:1000,</div><div class="line">  //`withCredentails`选项表明了是否是跨域请求</div><div class="line"></div><div class="line">  withCredentials:<span class="literal">false</span>,//default</div><div class="line">  //`adapter`适配器选项允许自定义处理请求，这会使得测试变得方便</div><div class="line">  //返回一个promise,并提供验证返回</div><div class="line">  adapter: <span class="keyword">function</span>(config)&#123;</div><div class="line">    /*..........*/</div><div class="line">  &#125;,</div><div class="line">  //`auth`表明HTTP基础的认证应该被使用，并提供证书</div><div class="line">  //这会设置一个authorization头（header）,并覆盖你在header设置的Authorization头信息</div><div class="line">  auth: &#123;</div><div class="line">    username:<span class="string">"zhangsan"</span>,</div><div class="line">    password: <span class="string">"s00sdkf"</span></div><div class="line">  &#125;,</div><div class="line">  //返回数据的格式</div><div class="line">  //其可选项是arraybuffer,blob,document,json,text,stream</div><div class="line">  responseType:<span class="string">'json'</span>,//default</div><div class="line">  //</div><div class="line">  xsrfCookieName: <span class="string">'XSRF-TOKEN'</span>,//default</div><div class="line">  xsrfHeaderName:<span class="string">'X-XSRF-TOKEN'</span>,//default</div><div class="line">  //`onUploadProgress`上传进度事件</div><div class="line">  onUploadProgress:<span class="keyword">function</span>(progressEvent)&#123;</div><div class="line">    //下载进度的事件</div><div class="line">onDownloadProgress:<span class="keyword">function</span>(progressEvent)&#123;</div><div class="line">&#125;</div><div class="line">  &#125;,</div><div class="line">  //相应内容的最大值</div><div class="line">  maxContentLength:2000,</div><div class="line">  //`validateStatus`定义了是否根据http相应状态码，来resolve或者reject promise</div><div class="line">  //如果`validateStatus`返回<span class="literal">true</span>(或者设置为`null`或者`undefined`),那么promise的状态将会是resolved,否则其状态就是rejected</div><div class="line">  validateStatus:<span class="keyword">function</span>(status)&#123;</div><div class="line">    <span class="built_in">return</span> status &gt;= 200 &amp;&amp; status &lt;300;//default</div><div class="line">  &#125;,</div><div class="line">  //`maxRedirects`定义了在nodejs中重定向的最大数量</div><div class="line">  maxRedirects: 5,//default</div><div class="line">  //`httpAgent/httpsAgent`定义了当发送http/https请求要用到的自定义代理</div><div class="line">  //keeyAlive在选项中没有被默认激活</div><div class="line">  httpAgent: new http.Agent(&#123;keeyAlive:<span class="literal">true</span>&#125;),</div><div class="line">  httpsAgent: new https.Agent(&#123;keeyAlive:<span class="literal">true</span>&#125;),</div><div class="line">  //proxy定义了主机名字和端口号，</div><div class="line">  //`auth`表明http基本认证应该与proxy代理链接，并提供证书</div><div class="line">  //这将会设置一个`Proxy-Authorization` header,并且会覆盖掉已经存在的`Proxy-Authorization`  header</div><div class="line">  proxy: &#123;</div><div class="line">    host:<span class="string">'127.0.0.1'</span>,</div><div class="line">    port: 9000,</div><div class="line">    auth: &#123;</div><div class="line">      username:<span class="string">'skda'</span>,</div><div class="line">      password:<span class="string">'radsd'</span></div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">  //`cancelToken`定义了一个用于取消请求的cancel token</div><div class="line">  //详见cancelation部分</div><div class="line">  cancelToken: new cancelToken(<span class="keyword">function</span>(cancel)&#123;</div><div class="line"></div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="五、请求返回的内容"><a href="#五、请求返回的内容" class="headerlink" title="五、请求返回的内容"></a>五、请求返回的内容</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line"></div><div class="line">  data:&#123;&#125;,</div><div class="line">  status:200,</div><div class="line">  //从服务器返回的http状态文本</div><div class="line">  statusText:<span class="string">'OK'</span>,</div><div class="line">  //响应头信息</div><div class="line">  headers: &#123;&#125;,</div><div class="line">  //`config`是在请求的时候的一些配置信息</div><div class="line">  config: &#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>你可以这样来获取响应信息<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">axios.get(<span class="string">'/user/12345'</span>)</div><div class="line"><span class="keyword">then</span>(<span class="keyword">function</span>(res)&#123;</div><div class="line">  console.log(res.data);</div><div class="line">  console.log(res.status);</div><div class="line">  console.log(res.statusText);</div><div class="line">  console.log(res.headers);</div><div class="line">  console.log(res.config);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="六、默认配置"><a href="#六、默认配置" class="headerlink" title="六、默认配置"></a>六、默认配置</h3><p>你可以设置默认配置，对所有请求都有效</p>
-<ul>
-<li><p>1、 全局默认配置</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">axios.defaults.baseURL = <span class="string">'http://api.exmple.com'</span>;</div><div class="line">axios.defaults.headers.common[<span class="string">'Authorization'</span>] = AUTH_TOKEN;</div><div class="line">axios.defaults.headers.post[<span class="string">'content-Type'</span>] = <span class="string">'appliction/x-www-form-urlencoded'</span>;</div></pre></td></tr></table></figure>
-</li>
-<li><p>2、 自定义的实例默认设置</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">//当创建实例的时候配置默认配置</div><div class="line">var instance = axios.create(&#123;</div><div class="line">    baseURL: <span class="string">'https://api.example.com'</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line">//当实例创建时候修改配置</div><div class="line">instance.defaults.headers.common[<span class="string">"Authorization"</span>] = AUTH_TOKEN;</div></pre></td></tr></table></figure>
-</li>
-<li><p>3、 配置中的有优先级</p>
-<ul>
-<li>config配置将会以优先级别来合并，顺序是lib/defauts.js中的默认配置，然后是实例中的默认配置，最后是请求中的config参数的配置，越往后等级越高，后面的会覆盖前面的例子。<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">//创建一个实例的时候会使用libray目录中的默认配置</div><div class="line">//在这里timeout配置的值为0，来自于libray的默认值</div><div class="line">var instance = axios.create();</div><div class="line">//回覆盖掉library的默认值</div><div class="line">//现在所有的请求都要等2.5S之后才会发出</div><div class="line">instance.defaults.timeout = 2500;</div><div class="line">//这里的timeout回覆盖之前的2.5S变成5s</div><div class="line">instance.get(<span class="string">'/longRequest'</span>,&#123;</div><div class="line">  timeout: 5000</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="七、拦截器"><a href="#七、拦截器" class="headerlink" title="七、拦截器"></a>七、拦截器</h3><ul>
-<li><p>1、你可以在请求、响应在到达then/catch之前拦截他们</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">//添加一个请求拦截器</div><div class="line">axios.interceptors.request.use(<span class="keyword">function</span>(config)&#123;</div><div class="line">  //在请求发出之前进行一些操作</div><div class="line">  <span class="built_in">return</span> config;</div><div class="line">&#125;,<span class="keyword">function</span>(err)&#123;</div><div class="line">  //Do something with request error</div><div class="line">  <span class="built_in">return</span> Promise.reject(error);</div><div class="line">&#125;);</div><div class="line">//添加一个响应拦截器</div><div class="line">axios.interceptors.response.use(<span class="keyword">function</span>(res)&#123;</div><div class="line">  //在这里对返回的数据进行处理</div><div class="line">  <span class="built_in">return</span> res;</div><div class="line">&#125;,<span class="keyword">function</span>(err)&#123;</div><div class="line">  //Do something with response error</div><div class="line">  <span class="built_in">return</span> Promise.reject(error);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-</li>
-<li><p>2、取消拦截器</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">var myInterceptor = axios.interceptor.request.use(<span class="function"><span class="title">function</span></span>()&#123;/*....*/&#125;);</div><div class="line">axios.interceptors.request.eject(myInterceptor);</div></pre></td></tr></table></figure>
-</li>
-<li><p>3、 给自定义的axios实例添加拦截器</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">var instance = axios.create();</div><div class="line">instance.interceptors.request.use(<span class="function"><span class="title">function</span></span>()&#123;&#125;)</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="八、错误处理"><a href="#八、错误处理" class="headerlink" title="八、错误处理"></a>八、错误处理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">axios.get(<span class="string">'/user/12345'</span>)</div><div class="line">  .catch(<span class="keyword">function</span>(error)&#123;</div><div class="line">    <span class="keyword">if</span>(error.response)&#123;</div><div class="line">      //请求已经发出，但是服务器响应返回的状态吗不在2xx的范围内</div><div class="line">      console.log(error.response.data);</div><div class="line">      console.log(error.response.status);</div><div class="line">      console.log(error.response.header);</div><div class="line">    &#125;<span class="keyword">else</span> &#123;</div><div class="line">      //一些错误是在设置请求的时候触发</div><div class="line">      console.log(<span class="string">'Error'</span>,error.message);</div><div class="line">    &#125;</div><div class="line">    console.log(error.config);</div><div class="line">  &#125;);</div></pre></td></tr></table></figure>
-<h3 id="九、取消"><a href="#九、取消" class="headerlink" title="九、取消"></a>九、取消</h3><ul>
-<li>你可以通过一个cancel token来取消一个请求</li>
-<li><p>你可以通过CancelToken.source工厂函数来创建一个cancel token</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">var CancelToken = axios.CancelToken;</div><div class="line">var <span class="built_in">source</span> = CancelToken.source();</div><div class="line"></div><div class="line">axios.get(<span class="string">'/user/12345'</span>,&#123;</div><div class="line">  cancelToken: source.token</div><div class="line">&#125;).catch(<span class="keyword">function</span>(thrown)&#123;</div><div class="line">  <span class="keyword">if</span>(axios.isCancel(thrown))&#123;</div><div class="line">    console.log(<span class="string">'Request canceled'</span>,thrown.message);</div><div class="line">  &#125;<span class="keyword">else</span> &#123;</div><div class="line">    //handle error</div><div class="line">  &#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line">//取消请求（信息的参数可以设置的）</div><div class="line">source.cance(<span class="string">"操作被用户取消"</span>);</div></pre></td></tr></table></figure>
-</li>
-<li><p>你可以给cancelToken构造函数传递一个executor function来创建一个cancel token:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">var cancelToken = axios.CancelToken;</div><div class="line">var cance;</div><div class="line">axios.get(<span class="string">'/user/12345'</span>,&#123;</div><div class="line">cancelToken: new CancelToken(<span class="keyword">function</span>(c)&#123;</div><div class="line"> //这个executor函数接受一个cancel <span class="keyword">function</span>作为参数</div><div class="line"> cancel = c;</div><div class="line">&#125;)</div><div class="line">&#125;)</div><div class="line">//取消请求</div><div class="line">cancel();</div></pre></td></tr></table></figure></li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/27/axios/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
     <article id="post-vue之vuex" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -511,9 +378,75 @@
 
 
   
+    <article id="post-vue组件data为什么是函数？" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/20/vue组件data为什么是函数？/">vue组件data为什么是函数？</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/20/vue组件data为什么是函数？/" class="archive-article-date">
+  	<time datetime="2017-07-20T09:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-20</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在创建或注册模板的时候，传入一个data属性作为用来绑定的数据。但是在组件中，data必须是一个函数，而不能直接把一个对象赋值给它。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Vue.component(<span class="string">'my-component'</span>, &#123;</div><div class="line">  template: <span class="string">'&lt;div&gt;OK&lt;/div&gt;'</span>,</div><div class="line">  <span class="function"><span class="title">data</span></span>() &#123;</div><div class="line">    <span class="built_in">return</span> &#123;&#125; // 返回一个唯一的对象，不要和其他组件共用一个对象进行返回</div><div class="line">  &#125;,</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<p>你在前面看到，在new Vue()的时候，是可以给data直接赋值为一个对象的。这是怎么回事，为什么到了组件这里就不行了。</p>
+<p>你要理解，上面这个操作是一个简易操作，实际上，它首先需要创建一个组件构造器，然后注册组件。注册组件的本质其实就是建立一个组件构造器的引用。使用组件才是真正创建一个组件实例。所以，注册组件其实并不产生新的组件类，但会产生一个可以用来实例化的新方式。</p>
+<p>理解这点之后，再理解js的原型链：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">var MyComponent = <span class="function"><span class="title">function</span></span>() &#123;&#125;</div><div class="line">MyComponent.prototype.data = &#123;</div><div class="line">  a: 1,</div><div class="line">  b: 2,</div><div class="line">&#125;</div><div class="line">// 上面是一个虚拟的组件构造器，真实的组件构造器方法很多</div><div class="line"></div><div class="line">var component1 = new MyComponent()</div><div class="line">var component2 = new MyComponent()</div><div class="line">// 上面实例化出来两个组件实例，也就是通过&lt;my-component&gt;调用，创建的两个实例</div><div class="line"></div><div class="line">component1.data.a === component2.data.a // <span class="literal">true</span></div><div class="line">component1.data.b = 5</div><div class="line">component2.data.b // 5</div></pre></td></tr></table></figure>
+<p>可以看到上面代码中最后三句，这就比较坑爹了，如果两个实例同时引用一个对象，那么当你修改其中一个属性的时候，另外一个实例也会跟着改。这怎么可以，两个实例应该有自己各自的域才对。所以，需要通过下面方法来进行处理：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var MyComponent = <span class="function"><span class="title">function</span></span>() &#123;</div><div class="line">  this.data = this.data()</div><div class="line">&#125;</div><div class="line">MyComponent.prototype.data = <span class="function"><span class="title">function</span></span>() &#123;</div><div class="line">  <span class="built_in">return</span> &#123;</div><div class="line">    a: 1,</div><div class="line">    b: 2,</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样每一个实例的data属性都是独立的，不会相互影响了。所以，你现在知道为什么vue组件的data必须是函数了吧。这都是因为js本身的特性带来的，跟vue本身设计无关。其实vue不应该把这个方法名取为data()，应该叫setData或其他更容易立即的方法名。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/20/vue组件data为什么是函数？/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
     </nav>
   
 

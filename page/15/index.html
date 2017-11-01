@@ -149,72 +149,6 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-JavaScript之原型详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/24/JavaScript之原型详解/">JavaScript之原型详解</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/24/JavaScript之原型详解/" class="archive-article-date">
-  	<time datetime="2017-05-24T00:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>本篇文章主要介绍的是函数对象中的原型(prototype)属性,对于JavaScript,理解原型是一个非常重要的环节，所以我今天把自己的经验分享出来，先看一段代码。</p>
-<h3 id="原型属性"><a href="#原型属性" class="headerlink" title="原型属性"></a>原型属性</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> foo(a,b)&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line">console.log(foo.lenght);    		  //输出2</div><div class="line">console.log(foo.constructor);   	  //输出Function</div><div class="line">console.log(typeof foo.constructor);  //输出Object</div></pre></td></tr></table></figure>
-<p>以上的代码，其实在函数定义时就被创建了，属性中就包括prototype属性，它的初始值是一个空的对象。<br>当然我们也可以自己添加属性，如:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">foo.prototype = &#123;&#125;</div></pre></td></tr></table></figure></p>
-<p>我们可以赋予这个空对象一些属性和方法，并且与foo函数本身不会造成什么影响。</p>
-<h3 id="利用原型添加属性和方法"><a href="#利用原型添加属性和方法" class="headerlink" title="利用原型添加属性和方法"></a>利用原型添加属性和方法</h3><p>定义一个构造函数，并用构造函数来创建出构造对象，这种的做法是通过new关键字返回一个函数的对象，利用这个对象就可以调用this返回其对象的方法或者属性，这样就有了一种赋予对象一种新的方法或者属性的功能。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> Gadget(name,color)&#123;</div><div class="line">	this.name = name;</div><div class="line">	this.color = color;</div><div class="line">	this.say = <span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">		<span class="built_in">return</span> this.name + this.color;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">Gadget.prototype = &#123;</div><div class="line">	price:100,</div><div class="line">	rating:3,</div><div class="line">	getInfo:<span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">		<span class="built_in">return</span> this.price + this.rating;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>向原型中添加完属性和方法之后，就可以访问了，这里构造函数自身的属性优先级要高于原型的属性。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">var newtoy = new Gadget(<span class="string">'yuexing'</span>,<span class="string">'blue'</span>);</div><div class="line">console.log(newtoy.say());   //输出 yuexing blue</div><div class="line">console.log(newtoy.name);    //输出yuexing</div><div class="line">console.log(newtoy.price);   //输出100</div><div class="line">console.log(newtoy.getInfo());   //输出100 3</div></pre></td></tr></table></figure></p>
-<p>对于原型来说，最重要的一个概念就是“驻留”，由于在javascrit中，对象都是通过引用方式来传递值的，也就是传递的实际是一个地址，因此我们所创建的对象中的原型，没有一份属于自己的原型副本，这就意味着我们随时可以对原型进行添加和修改，并且对象会继承者原型这一切的改变。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Gadget.prototype.get = <span class="keyword">function</span>(what)&#123;</div><div class="line">	<span class="built_in">return</span> this[what];</div><div class="line">&#125;</div><div class="line">var newtoy = new Gadget(<span class="string">'yuexing'</span>,<span class="string">'blue'</span>);</div><div class="line">console.log(newtoy.get(<span class="string">'price'</span>));    //输出100</div></pre></td></tr></table></figure></p>
-<h3 id="自身属性和原型属性"><a href="#自身属性和原型属性" class="headerlink" title="自身属性和原型属性"></a>自身属性和原型属性</h3><p>在之前的getInfo方法中，我你们用的是this指针来完成对象访问的，但是执行使用Gadget.prototype也可以直接访问,这难道有什么不同么？<br>当我们访问newtoy的某个属性的时候，JavaScript引擎会遍历该对象的所有属性，并查找一个叫name 和 color的属性，如果找到了就立即返回值，如果找不到，Javascrit引擎就会去查询创建当前对象的原型属性，等价于我们直接访问（Gadget.prototype），如果在原型中找到了就立即返回原型中的值，这个结构会一直持续下去，并且最终取决于原型链的长度，但其最后肯定是Object对象，因为他是最高级的父级对象。至于它为什么会向上查找，因为这里有一个神秘的_ <em>proto</em> _的属性，下节再说这个属性。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/24/JavaScript之原型详解/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
     <article id="post-vue之全面理解MVVM模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -341,9 +275,72 @@
 
 
   
+    <article id="post-vue-router在项目中如何正确配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/19/vue-router在项目中如何正确配置/">vue-roter路由在项目中的使用思路。</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/19/vue-router在项目中如何正确配置/" class="archive-article-date">
+  	<time datetime="2017-05-19T03:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前做了一个项目，做到文章详情页的时候发现可以跳转到文章详情页，但是导航不会随之消失，后来发现这就是我路由没有配置好的问题，现在把这个正确的配置放上来，基本的大部分app都大同小异。</p>
+<h3 id="正确导航的一个配置-看例子"><a href="#正确导航的一个配置-看例子" class="headerlink" title="正确导航的一个配置  看例子"></a>正确导航的一个配置  看例子</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">routes: [</div><div class="line">    &#123;</div><div class="line">      path: <span class="string">'/'</span>,</div><div class="line">      redirect: &#123; name: <span class="string">'Nav'</span> &#125;   //默认跳转到导航组件 </div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      path:<span class="string">'/Nav'</span>,			   //导航组件 （网站导航组件）</div><div class="line">      name:<span class="string">'Nav'</span>,</div><div class="line">      component:Nav,</div><div class="line">      redirect: &#123; name: <span class="string">'About'</span> &#125;,  //跳转到about组件 （可以看做是文章列表组件）</div><div class="line">      children:[</div><div class="line">        &#123;</div><div class="line">          path:<span class="string">'/Home/:id'</span>,	</div><div class="line">          name:<span class="string">'Home'</span>,</div><div class="line">          component:Home</div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">          path:<span class="string">'/About/:id'</span>,</div><div class="line">          name:<span class="string">'About'</span>,</div><div class="line">          component:About</div><div class="line">        &#125;</div><div class="line">      ] </div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      path:<span class="string">'/Where'</span>,  //文章内容页面组件</div><div class="line">      name:<span class="string">'Where'</span>,</div><div class="line">      component:Where,</div><div class="line">    &#125;</div><div class="line">  ]</div></pre></td></tr></table></figure>
+<h3 id="在导航Nav组件里面的配置"><a href="#在导航Nav组件里面的配置" class="headerlink" title="在导航Nav组件里面的配置"></a>在导航Nav组件里面的配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;&lt;div class=<span class="string">"nav"</span>&gt;</div><div class="line">	//点击跳转对应的路由组件</div><div class="line">  	&lt;router-link :to=<span class="string">"&#123;name:'About',params:&#123;id:1&#125;&#125;"</span>&gt;Home&lt;/router-link&gt;</div><div class="line">  	&lt;router-link :to=<span class="string">"&#123;name:'About',params:&#123;id:2&#125;&#125;"</span>&gt;About&lt;/router-link&gt;</div><div class="line">	//用于显然的列表</div><div class="line">   	&lt;router-view&gt;&lt;/router-view&gt;</div><div class="line">&lt;/div&gt;&#125;</div></pre></td></tr></table></figure>
+<p>在文章里列表组件中，可以利用$router.push(‘组件名’)跳转到相应的文章内容组件，并且导航是不会显示的。</p>
+<p>至于如何通过不同的ID来切换相同组件的数据，可以看我上一篇文章。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/19/vue-router在项目中如何正确配置/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/14/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/16/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/14/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/16/">Next &raquo;</a>
     </nav>
   
 
