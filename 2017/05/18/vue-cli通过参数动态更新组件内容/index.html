@@ -6,8 +6,6 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <link rel="stylesheet" href="/assets/img/pace-theme-flash.css">
-  <script src="/assets/img/pace.min.js"></script>
   <title>vue-cli通过参数动态更新组件内容 | Yue Xing</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="平时开发时候都是一个导航对应一个组件，现在有一个需求，就是点击不同的导航（通过ID传递），更换不同的内容，而组件的样式都是一样的，这时候就需要用到这个了。 同一个组件通过参数动态渲染的做法vue-router中提供了一个导航钩子的方法 beforeRouteUpdate(to, from, next),这个方法很有用，意思就是在当前路由改变，但是该组件被复用时调用。 if/for语句中），它在代码">
@@ -49,7 +47,7 @@
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
-			<img src="/assets/img/logo.jpg" class="js-avatar">
+			<img src="/img/logo.jpg" class="js-avatar">
 		</a>
 		<hgroup>
 		  <h1 class="header-author"><a href="/">Yue Xing</a></h1>
@@ -105,7 +103,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<div class="profilepic">
-				<img src="/assets/img/logo.jpg" class="js-avatar">
+				<img src="/img/logo.jpg" class="js-avatar">
 			</div>
 			<hgroup>
 			  <h1 class="header-author js-header-author">Yue Xing</h1>
@@ -395,11 +393,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -6,8 +6,6 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <link rel="stylesheet" href="/assets/img/pace-theme-flash.css">
-  <script src="/assets/img/pace.min.js"></script>
   <title>Yue Xing</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta property="og:type" content="website">
@@ -44,7 +42,7 @@
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
-			<img src="/assets/img/logo.jpg" class="js-avatar">
+			<img src="/img/logo.jpg" class="js-avatar">
 		</a>
 		<hgroup>
 		  <h1 class="header-author"><a href="/">Yue Xing</a></h1>
@@ -100,7 +98,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<div class="profilepic">
-				<img src="/assets/img/logo.jpg" class="js-avatar">
+				<img src="/img/logo.jpg" class="js-avatar">
 			</div>
 			<hgroup>
 			  <h1 class="header-author js-header-author">Yue Xing</h1>
@@ -278,19 +276,19 @@
 
 
   
-    <article id="post-react-redux" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-redux" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/14/react-redux/">react-redux</a>
+      <a class="article-title" href="/2017/09/14/redux/">redux</a>
     </h1>
   
 
         
-        <a href="/2017/09/14/react-redux/" class="archive-article-date">
+        <a href="/2017/09/14/redux/" class="archive-article-date">
   	<time datetime="2017-09-13T16:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-14</time>
 </a>
         
@@ -298,28 +296,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="react-redux提供了俩个最主要的功能"><a href="#react-redux提供了俩个最主要的功能" class="headerlink" title="react-redux提供了俩个最主要的功能"></a>react-redux提供了俩个最主要的功能</h3><blockquote>
-<p>connect : 连接容器组件和展示组件</p>
-<p>Provider: 提供包含store的context</p>
-</blockquote>
-<h1 id="Provider"><a href="#Provider" class="headerlink" title="Provider"></a>Provider</h1><p>在组件中导入store是非常不利于复用的，所以react提供了一个叫context的功能，能够完美解决这个问题。</p>
-<p>因为redux应用中只有一个store，因此所有的组件如果要使用store的话，只能访问这唯一的store,很自然，希望顶层的组件来扮演这个context提供者的角色，只要顶层组件提供包含store的context，那就覆盖了整个应用的所有组件。</p>
-<p>创建Provider.js</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">import &#123;PropTypes,Component&#125; from &apos;react&apos;</div><div class="line"></div><div class="line">class Provider extends Component&#123;</div><div class="line"></div><div class="line">    getChildContext()&#123;				//这个函数返回的就是代表context对象</div><div class="line">        return &#123;</div><div class="line">            store:this.props.store</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    render()&#123;</div><div class="line">        return this.props.children	//把渲染的工作交给子组件</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Provider.childContextTypes = &#123;</div><div class="line">  store: PropTypes.object</div><div class="line">&#125;;</div><div class="line"></div><div class="line">export default Provider</div></pre></td></tr></table></figure>
-<p>然后再入口文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;Provider store=&#123;store&#125;&gt;</div><div class="line">	&lt;CounterPanel /&gt;</div><div class="line">&lt;/Provider&gt;</div></pre></td></tr></table></figure>
-<p>底层组件使用</p>
-<p>为了让底层组件能够访问到context，必须给context-Types的类型和Provider.childContextTypes一样的值，俩者必须一致，不然就无法访问到context</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">CounterContainer.contextTypes = &#123;</div><div class="line">  store: PropTypes.object</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>还有构造函数里面必须带上context这个参数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">constructor(props,context)&#123;</div><div class="line">	super(props,context)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>然后我们就可以通过this.context.store来访问这个store</p>
-<h1 id="connect"><a href="#connect" class="headerlink" title="connect"></a>connect</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">export default connect(mapStateToTypes, mapDispatchToTypes)(Counter);</div></pre></td></tr></table></figure>
-<p>connect是react-redux提供的一个方法，这个方法接收俩个参数，mapStateToTypes和mapDispatchToTypes，执行结果依然是一个函数，然后才可以再后面又加一个括号，这个括号里面就是展示组件。</p>
-<h4 id="这个函数做了什么呢？"><a href="#这个函数做了什么呢？" class="headerlink" title="这个函数做了什么呢？"></a>这个函数做了什么呢？</h4><p>作为一个容器组件，做的事情无外乎就是俩件事情。</p>
+        <h2 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h2><p><img src="/img/redux.jpg" alt="redux"></p>
 <blockquote>
-<p>1.把store上的状态转化为内层展示组件的props</p>
-<p>2.把内存展示组件中的用户动作转化为派送给store的动作。</p>
+<p>1.用户通过dispath发出Action </p>
+<p>2.Store 自动调用 Reducer，并且传入两个参数：当前 State 和收到的 Action。 Reducer 会返回新的 State 。</p>
+<p>3.State 一旦有变化，Store 就会调用监听函数subscribe。</p>
 </blockquote>
 
       
@@ -344,7 +325,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/14/react-redux/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/09/14/redux/">展开全文 >></a>
         </p>
       
 
@@ -471,11 +452,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
