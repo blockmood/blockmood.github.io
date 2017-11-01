@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <link rel="stylesheet" href="/assets/img/pace-theme-flash.css">
   <script src="/assets/img/pace.min.js"></script>
-  <title>webpack之sass-loader模块加载 | Yue Xing</title>
+  <title>配置SSH Keys | Yue Xing</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="为了使用sass，我们需要安装sass的依赖包。1234$ npm install --save-dev sass-loader$ npm install --save-dev node-sass  //sass-loader依赖于node-sass，所以还要安装node-sass 当然了，使用样式的话，css-loader和style-loader也是必须的依赖包，如果没有安装，可以类似上述的方">
-<meta name="keywords" content="webpack">
+  <meta name="description" content="SSH密钥是一个用来识别值得信赖的电脑在进行GitHub一些操作时,不用输入密码。用户可以生成一个SSH密钥，并按照本节所述的方法将公共密钥添加到你的GitHub帐户。 我们建议你定期检查SSH密钥列表，并删除任何一个长时间没有使用的秘钥. 小贴士:如果你安装的有GitHub的桌面版 ，你可以用它来克隆库而不是进行SSH密钥处理。它还配备了Git的Bash的工具，这是在Windows上运行的git">
+<meta name="keywords" content="git">
 <meta property="og:type" content="article">
-<meta property="og:title" content="webpack之sass-loader模块加载">
-<meta property="og:url" content="http://yoursite.com/2017/06/01/webpack之sass-loader模块加载/index.html">
+<meta property="og:title" content="配置SSH Keys">
+<meta property="og:url" content="http://yoursite.com/2017/11/01/配置SSH Keys/index.html">
 <meta property="og:site_name" content="Yue Xing">
-<meta property="og:description" content="为了使用sass，我们需要安装sass的依赖包。1234$ npm install --save-dev sass-loader$ npm install --save-dev node-sass  //sass-loader依赖于node-sass，所以还要安装node-sass 当然了，使用样式的话，css-loader和style-loader也是必须的依赖包，如果没有安装，可以类似上述的方">
-<meta property="og:updated_time" content="2017-11-01T04:28:21.098Z">
+<meta property="og:description" content="SSH密钥是一个用来识别值得信赖的电脑在进行GitHub一些操作时,不用输入密码。用户可以生成一个SSH密钥，并按照本节所述的方法将公共密钥添加到你的GitHub帐户。 我们建议你定期检查SSH密钥列表，并删除任何一个长时间没有使用的秘钥. 小贴士:如果你安装的有GitHub的桌面版 ，你可以用它来克隆库而不是进行SSH密钥处理。它还配备了Git的Bash的工具，这是在Windows上运行的git">
+<meta property="og:updated_time" content="2017-11-01T04:52:22.575Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="webpack之sass-loader模块加载">
-<meta name="twitter:description" content="为了使用sass，我们需要安装sass的依赖包。1234$ npm install --save-dev sass-loader$ npm install --save-dev node-sass  //sass-loader依赖于node-sass，所以还要安装node-sass 当然了，使用样式的话，css-loader和style-loader也是必须的依赖包，如果没有安装，可以类似上述的方">
+<meta name="twitter:title" content="配置SSH Keys">
+<meta name="twitter:description" content="SSH密钥是一个用来识别值得信赖的电脑在进行GitHub一些操作时,不用输入密码。用户可以生成一个SSH密钥，并按照本节所述的方法将公共密钥添加到你的GitHub帐户。 我们建议你定期检查SSH密钥列表，并删除任何一个长时间没有使用的秘钥. 小贴士:如果你安装的有GitHub的桌面版 ，你可以用它来克隆库而不是进行SSH密钥处理。它还配备了Git的Bash的工具，这是在Windows上运行的git">
   
     <link rel="alternative" href="/atom.xml" title="Yue Xing" type="application/atom+xml">
   
@@ -152,32 +152,52 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-webpack之sass-loader模块加载" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-配置SSH Keys" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      webpack之sass-loader模块加载
+      配置SSH Keys
     </h1>
   
 
         
-        <a href="/2017/06/01/webpack之sass-loader模块加载/" class="archive-article-date">
-  	<time datetime="2017-06-01T06:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-01</time>
+        <a href="/2017/11/01/配置SSH Keys/" class="archive-article-date">
+  	<time datetime="2017-11-01T04:11:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-01</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>为了使用sass，我们需要安装sass的依赖包。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">$ npm install --save-dev sass-loader</div><div class="line"></div><div class="line">$ npm install --save-dev node-sass  //sass-loader依赖于node-sass，所以还要安装node-sass</div></pre></td></tr></table></figure></p>
-<p>当然了，使用样式的话，css-loader和style-loader也是必须的依赖包，如果没有安装，可以类似上述的方法安装</p>
-<p>css-loader使你能够使用类似@import 和 url(…)的方法实现 require()的功能；<br>style-loader将所有的计算后的样式加入页面中；<br>　　二者组合在一起使你能够把样式表嵌入webpack打包后的JS文件中。</p>
-<h3 id="webpack配置中的配置"><a href="#webpack配置中的配置" class="headerlink" title="webpack配置中的配置"></a>webpack配置中的配置</h3><p>只列举sass配置,前提是已经装了 css-loader和style-loader 并且已经配置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="built_in">test</span>: /\.scss$/,</div><div class="line">    use: [&#123;</div><div class="line">        loader: <span class="string">"style-loader"</span> // creates style nodes from JS strings</div><div class="line">    &#125;, &#123;</div><div class="line">        loader: <span class="string">"css-loader"</span> // translates CSS into CommonJS</div><div class="line">    &#125;, </div><div class="line">        loader: <span class="string">"sass-loader"</span> // compiles Sass to CSS</div><div class="line">    &#125;]</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import <span class="string">'../../css/test.scss'</span></div><div class="line"></div><div class="line">require(<span class="string">'../../css/test2.scss'</span>);</div></pre></td></tr></table></figure>
-<h3 id="文件中使用"><a href="#文件中使用" class="headerlink" title="文件中使用"></a>文件中使用</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;style lang=<span class="string">"scss"</span>&gt;</div><div class="line"></div><div class="line">&lt;/style&gt;</div></pre></td></tr></table></figure>
+        <p>SSH密钥是一个用来识别值得信赖的电脑在进行GitHub一些操作时,不用输入密码。用户可以生成一个SSH密钥，并按照本节所述的方法将公共密钥添加到你的GitHub帐户。</p>
+<p>我们建议你定期检查SSH密钥列表，并删除任何一个长时间没有使用的秘钥.</p>
+<p>小贴士:如果你安装的有GitHub的桌面版 ，你可以用它来克隆库而不是进行SSH密钥处理。它还配备了Git的Bash的工具，这是在Windows上运行的git命令的首选方式。</p>
+<h3 id="检测电脑中是否已有SSH-秘钥"><a href="#检测电脑中是否已有SSH-秘钥" class="headerlink" title="检测电脑中是否已有SSH 秘钥"></a>检测电脑中是否已有SSH 秘钥</h3><p>查看是否存在SSH秘钥<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ls -al ~/.ssh</div></pre></td></tr></table></figure></p>
+<p>默认情况下,公共秘钥的文件名是下列之一:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">id_dsa.pub</div><div class="line">id_ecdsa.pub</div><div class="line">id_ecdsa.pub</div><div class="line">id_ecdsa.pub</div></pre></td></tr></table></figure></p>
+<p>如果没有一个现有的公共和私有密钥，或者不希望使用任何可用的SSH秘钥来连接到GitHub上，请生成一个新的SSH密钥。</p>
+<h3 id="生成新的SSH密钥并将其添加到ssh-agent中"><a href="#生成新的SSH密钥并将其添加到ssh-agent中" class="headerlink" title="生成新的SSH密钥并将其添加到ssh-agent中"></a>生成新的SSH密钥并将其添加到ssh-agent中</h3><blockquote>
+<p>输入ssh-keygen -t rsa -b 4096 -C “your_email@example.com” (将邮箱替换为你自己的地址)</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh-keygen -t rsa -b 4096 -C &quot;your_email@example.com&quot; # Creates a new ssh key, using the provided email as a label Generating public/private rsa key pair.</div></pre></td></tr></table></figure>
+<blockquote>
+<p>当你提示“输入要保存密钥的文件”，然后按Enter键。接受默认文件位置。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Enter a file in which to save the key (/Users/you/.ssh/id_rsa): [Press enter]</div></pre></td></tr></table></figure>
+<blockquote>
+<p>在提示符下，键入一个安全密码(可以为空)。有关详细信息，请参阅“<a href="https://help.github.com/articles/working-with-ssh-key-passphrases/" target="_blank" rel="external">使用SSH密钥口令</a>”一节。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Enter passphrase (empty for no passphrase): [Type a passphrase] Enter same passphrase again: [Type passphrase again]</div></pre></td></tr></table></figure>
+<blockquote>
+<p>将ssh秘钥添加到 ssh-agent,在任意目录右键,选择Git Bash后输入命令确保ssh-agent的启用</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">start the ssh-agent in the background $ eval &quot;$(ssh-agent -s)&quot; Agent pid 59566</div></pre></td></tr></table></figure>
+<blockquote>
+<p>添加你的SSH密钥到ssh-agent 。如果你使用现有的SSH密钥，而不是生成新的SSH密钥，你需要替换现有的私有密钥文件的名称，以取代id_rsa的命令。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh-add ~/.ssh/id_rsa</div></pre></td></tr></table></figure>
       
 
       
@@ -190,7 +210,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">git</a>
         		</li>
       		
 		</ul>
@@ -246,7 +266,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/06/01/webpack之sass-loader模块加载/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/11/01/配置SSH Keys/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -260,18 +280,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/06/02/webpack+vue模块化构建项目/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          webpack+vue模块化构建项目
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/05/26/php ajax跨域问题最佳解决方案/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">php ajax跨域问题最佳解决方案</div>
+    <a href="/2017/10/26/react以函数为子组件/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">react以函数为子组件</div>
       <i class="icon-circle-right"></i>
     </a>
   

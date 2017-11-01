@@ -8,19 +8,14 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <link rel="stylesheet" href="/assets/img/pace-theme-flash.css">
   <script src="/assets/img/pace.min.js"></script>
-  <title>webpack之sass-loader模块加载 | Yue Xing</title>
+  <title>Tag: git | Yue Xing</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="为了使用sass，我们需要安装sass的依赖包。1234$ npm install --save-dev sass-loader$ npm install --save-dev node-sass  //sass-loader依赖于node-sass，所以还要安装node-sass 当然了，使用样式的话，css-loader和style-loader也是必须的依赖包，如果没有安装，可以类似上述的方">
-<meta name="keywords" content="webpack">
-<meta property="og:type" content="article">
-<meta property="og:title" content="webpack之sass-loader模块加载">
-<meta property="og:url" content="http://yoursite.com/2017/06/01/webpack之sass-loader模块加载/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Yue Xing">
+<meta property="og:url" content="http://yoursite.com/tags/git/index.html">
 <meta property="og:site_name" content="Yue Xing">
-<meta property="og:description" content="为了使用sass，我们需要安装sass的依赖包。1234$ npm install --save-dev sass-loader$ npm install --save-dev node-sass  //sass-loader依赖于node-sass，所以还要安装node-sass 当然了，使用样式的话，css-loader和style-loader也是必须的依赖包，如果没有安装，可以类似上述的方">
-<meta property="og:updated_time" content="2017-11-01T04:28:21.098Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="webpack之sass-loader模块加载">
-<meta name="twitter:description" content="为了使用sass，我们需要安装sass的依赖包。1234$ npm install --save-dev sass-loader$ npm install --save-dev node-sass  //sass-loader依赖于node-sass，所以还要安装node-sass 当然了，使用样式的话，css-loader和style-loader也是必须的依赖包，如果没有安装，可以类似上述的方">
+<meta name="twitter:title" content="Yue Xing">
   
     <link rel="alternative" href="/atom.xml" title="Yue Xing" type="application/atom+xml">
   
@@ -152,142 +147,61 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-webpack之sass-loader模块加载" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      webpack之sass-loader模块加载
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2017" class="archive-year">2017</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2017/11/01/配置SSH Keys/" class="archive-article-date">
+  	<time datetime="2017-11-01T04:11:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-01</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2017/11/01/配置SSH Keys/">配置SSH Keys</a>
     </h1>
   
 
-        
-        <a href="/2017/06/01/webpack之sass-loader模块加载/" class="archive-article-date">
-  	<time datetime="2017-06-01T06:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>为了使用sass，我们需要安装sass的依赖包。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">$ npm install --save-dev sass-loader</div><div class="line"></div><div class="line">$ npm install --save-dev node-sass  //sass-loader依赖于node-sass，所以还要安装node-sass</div></pre></td></tr></table></figure></p>
-<p>当然了，使用样式的话，css-loader和style-loader也是必须的依赖包，如果没有安装，可以类似上述的方法安装</p>
-<p>css-loader使你能够使用类似@import 和 url(…)的方法实现 require()的功能；<br>style-loader将所有的计算后的样式加入页面中；<br>　　二者组合在一起使你能够把样式表嵌入webpack打包后的JS文件中。</p>
-<h3 id="webpack配置中的配置"><a href="#webpack配置中的配置" class="headerlink" title="webpack配置中的配置"></a>webpack配置中的配置</h3><p>只列举sass配置,前提是已经装了 css-loader和style-loader 并且已经配置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="built_in">test</span>: /\.scss$/,</div><div class="line">    use: [&#123;</div><div class="line">        loader: <span class="string">"style-loader"</span> // creates style nodes from JS strings</div><div class="line">    &#125;, &#123;</div><div class="line">        loader: <span class="string">"css-loader"</span> // translates CSS into CommonJS</div><div class="line">    &#125;, </div><div class="line">        loader: <span class="string">"sass-loader"</span> // compiles Sass to CSS</div><div class="line">    &#125;]</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import <span class="string">'../../css/test.scss'</span></div><div class="line"></div><div class="line">require(<span class="string">'../../css/test2.scss'</span>);</div></pre></td></tr></table></figure>
-<h3 id="文件中使用"><a href="#文件中使用" class="headerlink" title="文件中使用"></a>文件中使用</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;style lang=<span class="string">"scss"</span>&gt;</div><div class="line"></div><div class="line">&lt;/style&gt;</div></pre></td></tr></table></figure>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">git</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/06/01/webpack之sass-loader模块加载/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
 
   
-<nav id="article-nav">
   
-    <a href="/2017/06/02/webpack+vue模块化构建项目/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          webpack+vue模块化构建项目
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2017/05/26/php ajax跨域问题最佳解决方案/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">php ajax跨域问题最佳解决方案</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
+    
 
 
           </div>
@@ -310,9 +224,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
-		isTag: false,
+		isTag: true,
 		isCategory: false,
 		open_in_new: false,
 		root: "/",

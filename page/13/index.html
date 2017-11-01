@@ -149,6 +149,67 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JavaScript之FileReader接口" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/06/JavaScript之FileReader接口/">JavaScript之FileReader接口</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/06/JavaScript之FileReader接口/" class="archive-article-date">
+  	<time datetime="2017-06-06T07:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>记得以前做网站时，曾经需要实现一个图片上传到服务器前，先预览的功能。当时用html的file标签一直实现不了，最后舍弃了这个标签，使用了其他方式来实现了这个功能。今天无意发现了一个知识点，用html的file标签就能实现图片上传前预览，感觉很棒，记录一下！就是通过file标签和js的FileReader接口，把选择的图片文件调用readAsDataURL方法，把图片数据转成base64字符串形式显示在页面上。</p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">&lt;div style=<span class="string">"border:2px dashed red;"</span>&gt;</div><div class="line">          &lt;p&gt;</div><div class="line">              图片上传前预览：&lt;input <span class="built_in">type</span>=<span class="string">"file"</span> id=<span class="string">"xdaTanFileImg"</span> onchange=<span class="string">"xmTanUploadImg(this)"</span>/&gt;</div><div class="line">          &lt;/p&gt;</div><div class="line">          &lt;img id=<span class="string">"xmTanImg"</span>/&gt;</div><div class="line">          &lt;div id=<span class="string">"xmTanDiv"</span>&gt;&lt;/div&gt;</div><div class="line">      &lt;/div&gt;</div><div class="line">      &lt;hr /&gt;</div><div class="line">      &lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span>&gt;            </div><div class="line">          //判断浏览器是否支持FileReader接口</div><div class="line">          <span class="keyword">if</span> (typeof FileReader == <span class="string">'undefined'</span>) &#123;</div><div class="line">              document.getElementById(<span class="string">"xmTanDiv"</span>).InnerHTML = <span class="string">"&lt;h1&gt;当前浏览器不支持FileReader接口&lt;/h1&gt;"</span>;</div><div class="line">              //使选择控件不可操作</div><div class="line">              document.getElementById(<span class="string">"xdaTanFileImg"</span>).setAttribute(<span class="string">"disabled"</span>, <span class="string">"disabled"</span>);</div><div class="line">          &#125;</div><div class="line"></div><div class="line">          //选择图片</div><div class="line">          <span class="keyword">function</span> xmTanUploadImg(obj) &#123;</div><div class="line">              var file = obj.files[0];</div><div class="line">              </div><div class="line">              console.log(obj);console.log(file);</div><div class="line">              console.log(<span class="string">"file.size = "</span> + file.size);  //file.size 单位为byte</div><div class="line"></div><div class="line">              var reader = new FileReader();</div><div class="line"></div><div class="line">              //读取文件过程方法</div><div class="line">              reader.onloadstart = <span class="keyword">function</span> (e) &#123;</div><div class="line">                  console.log(<span class="string">"开始读取...."</span>);</div><div class="line">              &#125;</div><div class="line">              reader.onprogress = <span class="keyword">function</span> (e) &#123;</div><div class="line">                  console.log(<span class="string">"正在读取中...."</span>);</div><div class="line">              &#125;</div><div class="line">              reader.onabort = <span class="keyword">function</span> (e) &#123;</div><div class="line">                  console.log(<span class="string">"中断读取...."</span>);</div><div class="line">              &#125;</div><div class="line">              reader.onerror = <span class="keyword">function</span> (e) &#123;</div><div class="line">                  console.log(<span class="string">"读取异常...."</span>);</div><div class="line">              &#125;</div><div class="line">              reader.onload = <span class="keyword">function</span> (e) &#123;</div><div class="line">                  console.log(<span class="string">"成功读取...."</span>);</div><div class="line"></div><div class="line">                  var img = document.getElementById(<span class="string">"xmTanImg"</span>);</div><div class="line">                  img.src = e.target.result;</div><div class="line">                  //或者 img.src = this.result;  //e.target == this</div><div class="line">              &#125;</div><div class="line">		//图片数据转成base64字符串形式。</div><div class="line">              reader.readAsDataURL(file)</div><div class="line">          &#125;</div><div class="line">      &lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>另外 FileReader除了有函数readAsDataURL，另外还有另外两个函数readAsBinaryString 和 readAsText，分别可以将选择的文件读取成二进制和文本格式 </p>
+<h3 id="代码实现-1"><a href="#代码实现-1" class="headerlink" title="代码实现"></a>代码实现</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line">&lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span>&gt;</div><div class="line">            //判断浏览器是否支持FileReader接口</div><div class="line">            <span class="keyword">if</span> (typeof FileReader == <span class="string">'undefined'</span>) &#123;</div><div class="line">                document.getElementById(<span class="string">"xmTanContentDiv"</span>).InnerHTML = <span class="string">"&lt;p&gt;当前浏览器不支持FileReader接口！&lt;/p&gt;"</span>;</div><div class="line">                document.getElementById(<span class="string">"xmTanFile"</span>).setAttribute(<span class="string">"disabled"</span>, <span class="string">"disabled"</span>);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            //选择文件</div><div class="line">            <span class="keyword">function</span> xmTanUploadFile(obj)&#123;</div><div class="line">                <span class="keyword">if</span> (obj.files.length &lt; 1) <span class="built_in">return</span>;</div><div class="line"></div><div class="line">                var file = obj.files[0];</div><div class="line">                </div><div class="line">                <span class="keyword">if</span> (file.size &gt; 1024 * 1024) &#123;</div><div class="line">                    alert(<span class="string">"文件大于1M， 太大了，小点吧！"</span>);</div><div class="line">                    obj.value = <span class="string">""</span>;</div><div class="line">                    <span class="built_in">return</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            //读取文件为二进制</div><div class="line">            <span class="keyword">function</span> <span class="function"><span class="title">readAsBinaryString</span></span>() &#123;</div><div class="line">                var obj = document.getElementById(<span class="string">"xmTanFile"</span>);</div><div class="line">                <span class="keyword">if</span> (obj.files.length &lt; 1) <span class="built_in">return</span>;</div><div class="line"></div><div class="line">                var file = obj.files[0];</div><div class="line">                var reader = new FileReader();</div><div class="line"></div><div class="line">                //将文件以二进制形式读入页面</div><div class="line">                reader.readAsBinaryString(file);</div><div class="line">                reader.onload = <span class="keyword">function</span> (f) &#123;</div><div class="line">                    document.getElementById(<span class="string">"xmTanContentDiv"</span>).innerHTML = this.result;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            //读取文件为文本</div><div class="line">            <span class="keyword">function</span> <span class="function"><span class="title">readAsText</span></span>() &#123;</div><div class="line">                var obj = document.getElementById(<span class="string">"xmTanFile"</span>);</div><div class="line">                <span class="keyword">if</span> (obj.files.length &lt; 1) <span class="built_in">return</span>;</div><div class="line"></div><div class="line">                var file = obj.files[0];</div><div class="line">                var reader = new FileReader();</div><div class="line"></div><div class="line">                //将文件以文本形式读入页面</div><div class="line">                reader.readAsText(file);</div><div class="line">                reader.onload = <span class="keyword">function</span> (f) &#123;</div><div class="line">                    document.getElementById(<span class="string">"xmTanContentDiv"</span>).innerHTML = this.result;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &lt;/script&gt;</div><div class="line">        &lt;div style=<span class="string">"border: 2px dashed red; padding: 20px 0px;"</span>&gt;</div><div class="line">            &lt;label&gt;选择文件：&lt;/label&gt;</div><div class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"file"</span> id=<span class="string">"xmTanFile"</span> accept=<span class="string">".html,.js,.css,.txt,.cs,.xml"</span> onchange=<span class="string">"xmTanUploadFile(this)"</span>/&gt;</div><div class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"button"</span> value=<span class="string">"读取成二进制数据"</span> onclick=<span class="string">"readAsBinaryString()"</span> /&gt;</div><div class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"button"</span> value=<span class="string">"读取成文本数据"</span> onclick=<span class="string">"readAsText()"</span> /&gt;</div><div class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"button"</span> value=<span class="string">"隐藏读取内容"</span> onclick=<span class="string">"document.getElementById('xmTanContentDiv').style.display = 'none';"</span>/&gt;</div><div class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"button"</span> value=<span class="string">"显示读取内容"</span> onclick=<span class="string">"document.getElementById('xmTanContentDiv').style.display = 'block';"</span>/&gt;</div><div class="line">            &lt;div id=<span class="string">"xmTanContentDiv"</span>&gt;&lt;/div&gt;</div><div class="line">        &lt;/div&gt;</div></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/06/JavaScript之FileReader接口/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-webpack+vue模块化构建项目" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -278,71 +339,9 @@
 
 
   
-    <article id="post-php ajax跨域问题最佳解决方案" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/26/php ajax跨域问题最佳解决方案/">php ajax跨域问题最佳解决方案</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/26/php ajax跨域问题最佳解决方案/" class="archive-article-date">
-  	<time datetime="2017-05-26T08:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>本文通过设置Access-Control-Allow-Origin来实现跨域,例如：客户端的域名是<code>client.runoob.com</code>，而请求的域名是<code>server.runoob.com</code>。如果直接使用ajax访问，会有以下错误：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">XMLHttpRequest cannot load http://server.runoob.com/server.php. No <span class="string">'Access-Control-Allow-Origin'</span> header is present on the requested resource.Origin <span class="string">'http://client.runoob.com'</span> is therefore not allowed access.</div></pre></td></tr></table></figure></p>
-<h3 id="1、允许单个域名访问"><a href="#1、允许单个域名访问" class="headerlink" title="1、允许单个域名访问"></a>1、允许单个域名访问</h3><p>指定某域名<code>http://client.runoob.com</code>跨域访问，则只需在<code>http://server.runoob.com/server.php</code>文件头部添加如下代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">header(<span class="string">'Access-Control-Allow-Origin:http://client.runoob.com'</span>);</div></pre></td></tr></table></figure></p>
-<h3 id="2、允许多个域名访问"><a href="#2、允许多个域名访问" class="headerlink" title="2、允许多个域名访问"></a>2、允许多个域名访问</h3><p>指定多个域名 <code>http://client1.runoob.com</code>、 <code>http://client2.runoob.com</code>等跨域访问，则只需在<code>http://server.runoob.com/server.php</code>文件头部添加如下代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$origin</span> = isset(<span class="variable">$_SERVER</span>[<span class="string">'HTTP_ORIGIN'</span>])? <span class="variable">$_SERVER</span>[<span class="string">'HTTP_ORIGIN'</span>] : <span class="string">''</span>;  </div><div class="line">  </div><div class="line"><span class="variable">$allow_origin</span> = array(  </div><div class="line">    <span class="string">'http://client1.runoob.com'</span>,  </div><div class="line">    <span class="string">'http://client2.runoob.com'</span>  </div><div class="line">);  </div><div class="line">  </div><div class="line"><span class="keyword">if</span>(in_array(<span class="variable">$origin</span>, <span class="variable">$allow_origin</span>))&#123;  </div><div class="line">    header(<span class="string">'Access-Control-Allow-Origin:'</span>.<span class="variable">$origin</span>);       </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="3、允许所有域名访问"><a href="#3、允许所有域名访问" class="headerlink" title="3、允许所有域名访问"></a>3、允许所有域名访问</h3><p>允许所有域名访问则只需在<code>http://server.runoob.com/server.php</code>文件头部添加如下代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">header(<span class="string">'Access-Control-Allow-Origin:*'</span>);</div></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">php</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/26/php ajax跨域问题最佳解决方案/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/12/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/14/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/12/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/14/">Next &raquo;</a>
     </nav>
   
 
@@ -473,6 +472,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">react</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
             
             <div class="clearfix"></div>
