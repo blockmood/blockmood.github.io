@@ -147,6 +147,70 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-利用reselect来缓存数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/12/利用reselect来缓存数据/">利用reselect提高数据获取性能</a>
+    </h1>
+  
+
+        
+        <a href="/2017/10/12/利用reselect来缓存数据/" class="archive-article-date">
+  	<time datetime="2017-10-12T07:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>首先安装对应的包<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install --save reselect</div></pre></td></tr></table></figure></p>
+<p>原理：<br>只要相关状态没有改变，那就直接使用上一次的缓存结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">import &#123;createSelector&#125; from &apos;reselect&apos;;</div><div class="line">import &#123;FilterTypes&#125; from &apos;../constants.js&apos;;</div><div class="line"></div><div class="line">const getFilter = (state) =&gt; state.filter;</div><div class="line">const getTodos = (state) =&gt; state.todos;</div><div class="line"></div><div class="line">export const selectVisibleTodos = createSelector(</div><div class="line">  [getFilter, getTodos],</div><div class="line">  (filter, todos) =&gt; &#123;</div><div class="line">    switch (filter) &#123;</div><div class="line">      case FilterTypes.ALL:</div><div class="line">        return todos;</div><div class="line">      case FilterTypes.COMPLETED:</div><div class="line">        return todos.filter(item =&gt; item.completed);</div><div class="line">      case FilterTypes.UNCOMPLETED:</div><div class="line">        return todos.filter(item =&gt; !item.completed);</div><div class="line">      default:</div><div class="line">        throw new Error(&apos;unsupported filter&apos;);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">);</div></pre></td></tr></table></figure>
+<p>reselect 提供了createSelector函数选择器，这是高阶函数，也就是接收函数作为参数来产生一个新函数的函数。<br>createSelector第一个参数是一个函数数组，每个元素代表了选择器需要做的映射计算（这里原理是当前的状态和之前的状态做比较，如果相同，就把数据缓存起来，就不会执行第二个函数，如果不同，才会执行第二个函数做重新计算），例子里提供了俩个函数getFilter和getTodos，对应代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">const getFilter = (state) =&gt; state.filter;</div><div class="line">const getTodos = (state) =&gt; state.todos;</div></pre></td></tr></table></figure></p>
+<p>createSelector第二个参数代表的是一个计算过程，参数为第一个参数的输出结果。</p>
+<p>Redux要求每个reducer不能修改state的状态，如果要返回一个新的状态，就必须返回一个新的对象。如此一来，Redux Store状态树上的某一个节点如果没有变化，那么这个节点下的数据就肯定没有变化，应用在reselect中，也就是第一个参数的原理，直接缓存运算结果。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/10/12/利用reselect来缓存数据/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-react组件函数式还是模块式区分" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -276,70 +340,6 @@
 
 
   
-    <article id="post-redux" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/14/redux/">redux</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/14/redux/" class="archive-article-date">
-  	<time datetime="2017-09-13T16:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h2><p><img src="/img/redux.jpg" alt="redux"></p>
-<blockquote>
-<p>1.用户通过dispath发出Action </p>
-<p>2.Store 自动调用 Reducer，并且传入两个参数：当前 State 和收到的 Action。 Reducer 会返回新的 State 。</p>
-<p>3.State 一旦有变化，Store 就会调用监听函数subscribe。</p>
-</blockquote>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">redux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/14/redux/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
@@ -436,6 +436,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">react-router</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">javascript</a>
               </li>
              
@@ -452,11 +456,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">

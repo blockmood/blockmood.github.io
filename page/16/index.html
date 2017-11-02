@@ -147,6 +147,68 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-vue-scroller列表上拉下拉加载更多" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/22/vue-scroller列表上拉下拉加载更多/">vue-scroller列表上拉下拉加载更多</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/22/vue-scroller列表上拉下拉加载更多/" class="archive-article-date">
+  	<time datetime="2017-05-22T14:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>我个人觉得官方例子特别好,直接上案例: <a href="https://github.com/wangdahoo/vue-scroller-demo" target="_blank" rel="external">链接地址</a>   <a href="https://wangdahoo.github.io/vue-scroller/#/" target="_blank" rel="external">演示地址</a></p>
+<h3 id="demo的使用方法"><a href="#demo的使用方法" class="headerlink" title="demo的使用方法"></a>demo的使用方法</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ npm install</div><div class="line">$ npm run dev</div></pre></td></tr></table></figure>
+<h3 id="在项目中的使用"><a href="#在项目中的使用" class="headerlink" title="在项目中的使用"></a>在项目中的使用</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$import</span> Vue from <span class="string">'vue'</span></div><div class="line"><span class="variable">$import</span> VueScroller from <span class="string">'vue-scroller'</span></div><div class="line"><span class="variable">$Vue</span>.use(VueScroller)</div></pre></td></tr></table></figure>
+<h3 id="源码说明"><a href="#源码说明" class="headerlink" title="源码说明"></a>源码说明</h3><p>以下例子中，你只需要看我标注的函数即可,我们可以理解为钩子函数，实际项目中我们只会用到这几个函数，至于其余的代码均为官方提供。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">  &lt;div id=<span class="string">"app"</span>&gt;</div><div class="line">    &lt;div class=<span class="string">"header"</span>&gt;</div><div class="line">      &lt;h1 class=<span class="string">"title"</span>&gt;Refresh &amp; Infinite&lt;/h1&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line"></div><div class="line">    &lt;scroller style=<span class="string">"top: 44px"</span></div><div class="line">      :on-refresh=<span class="string">"refresh"</span></div><div class="line">      :on-infinite=<span class="string">"infinite"</span>&gt;</div><div class="line">      &lt;div v-for=<span class="string">"(item, index) in items"</span> class=<span class="string">"row"</span> :class=<span class="string">"&#123;'grey-bg': index % 2 == 0&#125;"</span>&gt;</div><div class="line">        &#123;&#123; item &#125;&#125;</div><div class="line">      &lt;/div&gt;</div><div class="line">    &lt;/scroller&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/template&gt;</div><div class="line">&lt;script&gt;</div><div class="line">  import Vue from <span class="string">'vue'</span></div><div class="line">  import VueScroller from <span class="string">'vue-scroller'</span></div><div class="line">  Vue.use(VueScroller)</div><div class="line">  <span class="built_in">export</span> default &#123;</div><div class="line">    <span class="function"><span class="title">data</span></span>() &#123;</div><div class="line">      <span class="built_in">return</span> &#123;</div><div class="line">        items: []</div><div class="line">      &#125;</div><div class="line">    &#125;,</div><div class="line">    <span class="function"><span class="title">mounted</span></span>() &#123;		// 默认初始化加载 </div><div class="line">    	<span class="keyword">for</span> (var i = 1; i &lt;= 20; i++) &#123;</div><div class="line">        this.items.push(i + <span class="string">' - keep walking, be 2 with you.'</span>)</div><div class="line">      &#125;</div><div class="line">      this.top = 1</div><div class="line">      this.bottom = 20</div><div class="line">    &#125;,</div><div class="line">    methods: &#123;      //上拉加载函数  </div><div class="line">      refresh (<span class="keyword">done</span>) &#123;</div><div class="line">        setTimeout(() =&gt; &#123;</div><div class="line">          var start = this.top - 1</div><div class="line">          <span class="keyword">for</span> (var i = start; i &gt; start - 10; i--) &#123;</div><div class="line">            this.items.splice(0, 0, i + <span class="string">' - keep walking, be 2 with you.'</span>)</div><div class="line">          &#125;</div><div class="line">          this.top = this.top - 10</div><div class="line">          <span class="keyword">done</span>()</div><div class="line">        &#125;, 1500)</div><div class="line">      &#125;,</div><div class="line">      infinite (<span class="keyword">done</span>) &#123; //下拉加载函数 </div><div class="line">        setTimeout(() =&gt; &#123;</div><div class="line">          var start = this.bottom + 1</div><div class="line">          <span class="keyword">for</span> (var i = start; i &lt; start + 10; i++) &#123;</div><div class="line">            this.items.push(i + <span class="string">' - keep walking, be 2 with you.'</span>)</div><div class="line">          &#125;</div><div class="line">          this.bottom = this.bottom + 10</div><div class="line">          <span class="keyword">done</span>()</div><div class="line">        &#125;, 1500)</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/22/vue-scroller列表上拉下拉加载更多/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-vue-router在项目中如何正确配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -273,76 +335,6 @@
 
 
   
-    <article id="post-JavaScript之闭包详解篇" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/17/JavaScript之闭包详解篇/">JavaScript之闭包详解篇</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/17/JavaScript之闭包详解篇/" class="archive-article-date">
-  	<time datetime="2017-05-17T12:42:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>再看本篇之前需要有作用域的知识，如果您还不懂作用域，请看本人上一篇文章 <a href="https://blockmood.github.io/2017/05/16/JavaScript%E4%B9%8B%E4%BD%9C%E7%94%A8%E5%9F%9F%E8%AF%A6%E8%A7%A3%E7%AF%87/" target="_blank" rel="external">JavaScript之作用域详解篇</a></p>
-<h3 id="利用闭包突破作用域链"><a href="#利用闭包突破作用域链" class="headerlink" title="利用闭包突破作用域链"></a>利用闭包突破作用域链</h3><p>上篇文章中我们说到了可以利用闭包突破作用域链，那么首先我来介绍一个闭包这个概念，先上代码。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var a = 1;</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">f</span></span>()&#123;</div><div class="line">	var b =2;</div><div class="line">	<span class="keyword">function</span> <span class="function"><span class="title">n</span></span>()&#123;</div><div class="line">		var c = 3;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>首先我说一下全局作用域，可以将其看做是一个包含一切的宇宙，其中可以包含各种变量和函数等等，但是每个函数也有一个自己的作用域，用于存储一些别的变量和函数，现在我们假设a变量在全局作用域中，变量b在函数f()作用域中，变量c在函数n()作用域中,但是n函数也在f()函数作用域中，在这里呢，我们可以访问的作用域为全局，函数f()，函数n(),其中变量a和变量b之间是不连通的，因为变量b在函数f()以外是不可见的，但是我们可以将变量c和变量b连通起来，或者也可以说将函数n()和变量b连接起来，当我们将函数n()的作用域扩展到f()以外，并且止步于全局空间以内的时候，这个时候就产生了闭包。</p>
-<p>函数n()会和变量a一样，置身于全局作用域，而且函数有一个特点，就是说它还记得被定义时所处于的环境，因此，它仍然可以访问函数f()作用域中的b变量,因为现在函数n和变量a都处于同一个作用域，但是函数n()可以访问变量b，但是变量a则不可以。</p>
-<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>下面我们来看一个函数</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">f</span></span>()&#123;</div><div class="line">	var b = <span class="string">'b'</span>;</div><div class="line">	<span class="built_in">return</span> <span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">		<span class="built_in">return</span> b;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这个函数含有了一个局部变量b，它在全局是不可见的，</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">console.log(b);</div><div class="line">输出：b is not defined</div></pre></td></tr></table></figure>
-<p>接下来我们看一个函数f的返回值，它是另外的一个函数,我们可以把它看成是上面讲的函数n，该函数有自己的私用空间，同时也可以访问函数f()的空间和全局空间，所以变量b对他来说是可见的，因为函数f()时可以在全局中被调用的（它是一个全局函数），所以我们可以把它的返回值赋值给另外的一个全局变量，这个时候呢就生成了一个可以访问函数f()私有空间的一个新的全局函数，直接看代码。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var n = f();</div><div class="line">console.log(n());</div><div class="line">输出:b</div></pre></td></tr></table></figure>
-<p>今天先写这么多，更深层次的后面再讲。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/17/JavaScript之闭包详解篇/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/15/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/17/">Next &raquo;</a>
@@ -439,6 +431,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">react-router</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">javascript</a>
               </li>
              
@@ -455,11 +451,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">

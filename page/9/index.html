@@ -147,6 +147,144 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-gulp + webpack 构建多页面前端项目" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/05/gulp + webpack 构建多页面前端项目/">gulp + webpack 构建多页面前端项目</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/05/gulp + webpack 构建多页面前端项目/" class="archive-article-date">
+  	<time datetime="2017-07-05T11:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-05</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前在使用gulp和webpack对项目进行构建的时候遇到了一些问题，最终算是搭建了一套比较完整的解决方案，接下来这篇文章以一个实际项目为例子，讲解多页面项目中如何利用gulp和webpack进行工程化构建。本文是自己的实践经验，所以有些解决方案并不是最优的，仍在探索优化中。所以有什么错误疏漏请随时指出。</p>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>现在为什么又整了一个webpack进来呢？</p>
+<p>我们知道webpack近来都比较火，那他火的原因是什么，有什么特别屌的功能吗？带着这些疑问，继续看下去。</p>
+<p>在使用gulp进行项目构建的时候，我们一开始的策略是将所有js打包为一个文件，所有css打包为一个文件。然后每个页面都将只加载一个js和一个css,也就是我们通常所说的 ==all in one== 打包模式。这样做的目的就是减少http请求。这个方案对于简单的前端项目来说的是一个万金油。因为通常页面依赖的js,css并不会太大，通过压缩和gzip等方法更加减小了文件的体积。在项目最开始的一段时间内（几个月甚至更长），一个前端团队都能通过这种办法达到以不变应万变的效果。</p>
+<p>然而，作为一个有追求（爱折腾）的前端，难道就满足于此吗？</p>
+<p>妈妈说我不仅要请求合并，还要按需加载，我要模块化开发，还要自动监听文件更新，支持图片自动合并….</p>
+<p>等等！你真的需要这些功能吗？是项目真的遇到了性能问题？不然你整这些干嘛？</p>
+<p>对于pc端应用来说，性能往往不是最突出的问题，因为pc端的网速，浏览器性能都有比较好，所以很长一段时间我们要考虑的是开发效率的问题而不是性能问题，得在前端框架的选型上下功夫。至于加载文件的大小或文件个数，都难以形成性能瓶颈。</p>
+<p>对于wap端来说，限制于手机的慢网速（仍然有很多用不上4g，wifi的人），对网站的性能要求就比较苛刻了，这时候就不仅仅要考虑开发效率的问题了。（移动网络的性能问题可参考《web性能权威指南》）</p>
+<p>这点我有不一样的看法。如果我们在项目搭建的时候就能考虑得多一点，把基本能做的先做了。所花的成本绝对比以后去重构代码的成本要低很多，而且我们能够同时保证开发效率和网站性能，何乐而不为呢。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>竟然要做，那要做到什么程度呢，往往“度”是最难把握的东西。</p>
+<p>以前在做wap网站的时候，遇到的最大的问题按需加载和请求合并的权衡。<br>通过纯前端的方法不能同时满足请求合并和按需加载，这里面的原理和难点已经有大牛讲得很清楚了 前端工程与模块化框架</p>
+<p>实现的方法归纳起来主要有以下步骤：</p>
+<ul>
+<li>通过工具分析出前端静态文件依赖表</li>
+<li>页面通过模块化工具加载入口文件，并将所依赖的所有文件合并为combo请求。</li>
+<li>后端返回combo文件，浏览器将模块缓存起来，跳页面的时候执行步骤2，只请求没有缓存过的文件。</li>
+</ul>
+<p>如此通过依赖分析和后端combo实现了按需加载和请求合并。</p>
+<p>这种实现方式的缺陷就是需要后端的支持，如果前端团队本身不是自己实现的后端路由层，需要后端同学加以配合，就需要更多沟通成本。</p>
+<p>在没有后端支持的情况下，很难实现按需加载和请求合并。</p>
+<p>针对这个问题webpack有没有什么解决方案？而webpack和gulp又是怎么协作的呢？请看下去。</p>
+<h3 id="webpack的使用"><a href="#webpack的使用" class="headerlink" title="webpack的使用"></a>webpack的使用</h3><p>webpack可以说是一个大而全的前端构建工具。它实现了模块化开发和静态文件处理两大问题。</p>
+<p>以往我们要在项目中支持模块化开发，需要引入requirejs，seajs等模块加载框架。而webpack天生支持AMD，CommonJS, ES6 module等模块规范。不用思考加载器的选型，可以直接像写nodejs一样写模块。而webpack这种万物皆模块的思想好像就是为React而生的，在React组件中可以直接引入css或图片，而做到这一切只需要一个require语句和loader的配置。</p>
+<p>webpack的功能之多和繁杂的配置项会让初学者感到眼花缭乱，网上的很多资料也是只介绍功能不教人实用技巧。这里有一篇文章就讲解了webpack开发的workflow, 虽然该教程是基于React的，但是比较完整地讲了webpack的开发流程。下面我也用一个实例讲解使用中遇到的问题和解决方案。</p>
+<p>我们的项目是一个多页面项目，即每个页面为一个html，访问不同的页面需要跳转链接。项目目录结构大概是这样的，app放html文件，css为样式文件，images存放图片，js下有不同的文件夹，里面的子文件夹为一些核心文件和一些库文件，ui组件。js的根目录为页面入口文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">├── app</div><div class="line">│   ├── header.inc</div><div class="line">│   ├── <span class="built_in">help</span>-charge.inc</div><div class="line">│   ├── index.html</div><div class="line">│   ├── news-detail.html</div><div class="line">│   └── news-list.html</div><div class="line">├── css</div><div class="line">│   ├── icon.less</div><div class="line">│   └── slider.css</div><div class="line">├── images</div><div class="line">└── js</div><div class="line">    ├── core</div><div class="line">    ├── lib</div><div class="line">    ├── ui</div><div class="line">    ├── news-detail.js</div><div class="line">    ├── news-list.js</div><div class="line">    └── main.js</div></pre></td></tr></table></figure>
+<p>该项目中我们只用webpack处理js文件的合并压缩。其他任务交给gulp。关于多页面项目和单页面项目中js处理的差异请看这里。</p>
+<h4 id="配置文件如下："><a href="#配置文件如下：" class="headerlink" title="配置文件如下："></a>配置文件如下：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">module.exports = &#123;</div><div class="line">    devtool: <span class="string">"source-map"</span>,    //生成sourcemap,便于开发调试</div><div class="line">    entry: getEntry(),         //获取项目入口js文件</div><div class="line">    output: &#123;</div><div class="line">        path: path.join(__dirname, <span class="string">"dist/js/"</span>), //文件输出目录</div><div class="line">        publicPath: <span class="string">"dist/js/"</span>,        //用于配置文件发布路径，如CDN或本地服务器</div><div class="line">        filename: <span class="string">"[name].js"</span>,        //根据入口文件输出的对应多个文件名</div><div class="line">    &#125;,</div><div class="line">    module: &#123;</div><div class="line">        //各种加载器，即让各种文件格式可用require引用</div><div class="line">        loaders: [</div><div class="line">            // &#123; <span class="built_in">test</span>: /\.css$/, loader: <span class="string">"style-loader!css-loader"</span>&#125;,</div><div class="line">            // &#123; <span class="built_in">test</span>: /\.less$/, loader: <span class="string">"style-loader!csss-loader!less-loader"</span>&#125;</div><div class="line">        ]</div><div class="line">    &#125;,</div><div class="line">    resolve: &#123;</div><div class="line">        //配置别名，在项目中可缩减引用路径</div><div class="line">        <span class="built_in">alias</span>: &#123;</div><div class="line">            jquery: srcDir + <span class="string">"/js/lib/jquery.min.js"</span>,</div><div class="line">            core: srcDir + <span class="string">"/js/core"</span>,</div><div class="line">            ui: srcDir + <span class="string">"/js/ui"</span></div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    plugins: [</div><div class="line">        //提供全局的变量，在模块中使用无需用require引入</div><div class="line">        new webpack.ProvidePlugin(&#123;</div><div class="line">            jQuery: <span class="string">"jquery"</span>,</div><div class="line">            $: <span class="string">"jquery"</span>,</div><div class="line">            // nie: <span class="string">"nie"</span></div><div class="line">        &#125;),</div><div class="line">        //将公共代码抽离出来合并为一个文件</div><div class="line">        new CommonsChunkPlugin(<span class="string">'common.js'</span>),</div><div class="line">        //js文件的压缩</div><div class="line">        new uglifyJsPlugin(&#123;</div><div class="line">            compress: &#123;</div><div class="line">                warnings: <span class="literal">false</span></div><div class="line">            &#125;</div><div class="line">        &#125;)</div><div class="line">    ]</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p><a href="https://github.com/webpack/docs/wiki/configuration#configuration-object-content" target="_blank" rel="external">配置项参考文档</a></p>
+<h3 id="打包思路："><a href="#打包思路：" class="headerlink" title="打包思路："></a>打包思路：</h3><p>该配置方案的思路是每个页面一个入口文件，文件中可以通过require引入其他模块，而这些模块webpack会自动跟入口文件合并为一个文件。通过getEntry获取入口文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">getEntry</span></span>() &#123;</div><div class="line">    var jsPath = path.resolve(srcDir, <span class="string">'js'</span>);</div><div class="line">    var <span class="built_in">dirs</span> = fs.readdirSync(jsPath);</div><div class="line">    var matchs = [], files = &#123;&#125;;</div><div class="line">    dirs.forEach(<span class="keyword">function</span> (item) &#123;</div><div class="line">        matchs = item.match(/(.+)\.js$/);</div><div class="line">        <span class="keyword">if</span> (matchs) &#123;</div><div class="line">            files[matchs[1]] = path.resolve(srcDir, <span class="string">'js'</span>, item);</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    <span class="built_in">return</span> files;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该方法将生成文件名到文件绝对路径的map， 比如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">entry：&#123;</div><div class="line">    news-detail: /../Document/project/.../news-detail.js</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后output就会在output.path路径下生成[name].js，即news-detail.js,文件名保持相同。</p>
+<p>module 的作用是添加loaders, 那loaders有什么作用呢？<br>如果我们想要在js文件中通过require引入模块，比如css或image，那么就需要在这里配置加载器，这一点对于React来说相当方便，因为可以在组件中使用模块化CSS。而一般的项目中可以不用到这个加载器。</p>
+<p>resolve 中的alias可以用于定义别名，用过seajs等模块工具的都知道alias的作用，比如我们在这里定义了ui这个别名，那么在模块中想引用ui目录下的文件，就可以直接这样写</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">require(<span class="string">'ui/dialog.js'</span>);</div></pre></td></tr></table></figure>
+<p>不用加上前面的更长的文件路径。</p>
+<p>plugin 用于引入一些插件，常见的有 这些<br>我们这里使用了CommonsChunkPlugin用于生成公用代码，不只可以生成一个，还能根据不同页面的文件关系，自由生成多个，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">var CommonsChunkPlugin = require(<span class="string">"webpack/lib/optimize/CommonsChunkPlugin"</span>);</div><div class="line">module.exports = &#123;</div><div class="line">    entry: &#123;</div><div class="line">        p1: <span class="string">"./page1"</span>,</div><div class="line">        p2: <span class="string">"./page2"</span>,</div><div class="line">        p3: <span class="string">"./page3"</span>,</div><div class="line">        ap1: <span class="string">"./admin/page1"</span>,</div><div class="line">        ap2: <span class="string">"./admin/page2"</span></div><div class="line">    &#125;,</div><div class="line">    output: &#123;</div><div class="line">        filename: <span class="string">"[name].js"</span></div><div class="line">    &#125;,</div><div class="line">    plugins: [</div><div class="line">        new CommonsChunkPlugin(<span class="string">"admin-commons.js"</span>, [<span class="string">"ap1"</span>, <span class="string">"ap2"</span>]),</div><div class="line">        new CommonsChunkPlugin(<span class="string">"commons.js"</span>, [<span class="string">"p1"</span>, <span class="string">"p2"</span>, <span class="string">"admin-commons.js"</span>])</div><div class="line">    ]</div><div class="line">&#125;;</div><div class="line">// 在不同页面用&lt;script&gt;标签引入如下js:</div><div class="line">// page1.html: commons.js, p1.js</div><div class="line">// page2.html: commons.js, p2.js</div><div class="line">// page3.html: p3.js</div><div class="line">// admin-page1.html: commons.js, admin-commons.js, ap1.js</div><div class="line">// admin-page2.html: commons.js, admin-commons.js, ap2.js</div></pre></td></tr></table></figure>
+<p>这种用法有点像gulp或grunt中手动将多个js合并为common, 但是在webpack里，这个过程是全自动生成的，不用我们自己分析代码的依赖关系。但是这种按需加载的弊端也十分明显，需要人工配置需要提取的文件。另外一个插件是uglifyJsPlugin，用于压缩js代码。</p>
+<p>我们还用到一个字段是 devtool, 用于配置开发工具。‘source-map’就是在生成的代码中加入sourceMap的支持。能够直接定位到出错代码的具体位置，对sourcemap的使用和原理还不了解的可以看下<a href="http://www.ruanyifeng.com/blog/2013/01/javascript_source_map.html" target="_blank" rel="external">这篇文章</a>。<br>另外，devtool的配置参数使用在<a href="http://webpack.github.io/docs/configuration.html#devtool" target="_blank" rel="external">这里</a>。</p>
+<h3 id="如何加载第三方库？"><a href="#如何加载第三方库？" class="headerlink" title="如何加载第三方库？"></a>如何加载第三方库？</h3><p>在pc开发中我们通常会用到jQuery库。如何很好地处理这类文件呢？这里有两种办法。</p>
+<p>方法一 是在html中用script标签引入js文件，如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script src=<span class="string">"https://code.jquery.com/jquery-git2.min.js"</span>&gt;&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>然后再配置文件中添加externals</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">externals: &#123; jquery: <span class="string">"jQuery"</span> &#125;</div></pre></td></tr></table></figure>
+<p>该字段的作用是将加jQuery全局变量变为模块可引入。然后在各个模块中，就可以如下使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var $ = require(<span class="string">"jquery"</span>);</div></pre></td></tr></table></figure>
+<p>我个人觉得既然已经将加jQuery通过script引入了，那么就直接使用$标签就行了。不必再将其转化为模块。</p>
+<p>方法二 是将jQuery代码保存到本地，在配置文件中添加：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">resolve: &#123; <span class="built_in">alias</span>: &#123; jquery: <span class="string">"/path/to/jquery-git2.min.js"</span> &#125; &#125;</div></pre></td></tr></table></figure>
+<p>即为jquery添加了别名，然后在模块中也是这样使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var $ = require(<span class="string">"jquery"</span>);</div></pre></td></tr></table></figure>
+<p>还可以配合使用ProvidePlugin，其作用是提供全局变量给每个模块，这样就不需要在模块中通过require引入，例如：使用前:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">var _ = require(<span class="string">"underscore"</span>);</div><div class="line">_.size(...);</div></pre></td></tr></table></figure>
+<p>使用后：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">plugins: [</div><div class="line">  new webpack.ProvidePlugin(&#123;</div><div class="line">    <span class="string">"_"</span>: <span class="string">"underscore"</span></div><div class="line">  &#125;)</div><div class="line">]</div><div class="line"></div><div class="line">// If you use <span class="string">"_"</span>, underscore is automatically required</div><div class="line">_.size(...)</div></pre></td></tr></table></figure>
+<p>总的来说，如果文件来自CDN，那么使用方法一，如果文件在本地，则用方法二。</p>
+<h3 id="gulp足够优秀"><a href="#gulp足够优秀" class="headerlink" title="gulp足够优秀"></a>gulp足够优秀</h3><p>目前来说，我们只利用webpack进行了js方面的打包，其他功能用gulp就足够了。gulp主要做了下面几个工作：</p>
+<ul>
+<li>css转化合并压缩</li>
+<li>图片的雪碧图合并和base64</li>
+<li>文件md5计算与替换</li>
+<li>热启动，浏览器自动刷新</li>
+</ul>
+<p>下列是依赖的npm模块：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="string">"devDependencies"</span>: &#123;</div><div class="line">    <span class="string">"gulp"</span>: <span class="string">"^3.8.10"</span>,</div><div class="line">    <span class="string">"gulp-clean"</span>: <span class="string">"0.3.1"</span>,</div><div class="line">    <span class="string">"gulp-concat"</span>: <span class="string">"2.6.0"</span>,</div><div class="line">    <span class="string">"gulp-connect"</span>: <span class="string">"2.2.0"</span>,</div><div class="line">    <span class="string">"gulp-css-base64"</span>: <span class="string">"^1.3.2"</span>,</div><div class="line">    <span class="string">"gulp-css-spriter"</span>: <span class="string">"^0.3.3"</span>,</div><div class="line">    <span class="string">"gulp-cssmin"</span>: <span class="string">"0.1.7"</span>,</div><div class="line">    <span class="string">"gulp-file-include"</span>: <span class="string">"0.13.7"</span>,</div><div class="line">    <span class="string">"gulp-less"</span>: <span class="string">"3.0.3"</span>,</div><div class="line">    <span class="string">"gulp-md5-plus"</span>: <span class="string">"0.1.8"</span>,</div><div class="line">    <span class="string">"gulp-open"</span>: <span class="string">"1.0.0"</span>,</div><div class="line">    <span class="string">"gulp-uglify"</span>: <span class="string">"1.4.2"</span>,</div><div class="line">    <span class="string">"gulp-util"</span>: <span class="string">"~2.2.9"</span>,</div><div class="line">    <span class="string">"gulp-watch"</span>: <span class="string">"4.1.0"</span>,</div><div class="line">    <span class="string">"webpack"</span>: <span class="string">"~1.0.0-beta6"</span></div><div class="line">  &#125;,</div></pre></td></tr></table></figure>
+<h3 id="支持雪碧图合并和base64"><a href="#支持雪碧图合并和base64" class="headerlink" title="支持雪碧图合并和base64"></a>支持雪碧图合并和base64</h3><p>我对gulp-css-spriter和gulp-css-base64的源码做了一点修改，使其支持下面的语法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">.icon_corner_new&#123;</div><div class="line">    background-image: url(../images/new-ico.png?__sprite);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果在url的后面加上__sprite后缀,则插件将会把该图片合并到雪碧图里。可以支持一个css文件合并为一个雪碧图，也可以整站合并。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">.icon_corner_new&#123;</div><div class="line">    background-image: url(../images/new-ico.png?__inline);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果加上后缀__inline,则会将图片转化为base64,直接添加到css文件中，对于几k的小文件可以直接使用inline操作。具体配置代码如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">gulp.task(<span class="string">'sprite'</span>, <span class="keyword">function</span> (<span class="keyword">done</span>) &#123;</div><div class="line">    var timestamp = +new Date();</div><div class="line">    gulp.src(<span class="string">'dist/css/style.min.css'</span>)</div><div class="line">        .pipe(spriter(&#123;</div><div class="line">            spriteSheet: <span class="string">'dist/images/spritesheet'</span> + timestamp + <span class="string">'.png'</span>,</div><div class="line">            pathToSpriteSheetFromCSS: <span class="string">'../images/spritesheet'</span> + timestamp + <span class="string">'.png'</span>,</div><div class="line">            spritesmithOptions: &#123;</div><div class="line">                padding: 10</div><div class="line">            &#125;</div><div class="line">        &#125;))</div><div class="line">        .pipe(base64())</div><div class="line">        // .pipe(cssmin())</div><div class="line">        .pipe(gulp.dest(<span class="string">'dist/css'</span>))</div><div class="line">        .on(<span class="string">'end'</span>, <span class="keyword">done</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>src为需要处理的css文件，spriteSheet为雪碧图生成的目标文件夹，pathToSpriteSheetFromCSS为css文件中url的替换字符串，spritesmithOptions是生成雪碧图的间隙。</p>
+<h3 id="文件加md5-实现发布更新"><a href="#文件加md5-实现发布更新" class="headerlink" title="文件加md5, 实现发布更新"></a>文件加md5, 实现发布更新</h3><p>发版本的时候为了避免浏览器读取了旧的缓存文件，需要为其添加md5戳。这里采用了gulp-md5-plus</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">gulp.task(<span class="string">'md5:js'</span>, <span class="keyword">function</span> (<span class="keyword">done</span>) &#123;</div><div class="line">    gulp.src(<span class="string">'dist/js/*.js'</span>)</div><div class="line">        .pipe(md5(10, <span class="string">'dist/app/*.html'</span>))</div><div class="line">        .pipe(gulp.dest(<span class="string">'dist/js'</span>))</div><div class="line">        .on(<span class="string">'end'</span>, <span class="keyword">done</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>该代码会将dist/js下面所有的js计算md5戳，并将dist/app/下的html中script中的src引用文件名替换为加了md5的文件名，再将md5文件替换到目标目录dist/js。css的md5操作跟js无异。</p>
+<p>关于服务器启动和代码转换的功能点，这里就不展开讲了。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/05/gulp + webpack 构建多页面前端项目/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-JavaScript深入之执行上下文" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -316,97 +454,6 @@
 
 
   
-    <article id="post-JavaScript深入之变量对象" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/01/JavaScript深入之变量对象/">JavaScript深入之变量对象</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/01/JavaScript深入之变量对象/" class="archive-article-date">
-  	<time datetime="2017-07-01T01:12:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在上篇<a href="https://blockmood.github.io/2017/07/01/JavaScript%E6%B7%B1%E5%85%A5%E4%B9%8B%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E6%A0%88/" target="_blank" rel="external">JavaScript深入之执行上下文栈</a>中讲到，当 JavaScript 代码执行一段可执行代码(executable code)时，会创建对应的执行上下文(execution context)。<br>对于每个执行上下文，都有三个重要属性：</p>
-<p>变量对象(Variable object，VO)<br>作用域链(Scope chain)<br>this<br>今天重点讲讲创建变量对象的过程。</p>
-<h3 id="变量对象"><a href="#变量对象" class="headerlink" title="变量对象"></a>变量对象</h3><p>变量对象是与执行上下文相关的数据作用域，存储了在上下文中定义的变量和函数声明。</p>
-<p>因为不同执行上下文下的变量对象稍有不同，所以我们来聊聊全局上下文下的变量对象和函数上下文下的变量对象。</p>
-<h3 id="函数上下文"><a href="#函数上下文" class="headerlink" title="函数上下文"></a>函数上下文</h3><p>函数上下文中，我们用活动对象(activation object, AO)来表示变量对象。</p>
-<p>活动对象和变量对象其实是一个东西，只是变量对象是规范上的或者说是引擎实现上的，不可在 JavaScript 环境中访问，只有到当进入一个执行上下文中，这个执行上下文的变量对象才会被激活，所以才叫 activation object 呐，而只有被激活的变量对象，也就是活动对象上的各种属性才能被访问。</p>
-<p>活动对象是在进入函数上下文时刻被创建的，它通过函数的 arguments 属性初始化。arguments 属性值是 Arguments 对象。</p>
-<h3 id="执行过程"><a href="#执行过程" class="headerlink" title="执行过程"></a>执行过程</h3><p>执行上下文的代码会分成两个阶段进行处理：分析和执行，我们也可以叫做：</p>
-<p>1.进入执行上下文<br>2.代码执行</p>
-<h3 id="进入执行上下文"><a href="#进入执行上下文" class="headerlink" title="进入执行上下文"></a>进入执行上下文</h3><p>当进入执行上下文时，这时候还没有执行代码，</p>
-<p>变量对象会包括：</p>
-<p>1.函数的所有形参 (如果是函数上下文)<br>    由名称和对应值组成的一个变量对象的属性被创建<br>    没有实参，属性值设为 undefined</p>
-<p>2.函数声明<br>由名称和对应值（函数对象(function-object)）组成一个变量对象的属性被创建<br>如果变量对象已经存在相同名称的属性，则完全替换这个属性</p>
-<p>3.变量声明<br>由名称和对应值（undefined）组成一个变量对象的属性被创建；<br>如果变量名称跟已经声明的形式参数或函数相同，则变量声明不会干扰已经存在的这类属性。</p>
-<p>举个例子：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> foo(a) &#123;</div><div class="line">  var b = 2;</div><div class="line">  <span class="keyword">function</span> <span class="function"><span class="title">c</span></span>() &#123;&#125;</div><div class="line">  var d = <span class="function"><span class="title">function</span></span>() &#123;&#125;;</div><div class="line"></div><div class="line">  b = 3;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">foo(1);</div></pre></td></tr></table></figure></p>
-<p>在进入执行上下文后，这时候的 AO 是：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">AO = &#123;</div><div class="line">    arguments: &#123;</div><div class="line">        0: 1,</div><div class="line">        length: 1</div><div class="line">    &#125;,</div><div class="line">    a: 1,</div><div class="line">    b: undefined,</div><div class="line">    c: reference to <span class="keyword">function</span> <span class="function"><span class="title">c</span></span>()&#123;&#125;,</div><div class="line">    d: undefined</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="代码执行"><a href="#代码执行" class="headerlink" title="代码执行"></a>代码执行</h3><p>在代码执行阶段，会顺序执行代码，根据代码，修改变量对象的值</p>
-<p>还是上面的例子，当代码执行完后，这时候的 AO 是：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">AO = &#123;</div><div class="line">    arguments: &#123;</div><div class="line">        0: 1,</div><div class="line">        length: 1</div><div class="line">    &#125;,</div><div class="line">    a: 1,</div><div class="line">    b: 3,</div><div class="line">    c: reference to <span class="keyword">function</span> <span class="function"><span class="title">c</span></span>()&#123;&#125;,</div><div class="line">    d: reference to FunctionExpression <span class="string">"d"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>到这里变量对象的创建过程就介绍完了，让我们简洁的总结我们上述所说：</p>
-<p>全局上下文的变量对象初始化是全局对象</p>
-<p>函数上下文的变量对象初始化只包括 Arguments 对象</p>
-<p>在进入执行上下文时会给变量对象添加形参、函数声明、变量声明等初始的属性值</p>
-<p>在代码执行阶段，会再次修改变量对象的属性值</p>
-<h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">foo</span></span>() &#123;</div><div class="line">    console.log(a);</div><div class="line">    a = 1;</div><div class="line">&#125;</div><div class="line"></div><div class="line">foo(); // ???</div><div class="line"></div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">bar</span></span>() &#123;</div><div class="line">    a = 1;</div><div class="line">    console.log(a);</div><div class="line">&#125;</div><div class="line">bar(); // ???</div></pre></td></tr></table></figure>
-<p>第一段会报错：Uncaught ReferenceError: a is not defined。</p>
-<p>第二段会打印：1。</p>
-<p>这是因为函数中的 “a” 并没有通过 var 关键字声明，所有不会被存放在 AO 中。</p>
-<p>第一段执行 console 的时候， AO 的值是：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">AO = &#123;</div><div class="line">    arguments: &#123;</div><div class="line">        length: 0</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>没有 a 的值，然后就会到全局去找，全局也没有，所以会报错。</p>
-<p>当第二段执行 console 的时候，全局对象已经被赋予了 a 属性，这时候就可以从全局找到 a 的值，所以会打印 1。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">console.log(foo);</div><div class="line"></div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">foo</span></span>()&#123;</div><div class="line">    console.log(<span class="string">"foo"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line">var foo = 1;</div></pre></td></tr></table></figure>
-<p>会打印函数，而不是 undefined 。</p>
-<p>这是因为在进入执行上下文时，首先会处理函数声明，其次会处理变量声明，如果如果变量名称跟已经声明的形式参数或函数相同，则变量声明不会干扰已经存在的这类属性。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/01/JavaScript深入之变量对象/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/10/">Next &raquo;</a>
@@ -503,6 +550,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">react-router</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">javascript</a>
               </li>
              
@@ -519,11 +570,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">

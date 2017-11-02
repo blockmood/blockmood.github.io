@@ -147,6 +147,72 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JavaScript中defer的作用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/13/JavaScript中defer的作用/">JavaScript中defer的作用</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/13/JavaScript中defer的作用/" class="archive-article-date">
+  	<time datetime="2017-06-13T05:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-13</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>很多人都已经把 Javascript的用的炉火纯青了，但见到defer未必就知道他是做什么用的；很多人也都遇到过这样的问题，需要直接执行别且操作DOM对象的js 总是报找不到对象的错误，原因大家也都知道就是页面还有没有加载完毕，js的操作对象还在下载中。但很多人都不知道，添加defer标签就能轻而易举的解决这个问题。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;script src=<span class="string">"../CGI-bin/delscript.js"</span> defer&gt;&lt;/script&gt;</div><div class="line">中的defer作用是文档加载完毕了再执行脚本,这样回避免找不到对象的问题---有点问题</div><div class="line"></div><div class="line">&lt;button id=<span class="string">"myButton"</span> onclick=<span class="string">"alert('ok')"</span>&gt;<span class="built_in">test</span>&lt;/button&gt;</div><div class="line">&lt;script&gt;</div><div class="line">myButton.click();</div><div class="line">&lt;/script&gt;</div><div class="line"></div><div class="line">&lt;script&gt;</div><div class="line">myButton.click();</div><div class="line">&lt;/script&gt;</div><div class="line">&lt;button id=<span class="string">"myButton"</span> onclick=<span class="string">"alert('ok')"</span>&gt;<span class="built_in">test</span>&lt;/button&gt;</div><div class="line"></div><div class="line">&lt;script defer&gt;</div><div class="line"><span class="keyword">function</span> document.body.<span class="function"><span class="title">onload</span></span>() &#123;</div><div class="line">alert(document.body.offsetHeight);</div><div class="line">&#125;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<p>加上 defer 等于在页面完全在入后再执行，相当于 window.onload ，但应用上比 window.onload 更灵活！<br>defer是脚本程序强大功能中的一个“无名英雄”。它告诉浏览器Script段包含了无需立即执行的代码，并且，与SRC属性联合使用，它还可以使这些脚本在后台被下载，前台的内容则正常显示给用户。<br>–但是 文档加载完毕了再执行脚本</p>
+<p>请注意两点：<br>1、不要在defer型的脚本程序段中调用document.write命令，因为document.write将产生直接输出效果。<br>2、而且，不要在defer型脚本程序段中包括任何立即执行脚本要使用的全局变量或者函数。 </p>
+<p>一个常用的优化性能的方法是：当脚本不需要立即运行时，在<code>&lt;SCRIPT&gt;</code>标签中设置“defer”属性。 (立即脚本没有被包含在一个function块中,因此会在加载过程中执行。) 设置“defer”属性后，IE就不必等待该脚本装载和执行完毕。这样页面加载会更快。一般来说，这也表明立即脚本最好放在function块中，并在 document或者body对象的onload 句柄中处理该函数。在有一些脚本需要依赖用户操作而执行时—-例如点击按钮，或者移动鼠标到某个区域—-使用该属性非常有用。但当有一些脚本需要在页面加载过程中或加载完成后执行，使用defer属性得到的好处就不太大。</p>
+<p><code>script</code>中的defer属性默认情况下是false的。按照DHTML编程宝典中的描述，对于Defer属性是这样写的：<br>Using the attribute at design time can improve the download performance of a page because the browser does not need to parse and execute the script and can continue downloading and parsing the page instead.<br>也就是说：如果是编写脚本的时候加入defer属性，那么浏览器在下载脚本的时候就不必立即对其进行处理，而是继续对页面进行下载和解析，这样会提高下载的性能。<br>这样的情况有很多种。比如你定义了很多javascript变量，或者在引用文件（.inc）中写了很多的脚本需要处理，那不妨在这些脚本中加入defer属性，对性能的提高肯定有所帮助。<br>举例如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;script language=<span class="string">"javascript"</span> defer&gt;</div><div class="line">var object = new Object();</div><div class="line">....</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<p>因为defer属性默认是为false的，那么在这里<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script language=<span class="string">"javascript"</span> defer&gt;</div></pre></td></tr></table></figure></p>
+<p>显式声明defer属性后等同于<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script language=<span class="string">"javascript"</span> defer=<span class="literal">true</span>&gt;</div></pre></td></tr></table></figure></p>
+<p>声明了defer属性之后，需要判断是否有别的变量引用了defer脚本块中的变量，否则的话会导致脚本错误的产生。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/13/JavaScript中defer的作用/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-es6之数组扩展" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -301,80 +367,6 @@
 
 
   
-    <article id="post-es6之箭头函数" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/07/es6之箭头函数/">es6之箭头函数</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/07/es6之箭头函数/" class="archive-article-date">
-  	<time datetime="2017-06-07T01:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h3><p>ES6允许使用“箭头”（=&gt;）定义函数。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">var f = v =&gt; v;</div><div class="line">//等同于</div><div class="line">var f = <span class="keyword">function</span>(v) &#123;</div><div class="line">  <span class="built_in">return</span> v;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
-<p>如果箭头函数不需要参数或需要多个参数，就使用一个圆括号代表参数部分。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var f = () =&gt; 5;</div><div class="line">// 等同于</div><div class="line">var f = <span class="function"><span class="title">function</span></span> () &#123; <span class="built_in">return</span> 5 &#125;;</div><div class="line"></div><div class="line">var sum = (num1, num2) =&gt; num1 + num2;</div><div class="line">// 等同于</div><div class="line">var sum = <span class="keyword">function</span>(num1, num2) &#123;</div><div class="line">  <span class="built_in">return</span> num1 + num2;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
-<p>如果箭头函数的代码块部分多于一条语句，就要使用大括号将它们括起来，并且使用return语句返回。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var sum = (num1, num2) =&gt; &#123; <span class="built_in">return</span> num1 + num2; &#125;</div></pre></td></tr></table></figure></p>
-<p>由于大括号被解释为代码块，所以如果箭头函数直接返回一个对象，必须在对象外面加上括号。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var getTempItem = id =&gt; (&#123; id: id, name: <span class="string">"Temp"</span> &#125;);</div></pre></td></tr></table></figure></p>
-<p>箭头函数可以与变量解构结合使用。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">const full = (&#123; first, last &#125;) =&gt; first + <span class="string">' '</span> + last;</div><div class="line">// 等同于</div><div class="line"><span class="keyword">function</span> full(person) &#123;</div><div class="line">  <span class="built_in">return</span> person.first + <span class="string">' '</span> + person.last;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="使用注意点"><a href="#使用注意点" class="headerlink" title="使用注意点"></a>使用注意点</h3><p>箭头函数有几个使用注意点。</p>
-<p>（1）函数体内的this对象，就是定义时所在的对象，而不是使用时所在的对象。</p>
-<p>（2）不可以当作构造函数，也就是说，不可以使用new命令，否则会抛出一个错误。</p>
-<p>（3）不可以使用arguments对象，该对象在函数体内不存在。如果要用，可以用Rest参数代替。</p>
-<p>（4）不可以使用yield命令，因此箭头函数不能用作Generator函数。</p>
-<p>this指向的固定化，并不是因为箭头函数内部有绑定this的机制，实际原因是箭头函数根本没有自己的this，导致内部的this就是外层代码块的this。正是因为它没有this，所以也就不能用作构造函数。<br>除了this，以下三个变量在箭头函数之中也是不存在的，指向外层函数的对应变量：arguments、super、new.target。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">foo</span></span>() &#123;</div><div class="line">  setTimeout(() =&gt; &#123;</div><div class="line">    console.log(<span class="string">'args:'</span>, arguments);</div><div class="line">  &#125;, 100);</div><div class="line">&#125;</div><div class="line"></div><div class="line">foo(2, 4, 6, 8)</div><div class="line">// args: [2, 4, 6, 8]</div></pre></td></tr></table></figure></p>
-<p>上面代码中，箭头函数内部的变量arguments，其实是函数foo的arguments变量,另外，由于箭头函数没有自己的this，所以当然也就不能用call()、apply()、bind()这些方法去改变this的指向。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="title">function</span></span>() &#123;</div><div class="line">  <span class="built_in">return</span> [</div><div class="line">    (() =&gt; this.x).<span class="built_in">bind</span>(&#123; x: <span class="string">'inner'</span> &#125;)()</div><div class="line">  ];</div><div class="line">&#125;).call(&#123; x: <span class="string">'outer'</span> &#125;);</div><div class="line">// [<span class="string">'outer'</span>]</div></pre></td></tr></table></figure></p>
-<p>上面代码中，箭头函数没有自己的this，所以bind方法无效，内部的this指向外部的this。长期以来，JavaScript语言的this对象一直是一个令人头痛的问题，在对象方法中使用this，必须非常小心。箭头函数”绑定”this，很大程度上解决了这个困扰。</p>
-<h3 id="箭头函数与常规函数对比"><a href="#箭头函数与常规函数对比" class="headerlink" title="箭头函数与常规函数对比"></a>箭头函数与常规函数对比</h3><p>一个箭头函数与一个普通的函数在两个方面不一样：</p>
-<p>下列变量的构造是词法的： arguments ， super ， this ， new.target<br>不能被用作构造函数：没有内部方法 [[Construct]] （该方法允许普通的函数通过 new 调用），也没有 prototype 属性。因此， new (() =&gt; {}) 会抛出错误。<br>除了那些意外，箭头函数和普通的函数没有明显的区别。例如， typeof 和 instanceof 产生同样的结果：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">typeof () =&gt; &#123;&#125;</div><div class="line">//<span class="string">'function'</span></div><div class="line">() =&gt; &#123;&#125; instanceof Function</div><div class="line">//<span class="literal">true</span></div><div class="line"></div><div class="line">typeof <span class="function"><span class="title">function</span></span> () &#123;&#125;</div><div class="line">//<span class="string">'function'</span></div><div class="line"><span class="function"><span class="title">function</span></span> () &#123;&#125; instanceof Function</div><div class="line">//<span class="literal">true</span></div></pre></td></tr></table></figure></p>
-<p>函数表达式和对象字面量是例外，这种情形下必须放在括号里面，因为它们看起来像是函数声明和代码块。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">es6</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/07/es6之箭头函数/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/11/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/13/">Next &raquo;</a>
@@ -471,6 +463,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">react-router</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">javascript</a>
               </li>
              
@@ -487,11 +483,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">

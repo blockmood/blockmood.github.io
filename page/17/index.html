@@ -147,6 +147,76 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JavaScript之闭包详解篇" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/17/JavaScript之闭包详解篇/">JavaScript之闭包详解篇</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/17/JavaScript之闭包详解篇/" class="archive-article-date">
+  	<time datetime="2017-05-17T12:42:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>再看本篇之前需要有作用域的知识，如果您还不懂作用域，请看本人上一篇文章 <a href="https://blockmood.github.io/2017/05/16/JavaScript%E4%B9%8B%E4%BD%9C%E7%94%A8%E5%9F%9F%E8%AF%A6%E8%A7%A3%E7%AF%87/" target="_blank" rel="external">JavaScript之作用域详解篇</a></p>
+<h3 id="利用闭包突破作用域链"><a href="#利用闭包突破作用域链" class="headerlink" title="利用闭包突破作用域链"></a>利用闭包突破作用域链</h3><p>上篇文章中我们说到了可以利用闭包突破作用域链，那么首先我来介绍一个闭包这个概念，先上代码。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var a = 1;</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">f</span></span>()&#123;</div><div class="line">	var b =2;</div><div class="line">	<span class="keyword">function</span> <span class="function"><span class="title">n</span></span>()&#123;</div><div class="line">		var c = 3;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先我说一下全局作用域，可以将其看做是一个包含一切的宇宙，其中可以包含各种变量和函数等等，但是每个函数也有一个自己的作用域，用于存储一些别的变量和函数，现在我们假设a变量在全局作用域中，变量b在函数f()作用域中，变量c在函数n()作用域中,但是n函数也在f()函数作用域中，在这里呢，我们可以访问的作用域为全局，函数f()，函数n(),其中变量a和变量b之间是不连通的，因为变量b在函数f()以外是不可见的，但是我们可以将变量c和变量b连通起来，或者也可以说将函数n()和变量b连接起来，当我们将函数n()的作用域扩展到f()以外，并且止步于全局空间以内的时候，这个时候就产生了闭包。</p>
+<p>函数n()会和变量a一样，置身于全局作用域，而且函数有一个特点，就是说它还记得被定义时所处于的环境，因此，它仍然可以访问函数f()作用域中的b变量,因为现在函数n和变量a都处于同一个作用域，但是函数n()可以访问变量b，但是变量a则不可以。</p>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>下面我们来看一个函数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">f</span></span>()&#123;</div><div class="line">	var b = <span class="string">'b'</span>;</div><div class="line">	<span class="built_in">return</span> <span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">		<span class="built_in">return</span> b;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个函数含有了一个局部变量b，它在全局是不可见的，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">console.log(b);</div><div class="line">输出：b is not defined</div></pre></td></tr></table></figure>
+<p>接下来我们看一个函数f的返回值，它是另外的一个函数,我们可以把它看成是上面讲的函数n，该函数有自己的私用空间，同时也可以访问函数f()的空间和全局空间，所以变量b对他来说是可见的，因为函数f()时可以在全局中被调用的（它是一个全局函数），所以我们可以把它的返回值赋值给另外的一个全局变量，这个时候呢就生成了一个可以访问函数f()私有空间的一个新的全局函数，直接看代码。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var n = f();</div><div class="line">console.log(n());</div><div class="line">输出:b</div></pre></td></tr></table></figure>
+<p>今天先写这么多，更深层次的后面再讲。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/17/JavaScript之闭包详解篇/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-JavaScript之作用域详解篇" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -310,6 +380,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">react-router</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">javascript</a>
               </li>
              
@@ -326,11 +400,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">

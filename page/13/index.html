@@ -147,6 +147,80 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-es6之箭头函数" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/07/es6之箭头函数/">es6之箭头函数</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/07/es6之箭头函数/" class="archive-article-date">
+  	<time datetime="2017-06-07T01:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h3><p>ES6允许使用“箭头”（=&gt;）定义函数。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">var f = v =&gt; v;</div><div class="line">//等同于</div><div class="line">var f = <span class="keyword">function</span>(v) &#123;</div><div class="line">  <span class="built_in">return</span> v;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>如果箭头函数不需要参数或需要多个参数，就使用一个圆括号代表参数部分。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var f = () =&gt; 5;</div><div class="line">// 等同于</div><div class="line">var f = <span class="function"><span class="title">function</span></span> () &#123; <span class="built_in">return</span> 5 &#125;;</div><div class="line"></div><div class="line">var sum = (num1, num2) =&gt; num1 + num2;</div><div class="line">// 等同于</div><div class="line">var sum = <span class="keyword">function</span>(num1, num2) &#123;</div><div class="line">  <span class="built_in">return</span> num1 + num2;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>如果箭头函数的代码块部分多于一条语句，就要使用大括号将它们括起来，并且使用return语句返回。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var sum = (num1, num2) =&gt; &#123; <span class="built_in">return</span> num1 + num2; &#125;</div></pre></td></tr></table></figure></p>
+<p>由于大括号被解释为代码块，所以如果箭头函数直接返回一个对象，必须在对象外面加上括号。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var getTempItem = id =&gt; (&#123; id: id, name: <span class="string">"Temp"</span> &#125;);</div></pre></td></tr></table></figure></p>
+<p>箭头函数可以与变量解构结合使用。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">const full = (&#123; first, last &#125;) =&gt; first + <span class="string">' '</span> + last;</div><div class="line">// 等同于</div><div class="line"><span class="keyword">function</span> full(person) &#123;</div><div class="line">  <span class="built_in">return</span> person.first + <span class="string">' '</span> + person.last;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="使用注意点"><a href="#使用注意点" class="headerlink" title="使用注意点"></a>使用注意点</h3><p>箭头函数有几个使用注意点。</p>
+<p>（1）函数体内的this对象，就是定义时所在的对象，而不是使用时所在的对象。</p>
+<p>（2）不可以当作构造函数，也就是说，不可以使用new命令，否则会抛出一个错误。</p>
+<p>（3）不可以使用arguments对象，该对象在函数体内不存在。如果要用，可以用Rest参数代替。</p>
+<p>（4）不可以使用yield命令，因此箭头函数不能用作Generator函数。</p>
+<p>this指向的固定化，并不是因为箭头函数内部有绑定this的机制，实际原因是箭头函数根本没有自己的this，导致内部的this就是外层代码块的this。正是因为它没有this，所以也就不能用作构造函数。<br>除了this，以下三个变量在箭头函数之中也是不存在的，指向外层函数的对应变量：arguments、super、new.target。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">foo</span></span>() &#123;</div><div class="line">  setTimeout(() =&gt; &#123;</div><div class="line">    console.log(<span class="string">'args:'</span>, arguments);</div><div class="line">  &#125;, 100);</div><div class="line">&#125;</div><div class="line"></div><div class="line">foo(2, 4, 6, 8)</div><div class="line">// args: [2, 4, 6, 8]</div></pre></td></tr></table></figure></p>
+<p>上面代码中，箭头函数内部的变量arguments，其实是函数foo的arguments变量,另外，由于箭头函数没有自己的this，所以当然也就不能用call()、apply()、bind()这些方法去改变this的指向。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="title">function</span></span>() &#123;</div><div class="line">  <span class="built_in">return</span> [</div><div class="line">    (() =&gt; this.x).<span class="built_in">bind</span>(&#123; x: <span class="string">'inner'</span> &#125;)()</div><div class="line">  ];</div><div class="line">&#125;).call(&#123; x: <span class="string">'outer'</span> &#125;);</div><div class="line">// [<span class="string">'outer'</span>]</div></pre></td></tr></table></figure></p>
+<p>上面代码中，箭头函数没有自己的this，所以bind方法无效，内部的this指向外部的this。长期以来，JavaScript语言的this对象一直是一个令人头痛的问题，在对象方法中使用this，必须非常小心。箭头函数”绑定”this，很大程度上解决了这个困扰。</p>
+<h3 id="箭头函数与常规函数对比"><a href="#箭头函数与常规函数对比" class="headerlink" title="箭头函数与常规函数对比"></a>箭头函数与常规函数对比</h3><p>一个箭头函数与一个普通的函数在两个方面不一样：</p>
+<p>下列变量的构造是词法的： arguments ， super ， this ， new.target<br>不能被用作构造函数：没有内部方法 [[Construct]] （该方法允许普通的函数通过 new 调用），也没有 prototype 属性。因此， new (() =&gt; {}) 会抛出错误。<br>除了那些意外，箭头函数和普通的函数没有明显的区别。例如， typeof 和 instanceof 产生同样的结果：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">typeof () =&gt; &#123;&#125;</div><div class="line">//<span class="string">'function'</span></div><div class="line">() =&gt; &#123;&#125; instanceof Function</div><div class="line">//<span class="literal">true</span></div><div class="line"></div><div class="line">typeof <span class="function"><span class="title">function</span></span> () &#123;&#125;</div><div class="line">//<span class="string">'function'</span></div><div class="line"><span class="function"><span class="title">function</span></span> () &#123;&#125; instanceof Function</div><div class="line">//<span class="literal">true</span></div></pre></td></tr></table></figure></p>
+<p>函数表达式和对象字面量是例外，这种情形下必须放在括号里面，因为它们看起来像是函数声明和代码块。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">es6</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/07/es6之箭头函数/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-JavaScript之FileReader接口" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -274,69 +348,6 @@
 
 
   
-    <article id="post-webpack之sass-loader模块加载" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/01/webpack之sass-loader模块加载/">webpack之sass-loader模块加载</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/01/webpack之sass-loader模块加载/" class="archive-article-date">
-  	<time datetime="2017-06-01T06:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>为了使用sass，我们需要安装sass的依赖包。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">$ npm install --save-dev sass-loader</div><div class="line"></div><div class="line">$ npm install --save-dev node-sass  //sass-loader依赖于node-sass，所以还要安装node-sass</div></pre></td></tr></table></figure></p>
-<p>当然了，使用样式的话，css-loader和style-loader也是必须的依赖包，如果没有安装，可以类似上述的方法安装</p>
-<p>css-loader使你能够使用类似@import 和 url(…)的方法实现 require()的功能；<br>style-loader将所有的计算后的样式加入页面中；<br>　　二者组合在一起使你能够把样式表嵌入webpack打包后的JS文件中。</p>
-<h3 id="webpack配置中的配置"><a href="#webpack配置中的配置" class="headerlink" title="webpack配置中的配置"></a>webpack配置中的配置</h3><p>只列举sass配置,前提是已经装了 css-loader和style-loader 并且已经配置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="built_in">test</span>: /\.scss$/,</div><div class="line">    use: [&#123;</div><div class="line">        loader: <span class="string">"style-loader"</span> // creates style nodes from JS strings</div><div class="line">    &#125;, &#123;</div><div class="line">        loader: <span class="string">"css-loader"</span> // translates CSS into CommonJS</div><div class="line">    &#125;, </div><div class="line">        loader: <span class="string">"sass-loader"</span> // compiles Sass to CSS</div><div class="line">    &#125;]</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import <span class="string">'../../css/test.scss'</span></div><div class="line"></div><div class="line">require(<span class="string">'../../css/test2.scss'</span>);</div></pre></td></tr></table></figure>
-<h3 id="文件中使用"><a href="#文件中使用" class="headerlink" title="文件中使用"></a>文件中使用</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;style lang=<span class="string">"scss"</span>&gt;</div><div class="line"></div><div class="line">&lt;/style&gt;</div></pre></td></tr></table></figure>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/01/webpack之sass-loader模块加载/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/12/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/14/">Next &raquo;</a>
@@ -433,6 +444,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">react-router</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">javascript</a>
               </li>
              
@@ -449,11 +464,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">

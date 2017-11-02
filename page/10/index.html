@@ -147,6 +147,97 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JavaScript深入之变量对象" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/01/JavaScript深入之变量对象/">JavaScript深入之变量对象</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/01/JavaScript深入之变量对象/" class="archive-article-date">
+  	<time datetime="2017-07-01T01:12:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在上篇<a href="https://blockmood.github.io/2017/07/01/JavaScript%E6%B7%B1%E5%85%A5%E4%B9%8B%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E6%A0%88/" target="_blank" rel="external">JavaScript深入之执行上下文栈</a>中讲到，当 JavaScript 代码执行一段可执行代码(executable code)时，会创建对应的执行上下文(execution context)。<br>对于每个执行上下文，都有三个重要属性：</p>
+<p>变量对象(Variable object，VO)<br>作用域链(Scope chain)<br>this<br>今天重点讲讲创建变量对象的过程。</p>
+<h3 id="变量对象"><a href="#变量对象" class="headerlink" title="变量对象"></a>变量对象</h3><p>变量对象是与执行上下文相关的数据作用域，存储了在上下文中定义的变量和函数声明。</p>
+<p>因为不同执行上下文下的变量对象稍有不同，所以我们来聊聊全局上下文下的变量对象和函数上下文下的变量对象。</p>
+<h3 id="函数上下文"><a href="#函数上下文" class="headerlink" title="函数上下文"></a>函数上下文</h3><p>函数上下文中，我们用活动对象(activation object, AO)来表示变量对象。</p>
+<p>活动对象和变量对象其实是一个东西，只是变量对象是规范上的或者说是引擎实现上的，不可在 JavaScript 环境中访问，只有到当进入一个执行上下文中，这个执行上下文的变量对象才会被激活，所以才叫 activation object 呐，而只有被激活的变量对象，也就是活动对象上的各种属性才能被访问。</p>
+<p>活动对象是在进入函数上下文时刻被创建的，它通过函数的 arguments 属性初始化。arguments 属性值是 Arguments 对象。</p>
+<h3 id="执行过程"><a href="#执行过程" class="headerlink" title="执行过程"></a>执行过程</h3><p>执行上下文的代码会分成两个阶段进行处理：分析和执行，我们也可以叫做：</p>
+<p>1.进入执行上下文<br>2.代码执行</p>
+<h3 id="进入执行上下文"><a href="#进入执行上下文" class="headerlink" title="进入执行上下文"></a>进入执行上下文</h3><p>当进入执行上下文时，这时候还没有执行代码，</p>
+<p>变量对象会包括：</p>
+<p>1.函数的所有形参 (如果是函数上下文)<br>    由名称和对应值组成的一个变量对象的属性被创建<br>    没有实参，属性值设为 undefined</p>
+<p>2.函数声明<br>由名称和对应值（函数对象(function-object)）组成一个变量对象的属性被创建<br>如果变量对象已经存在相同名称的属性，则完全替换这个属性</p>
+<p>3.变量声明<br>由名称和对应值（undefined）组成一个变量对象的属性被创建；<br>如果变量名称跟已经声明的形式参数或函数相同，则变量声明不会干扰已经存在的这类属性。</p>
+<p>举个例子：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> foo(a) &#123;</div><div class="line">  var b = 2;</div><div class="line">  <span class="keyword">function</span> <span class="function"><span class="title">c</span></span>() &#123;&#125;</div><div class="line">  var d = <span class="function"><span class="title">function</span></span>() &#123;&#125;;</div><div class="line"></div><div class="line">  b = 3;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">foo(1);</div></pre></td></tr></table></figure></p>
+<p>在进入执行上下文后，这时候的 AO 是：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">AO = &#123;</div><div class="line">    arguments: &#123;</div><div class="line">        0: 1,</div><div class="line">        length: 1</div><div class="line">    &#125;,</div><div class="line">    a: 1,</div><div class="line">    b: undefined,</div><div class="line">    c: reference to <span class="keyword">function</span> <span class="function"><span class="title">c</span></span>()&#123;&#125;,</div><div class="line">    d: undefined</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="代码执行"><a href="#代码执行" class="headerlink" title="代码执行"></a>代码执行</h3><p>在代码执行阶段，会顺序执行代码，根据代码，修改变量对象的值</p>
+<p>还是上面的例子，当代码执行完后，这时候的 AO 是：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">AO = &#123;</div><div class="line">    arguments: &#123;</div><div class="line">        0: 1,</div><div class="line">        length: 1</div><div class="line">    &#125;,</div><div class="line">    a: 1,</div><div class="line">    b: 3,</div><div class="line">    c: reference to <span class="keyword">function</span> <span class="function"><span class="title">c</span></span>()&#123;&#125;,</div><div class="line">    d: reference to FunctionExpression <span class="string">"d"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>到这里变量对象的创建过程就介绍完了，让我们简洁的总结我们上述所说：</p>
+<p>全局上下文的变量对象初始化是全局对象</p>
+<p>函数上下文的变量对象初始化只包括 Arguments 对象</p>
+<p>在进入执行上下文时会给变量对象添加形参、函数声明、变量声明等初始的属性值</p>
+<p>在代码执行阶段，会再次修改变量对象的属性值</p>
+<h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">foo</span></span>() &#123;</div><div class="line">    console.log(a);</div><div class="line">    a = 1;</div><div class="line">&#125;</div><div class="line"></div><div class="line">foo(); // ???</div><div class="line"></div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">bar</span></span>() &#123;</div><div class="line">    a = 1;</div><div class="line">    console.log(a);</div><div class="line">&#125;</div><div class="line">bar(); // ???</div></pre></td></tr></table></figure>
+<p>第一段会报错：Uncaught ReferenceError: a is not defined。</p>
+<p>第二段会打印：1。</p>
+<p>这是因为函数中的 “a” 并没有通过 var 关键字声明，所有不会被存放在 AO 中。</p>
+<p>第一段执行 console 的时候， AO 的值是：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">AO = &#123;</div><div class="line">    arguments: &#123;</div><div class="line">        length: 0</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>没有 a 的值，然后就会到全局去找，全局也没有，所以会报错。</p>
+<p>当第二段执行 console 的时候，全局对象已经被赋予了 a 属性，这时候就可以从全局找到 a 的值，所以会打印 1。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">console.log(foo);</div><div class="line"></div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">foo</span></span>()&#123;</div><div class="line">    console.log(<span class="string">"foo"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line">var foo = 1;</div></pre></td></tr></table></figure>
+<p>会打印函数，而不是 undefined 。</p>
+<p>这是因为在进入执行上下文时，首先会处理函数声明，其次会处理变量声明，如果如果变量名称跟已经声明的形式参数或函数相同，则变量声明不会干扰已经存在的这类属性。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/01/JavaScript深入之变量对象/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-JavaScript深入之执行上下文栈" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -296,74 +387,6 @@
 
 
   
-    <article id="post-http之响应篇" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/21/http之响应篇/">http之响应篇</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/21/http之响应篇/" class="archive-article-date">
-  	<time datetime="2017-06-21T07:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-21</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一个http响应代表服务器给浏览器回送的数据，同时告诉浏览器该如何处理数据。</p>
-<h3 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h3><p>1.状态行<br>2.消息头信息<br>3.实体信息</p>
-<p>先看一段响应信息<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">//200 ok 表示客户端已经请求成功</div><div class="line">HTTP/1.1 200 OK</div><div class="line">//告诉浏览器请求页面的时间</div><div class="line">Date: Wed, 21 Jun 2017 05:54:22 GMT</div><div class="line">//告诉浏览器服务器的情况</div><div class="line">Server: Apache/2.4.23 (Win32) OpenSSL/1.0.2j mod_fcgid/2.3.9</div><div class="line">//文档类型</div><div class="line">Content-Type: text/html; charset=UTF-8</div><div class="line">//缓存</div><div class="line">Cache-controll:private</div><div class="line">//目标间隔时间和重定向跳转地址</div><div class="line">Refresh: 3;url=http://localhost/http/2.php</div><div class="line"></div><div class="line"></div><div class="line">//下面3个共同来控制该页面是否需要被缓存（为什么呢？ 因为浏览器种类有很多种）</div><div class="line">Expires:-1</div><div class="line">Cache-controll:no-cache</div><div class="line">Pragma:no-cache</div></pre></td></tr></table></figure></p>
-<h3 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h3><pre><code>100 ~ 199  表示成功接收请求，要求客户端继续提交下次请求才能完成整个处理过程
-200 ~ 299  表示成功接收请求并已完成整个过程，常用200
-300 ~ 399  为完成请求，客户需进一步细化请求，例如，请求的资源已经移到一个新的网址，常用304 302
-400 ~ 499  客户端请求有错误，常用404
-500 ~ 599  服务器内部出现错误，常用500
-</code></pre><p>304码一般都是缓存机制。</p>
-<h3 id="PHP禁用缓存"><a href="#PHP禁用缓存" class="headerlink" title="PHP禁用缓存"></a>PHP禁用缓存</h3><p>如何通过http响应控制页面缓存，在默认情况下，浏览器会缓存页面。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">header(<span class="string">"Expires:-1"</span>);</div><div class="line">header(<span class="string">"Cache-controll:no-cache"</span>);</div><div class="line">header(<span class="string">"Pragma:no-cache"</span>);</div></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">http</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/21/http之响应篇/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/9/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/11/">Next &raquo;</a>
@@ -460,6 +483,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">react-router</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">javascript</a>
               </li>
              
@@ -476,11 +503,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -147,6 +147,66 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Custom Link" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/02/Custom Link/">Custom Link</a>
+    </h1>
+  
+
+        
+        <a href="/2017/11/02/Custom Link/" class="archive-article-date">
+  	<time datetime="2017-11-02T00:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">import React from &apos;react&apos;</div><div class="line">import &#123;</div><div class="line">  BrowserRouter as Router,</div><div class="line">  Route,</div><div class="line">  Link</div><div class="line">&#125; from &apos;react-router-dom&apos;</div><div class="line"></div><div class="line">const CustomLinkExample = () =&gt; (</div><div class="line">  &lt;Router&gt;</div><div class="line">    &lt;div&gt;</div><div class="line">      &lt;OldSchoolMenuLink activeOnlyWhenExact=&#123;true&#125; to=&quot;/&quot; label=&quot;Home&quot;/&gt;</div><div class="line">      &lt;OldSchoolMenuLink to=&quot;/about&quot; label=&quot;About&quot;/&gt;</div><div class="line">      &lt;hr/&gt;</div><div class="line">      &lt;Route exact path=&quot;/&quot; component=&#123;Home&#125;/&gt;</div><div class="line">      &lt;Route path=&quot;/about&quot; component=&#123;About&#125;/&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">  &lt;/Router&gt;</div><div class="line">)</div><div class="line"></div><div class="line">const OldSchoolMenuLink = (&#123; label, to, activeOnlyWhenExact &#125;) =&gt; (</div><div class="line">  &lt;Route path=&#123;to&#125; exact=&#123;activeOnlyWhenExact&#125; children=&#123;(&#123; match &#125;) =&gt; (</div><div class="line">    &lt;div className=&#123;match ? &apos;active&apos; : &apos;&apos;&#125;&gt;</div><div class="line">      &#123;match ? &apos;&gt; &apos; : &apos;&apos;&#125;&lt;Link to=&#123;to&#125;&gt;&#123;label&#125;&lt;/Link&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">  )&#125;/&gt;</div><div class="line">)</div><div class="line"></div><div class="line">const Home = () =&gt; (</div><div class="line">  &lt;div&gt;</div><div class="line">    &lt;h2&gt;Home&lt;/h2&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">)</div><div class="line"></div><div class="line">const About = () =&gt; (</div><div class="line">  &lt;div&gt;</div><div class="line">    &lt;h2&gt;About&lt;/h2&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">)</div><div class="line"></div><div class="line">export default CustomLinkExample</div></pre></td></tr></table></figure>
+<p>参考链接 <a href="https://reacttraining.com/react-router/web/example/custom-link" target="_blank" rel="external">Custom Link</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">react-router</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/11/02/Custom Link/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-配置SSH Keys" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -299,72 +359,6 @@
 
 
   
-    <article id="post-不错的段子" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/19/不错的段子/">关于段子</a>
-    </h1>
-  
-
-        
-        <a href="/2017/10/19/不错的段子/" class="archive-article-date">
-  	<time datetime="2017-10-19T02:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>你不必把这杯白酒干了，喝到胃穿孔，<br>也不会获得帮助，不会获得尊重。<br>你不必放弃玩音乐，<br>不必出专辑，也不必放弃工作，<br>不必介意成为一个带着奶瓶的朋克。</p>
-<p>你不必在本子上记录，<br>大部分会议是在浪费时间，<br>你不必假装殷勤一直记录。<br>你不必总是笑，<br>不必每一条微信都回复，<br>不必处处点赞。</p>
-<p>你不必有什么户口，<br>也不必要求别人要有什么户口。<br>即便生存不易，<br>也不必让爸妈去相亲角被别人盘问出身。<br>你不必买大房子，<br>不必在月薪一万的时候就贷款三百万。<br>三十年后，<br>当孩子们问起那些年你有什么故事，<br>你不能只有贷款。</p>
-<p>你不必去知名的大公司追求梦想，<br>你想逃离的种种，在那里同样会有。<br>你不必去大城市，也不必逃离北上广。<br>不必用别人的一篇十万加，<br>来决定自己的一辈子。</p>
-<p>你不必改变自己。<br>不必相信一万小时定律，<br>不必读成功学，<br>不必加入高管群，<br>不必成为第二个什么人。<br>你不必听狭隘女权主义者的杂音，<br>不必理会那些只要求特权，<br>却不尽义务的人。<br>你不必用睡过多少女孩，来证明魅力。<br>这不值得炫耀，<br>而且你并不知道是谁睡了谁。</p>
-<p>你不必让所有人都开心。<br>不必每次旅游都要带礼物，<br>不必一次不落的随份子，<br>不必在饭桌上辛苦地计算座次。<br>你不必在过年的时候衣锦还乡。<br>不必发那么大的红包，<br>不必开车送每一个人回家。</p>
-<p>你不必承担所有责任。<br>不必为拒绝借钱给朋友而过意不去，<br>不必为父母的节俭而内疚，<br>不必向路边的每一个乞讨者伸出援手。<br>你不必刻意追求什么彼岸和远方，<br>每一个你想抵达的地方，<br>都有人和你一样想逃离。<br>你不必在深夜停车之后，<br>在楼下抽支烟再回家。</p>
-<p>你不必背负这么多，<br>你不必成功。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/19/不错的段子/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -461,6 +455,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">react-router</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">javascript</a>
               </li>
              
@@ -477,11 +475,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">

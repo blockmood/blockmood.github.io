@@ -147,6 +147,74 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-http之响应篇" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/21/http之响应篇/">http之响应篇</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/21/http之响应篇/" class="archive-article-date">
+  	<time datetime="2017-06-21T07:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一个http响应代表服务器给浏览器回送的数据，同时告诉浏览器该如何处理数据。</p>
+<h3 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h3><p>1.状态行<br>2.消息头信息<br>3.实体信息</p>
+<p>先看一段响应信息<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">//200 ok 表示客户端已经请求成功</div><div class="line">HTTP/1.1 200 OK</div><div class="line">//告诉浏览器请求页面的时间</div><div class="line">Date: Wed, 21 Jun 2017 05:54:22 GMT</div><div class="line">//告诉浏览器服务器的情况</div><div class="line">Server: Apache/2.4.23 (Win32) OpenSSL/1.0.2j mod_fcgid/2.3.9</div><div class="line">//文档类型</div><div class="line">Content-Type: text/html; charset=UTF-8</div><div class="line">//缓存</div><div class="line">Cache-controll:private</div><div class="line">//目标间隔时间和重定向跳转地址</div><div class="line">Refresh: 3;url=http://localhost/http/2.php</div><div class="line"></div><div class="line"></div><div class="line">//下面3个共同来控制该页面是否需要被缓存（为什么呢？ 因为浏览器种类有很多种）</div><div class="line">Expires:-1</div><div class="line">Cache-controll:no-cache</div><div class="line">Pragma:no-cache</div></pre></td></tr></table></figure></p>
+<h3 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h3><pre><code>100 ~ 199  表示成功接收请求，要求客户端继续提交下次请求才能完成整个处理过程
+200 ~ 299  表示成功接收请求并已完成整个过程，常用200
+300 ~ 399  为完成请求，客户需进一步细化请求，例如，请求的资源已经移到一个新的网址，常用304 302
+400 ~ 499  客户端请求有错误，常用404
+500 ~ 599  服务器内部出现错误，常用500
+</code></pre><p>304码一般都是缓存机制。</p>
+<h3 id="PHP禁用缓存"><a href="#PHP禁用缓存" class="headerlink" title="PHP禁用缓存"></a>PHP禁用缓存</h3><p>如何通过http响应控制页面缓存，在默认情况下，浏览器会缓存页面。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">header(<span class="string">"Expires:-1"</span>);</div><div class="line">header(<span class="string">"Cache-controll:no-cache"</span>);</div><div class="line">header(<span class="string">"Pragma:no-cache"</span>);</div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">http</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/21/http之响应篇/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-http之请求篇" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -298,72 +366,6 @@
 
 
   
-    <article id="post-JavaScript中defer的作用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/13/JavaScript中defer的作用/">JavaScript中defer的作用</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/13/JavaScript中defer的作用/" class="archive-article-date">
-  	<time datetime="2017-06-13T05:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-13</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>很多人都已经把 Javascript的用的炉火纯青了，但见到defer未必就知道他是做什么用的；很多人也都遇到过这样的问题，需要直接执行别且操作DOM对象的js 总是报找不到对象的错误，原因大家也都知道就是页面还有没有加载完毕，js的操作对象还在下载中。但很多人都不知道，添加defer标签就能轻而易举的解决这个问题。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;script src=<span class="string">"../CGI-bin/delscript.js"</span> defer&gt;&lt;/script&gt;</div><div class="line">中的defer作用是文档加载完毕了再执行脚本,这样回避免找不到对象的问题---有点问题</div><div class="line"></div><div class="line">&lt;button id=<span class="string">"myButton"</span> onclick=<span class="string">"alert('ok')"</span>&gt;<span class="built_in">test</span>&lt;/button&gt;</div><div class="line">&lt;script&gt;</div><div class="line">myButton.click();</div><div class="line">&lt;/script&gt;</div><div class="line"></div><div class="line">&lt;script&gt;</div><div class="line">myButton.click();</div><div class="line">&lt;/script&gt;</div><div class="line">&lt;button id=<span class="string">"myButton"</span> onclick=<span class="string">"alert('ok')"</span>&gt;<span class="built_in">test</span>&lt;/button&gt;</div><div class="line"></div><div class="line">&lt;script defer&gt;</div><div class="line"><span class="keyword">function</span> document.body.<span class="function"><span class="title">onload</span></span>() &#123;</div><div class="line">alert(document.body.offsetHeight);</div><div class="line">&#125;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
-<p>加上 defer 等于在页面完全在入后再执行，相当于 window.onload ，但应用上比 window.onload 更灵活！<br>defer是脚本程序强大功能中的一个“无名英雄”。它告诉浏览器Script段包含了无需立即执行的代码，并且，与SRC属性联合使用，它还可以使这些脚本在后台被下载，前台的内容则正常显示给用户。<br>–但是 文档加载完毕了再执行脚本</p>
-<p>请注意两点：<br>1、不要在defer型的脚本程序段中调用document.write命令，因为document.write将产生直接输出效果。<br>2、而且，不要在defer型脚本程序段中包括任何立即执行脚本要使用的全局变量或者函数。 </p>
-<p>一个常用的优化性能的方法是：当脚本不需要立即运行时，在<code>&lt;SCRIPT&gt;</code>标签中设置“defer”属性。 (立即脚本没有被包含在一个function块中,因此会在加载过程中执行。) 设置“defer”属性后，IE就不必等待该脚本装载和执行完毕。这样页面加载会更快。一般来说，这也表明立即脚本最好放在function块中，并在 document或者body对象的onload 句柄中处理该函数。在有一些脚本需要依赖用户操作而执行时—-例如点击按钮，或者移动鼠标到某个区域—-使用该属性非常有用。但当有一些脚本需要在页面加载过程中或加载完成后执行，使用defer属性得到的好处就不太大。</p>
-<p><code>script</code>中的defer属性默认情况下是false的。按照DHTML编程宝典中的描述，对于Defer属性是这样写的：<br>Using the attribute at design time can improve the download performance of a page because the browser does not need to parse and execute the script and can continue downloading and parsing the page instead.<br>也就是说：如果是编写脚本的时候加入defer属性，那么浏览器在下载脚本的时候就不必立即对其进行处理，而是继续对页面进行下载和解析，这样会提高下载的性能。<br>这样的情况有很多种。比如你定义了很多javascript变量，或者在引用文件（.inc）中写了很多的脚本需要处理，那不妨在这些脚本中加入defer属性，对性能的提高肯定有所帮助。<br>举例如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;script language=<span class="string">"javascript"</span> defer&gt;</div><div class="line">var object = new Object();</div><div class="line">....</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
-<p>因为defer属性默认是为false的，那么在这里<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script language=<span class="string">"javascript"</span> defer&gt;</div></pre></td></tr></table></figure></p>
-<p>显式声明defer属性后等同于<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script language=<span class="string">"javascript"</span> defer=<span class="literal">true</span>&gt;</div></pre></td></tr></table></figure></p>
-<p>声明了defer属性之后，需要判断是否有别的变量引用了defer脚本块中的变量，否则的话会导致脚本错误的产生。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/13/JavaScript中defer的作用/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/10/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/12/">Next &raquo;</a>
@@ -460,6 +462,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">react-router</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">javascript</a>
               </li>
              
@@ -476,11 +482,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">

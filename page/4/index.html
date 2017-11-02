@@ -147,6 +147,70 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-redux" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/14/redux/">redux</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/14/redux/" class="archive-article-date">
+  	<time datetime="2017-09-13T16:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h2><p><img src="/img/redux.jpg" alt="redux"></p>
+<blockquote>
+<p>1.用户通过dispath发出Action </p>
+<p>2.Store 自动调用 Reducer，并且传入两个参数：当前 State 和收到的 Action。 Reducer 会返回新的 State 。</p>
+<p>3.State 一旦有变化，Store 就会调用监听函数subscribe。</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">redux</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/09/14/redux/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-react-redux" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -288,102 +352,6 @@
 
 
   
-    <article id="post-JavaScript Async . Await" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/01/JavaScript Async . Await/">JavaScript Async/Await</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/01/JavaScript Async . Await/" class="archive-article-date">
-  	<time datetime="2017-08-01T08:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="什么是Async-Await？"><a href="#什么是Async-Await？" class="headerlink" title="什么是Async/Await？"></a>什么是Async/Await？</h3><p>Async/Await是一个很久就令人期待的JavaScript功能，它让使用异步函数更加愉快和容易理解。它是基于Promises的并且和现存的所有基于Promises的API相兼容。</p>
-<p>从async和await这两个名字来的这两个关键字将会帮助我们整理我们的异步代码。</p>
-<p>Async - 声明一个异步函数（async function someName(){…}）。</p>
-<ul>
-<li>自动将一个常规函数转化为一个Promise。</li>
-<li>当调用async函数的时候，它用函数内返回的任何值来解决（resolve）。</li>
-<li>异步函数可以使用await</li>
-</ul>
-<p>Await-暂停执行async函数（var result = await someAsyncCall();）。</p>
-<ul>
-<li>当放在一个Promise前面执行，await强制剩下的代码等待直到那个Promise结束并且返回一个结果</li>
-<li>Await只有和Promise一起使用才有用，和回调函数（普通函数）一起使用不会产生作用</li>
-<li>Await只可以在async函数内部使用</li>
-</ul>
-<p>这里有一个简单的例子，希望能帮你把事情理清楚：</p>
-<p>假设我们想从我们的服务器中得到一些JSON文件。我们将写一个函数用axios库发送一个http GET 请求到<a href="https://tutorialzine.com/misc/files/example.json。" target="_blank" rel="external">https://tutorialzine.com/misc/files/example.json。</a> 我们不得不等待服务器响应，所以很自然这个HTTP 请求是异步的。</p>
-<p>下面我们可以看到相同的功能实现了两次。首先是用Promises，然后第二次用Async / Await。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">// Promise 实现方式</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">getJSON</span></span>()&#123;</div><div class="line"></div><div class="line">    // 为了让函数阻塞我们手动创建了一个Promise</div><div class="line">    <span class="built_in">return</span> new Promise( <span class="keyword">function</span>(resolve) &#123;</div><div class="line">        axios.get(<span class="string">'https://tutorialzine.com/misc/files/example.json'</span>)</div><div class="line">            .<span class="keyword">then</span>( <span class="keyword">function</span>(json) &#123;</div><div class="line">                // 从请求来的数据可以从.<span class="keyword">then</span>中得到</div><div class="line">                // 我们使用resolve返回结果</div><div class="line">                resolve(json);</div><div class="line">            &#125;);</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">// Async/Await 实现方式</div><div class="line">// async关键字将会自动创建一个新的Promise并返回。</div><div class="line">async <span class="keyword">function</span> <span class="function"><span class="title">getJSONAsync</span></span>()&#123;</div><div class="line">    // await关键词使我们免于写一个.<span class="keyword">then</span>()</div><div class="line">    <span class="built_in">let</span> json = await axios.get(<span class="string">'https://tutorialzine.com/misc/files/example.json'</span>);</div><div class="line">    // GET请求的结果可以从json变量中得到</div><div class="line">    // 我们把结果就像一个普通的同步函数一样返回</div><div class="line">    <span class="built_in">return</span> json;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>很明显Async/Await版本的代码更短并且可读性更强。除了使用的语法，两个函数完全相同-他们都返回Promises并且都从axios得到JSON返回。我们可以像这样调用我们的async函数：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">getJSONAsync().<span class="keyword">then</span>( <span class="keyword">function</span>(result) &#123;</div><div class="line">    // Do something with result.</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<h3 id="那么，Async-Await-让-Promises-过时了吗？"><a href="#那么，Async-Await-让-Promises-过时了吗？" class="headerlink" title="那么，Async/Await 让 Promises 过时了吗？"></a>那么，Async/Await 让 Promises 过时了吗？</h3><p>一点也不，当我们使用Async/Await其实底层还是在使用Promises。对Promises的良好理解在长远考虑下是对你是十分有帮助的并且也是高度推荐的。</p>
-<p>这里甚至有一些情况Async/Await不能解决而我们不得不重新去寻求Promises的帮助。一种这样的场景是我们需要去调用多个独立的异步函数并等待他们所有完成。</p>
-<p>假如我们尝试用async and await，以下就会发生:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">async <span class="keyword">function</span> <span class="function"><span class="title">getABC</span></span>() &#123;</div><div class="line">    <span class="built_in">let</span> A = await getValueA(); // getValueA takes 2 second to finish</div><div class="line">    <span class="built_in">let</span> B = await getValueB(); // getValueB takes 4 second to finish</div><div class="line">    <span class="built_in">let</span> C = await getValueC(); // getValueC takes 3 second to finish</div><div class="line">    <span class="built_in">return</span> A*B*C;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>每一个await将会等待前一个返回一个结果。因为我们一次只执行一个调用那么整个函数从开始到结束将会花9秒的时间（2+4+3）。</p>
-<p>这不是一个最佳的解决方案，因为A,B和C互相并不依赖。换句话来说我们在得到B的时候我们并不需要A的值。我们可以同时得到这些值以减去几秒钟的等待时间。</p>
-<p>同时发送所有的requests我们需要Promise.all()。这将会保证我们在进行下一步的时候我们可以得到所有的结果，但是所有的异步函数将会平行的运行，而不是一个接一个。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">async <span class="keyword">function</span> <span class="function"><span class="title">getABC</span></span>() &#123;</div><div class="line">  // Promise.all() allows us to send all requests at the same time. </div><div class="line">  <span class="built_in">let</span> results = await Promise.all([ getValueA, getValueB, getValueC ]); </div><div class="line"></div><div class="line">  <span class="built_in">return</span> results.reduce((total,value) =&gt; total * value);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这种方式函数将会花费少的多的时间，在getValueB结束的时候getValueA和getValueC就已经结束了。我们将有效的减少执行的时间到最慢的请求而不是时间的总和。</p>
-<h3 id="处理Async-Await的错误"><a href="#处理Async-Await的错误" class="headerlink" title="处理Async/Await的错误"></a>处理Async/Await的错误</h3><p>另一个关于Async/Await很棒的事是它允许我们用很棒的老式try/catch块去catch任何意外的错误。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">async <span class="keyword">function</span> <span class="function"><span class="title">doSomethingAsync</span></span>()&#123;</div><div class="line">    try &#123;</div><div class="line">        // This async call may fail.</div><div class="line">        <span class="built_in">let</span> result = await someAsyncCall();</div><div class="line">    &#125;</div><div class="line">    catch(error) &#123;</div><div class="line">        // If it does we will catch the error here.</div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>任何我们写在try块中的等待的异步调用或者其他任何错误代码，catch都能解决他们引起的错误（error）。</p>
-<p>如果情况需要，我们也可以在执行async函数的时候抓取错误。由于所有异步函数返回Promises，所以我们可以在调用它们时简单地包含.catch()事件处理程序。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// 不包含try/catch块的async函数</div><div class="line">async <span class="keyword">function</span> <span class="function"><span class="title">doSomethingAsync</span></span>()&#123;</div><div class="line">    // 这个async调用也许会失败</div><div class="line">    <span class="built_in">let</span> result = await someAsyncCall();</div><div class="line">    <span class="built_in">return</span> result;  </div><div class="line">&#125;</div><div class="line"></div><div class="line">// 我们catch错误在调用async函数的时候</div><div class="line">doSomethingAsync().</div><div class="line">    .<span class="keyword">then</span>(successHandler)</div><div class="line">    .catch(errorHandler);</div></pre></td></tr></table></figure>
-<p>重要的是选择一种你喜欢的错误处理的方式，并坚持使用它。同时使用try/catch和.catch(）将很有可能导致一些问题。</p>
-<h3 id="浏览器支持"><a href="#浏览器支持" class="headerlink" title="浏览器支持"></a>浏览器支持</h3><p>Async/Await已经支持大部分的主流浏览器。绝大多数的厂商将会识别你的async/await代码而不需要额外的库-除了IE11.</p>
-<p>Node开发者只要node8或以上就可以享受到改进的异步流。它在今年晚些时候应该会变成LTS（ Long Term Support ）版本。</p>
-<p>如果这兼容性不能满足你，也有许多像Babel和TypeScript和Nodejs库asyncawait这样的JS transpiler（源码转换器）提供他们自己的跨平台版本的功能。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/01/JavaScript Async . Await/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
@@ -480,6 +448,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">react-router</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">javascript</a>
               </li>
              
@@ -496,11 +468,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
