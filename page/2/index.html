@@ -147,6 +147,75 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-react以函数为子组件" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/26/react以函数为子组件/">react以函数为子组件</a>
+    </h1>
+  
+
+        
+        <a href="/2017/10/26/react以函数为子组件/" class="archive-article-date">
+  	<time datetime="2017-10-26T07:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="代理方式的高阶组件"><a href="#代理方式的高阶组件" class="headerlink" title="代理方式的高阶组件"></a>代理方式的高阶组件</h3><p>react高阶组件不是唯一可用于提高组件代码重用的方法，高阶组件扩展现有组件功能的方式主要是通过props，以代理方式的高阶组件为例子，新产生的组件和原有的组件说到底是父子关系的组件，而俩个组件之间的通信自然是props,看下面的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">import React from &apos;react&apos;;</div><div class="line"></div><div class="line">const addNewProps = (WrappedComponent, newProps) =&gt; &#123;</div><div class="line">  return class WrappingComponent extends React.Component &#123;</div><div class="line">    render() &#123;</div><div class="line">      return &lt;WrappedComponent &#123;...this.props&#125; &#123;...newProps&#125; /&gt;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">export default addNewProps;</div></pre></td></tr></table></figure>
+<p>如果要使用这个组件，作为参数的组件必须要能够接受名为 newProps 的prop，不然应用这个组件就完全没有意义，这就是代理组件的一个缺点，对原有组件的props有了固化的要求。</p>
+<h3 id="以函数为子组件"><a href="#以函数为子组件" class="headerlink" title="以函数为子组件"></a>以函数为子组件</h3><p>以函数为子组件就是为了克服这种局限性的，在这种模式下，实现代码重用的不是一个函数，而是一个真正的react组件，这样的组件有一个特点，就是要求必须有子组件的存在，而且这个子组件必须是一个函数。在实例的生命周期中，this.props.children()引用的就是子组件，render函数会直接把this.props.children当做函数来调用，得到的结果就可以作为render函数返回结果的一部分。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">import React from &apos;react&apos;;</div><div class="line"></div><div class="line">const loggedinUser = &apos;mock user&apos;;</div><div class="line"></div><div class="line">class AddUserProp extends React.Component &#123;</div><div class="line">  render() &#123;</div><div class="line">    const user = loggedinUser;</div><div class="line">    return this.props.children(user)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">AddUserProp.propTypes = &#123;</div><div class="line">  children: React.PropTypes.func.isRequired</div><div class="line">&#125;</div><div class="line"></div><div class="line">export default AddUserProp;</div></pre></td></tr></table></figure>
+<p>使用这个组件的灵活之处在于他没有被对增强的组件有任何的props的要求，只是传递过去一个参数，至于使用的话</p>
+<p>例如：我们想让一个组件吧user显示出来</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;AddUserProp&gt;</div><div class="line">	&#123;</div><div class="line">		(user)=&gt; &lt;div&gt;&#123;user&#125;&lt;/div&gt;</div><div class="line">	&#125;</div><div class="line">&lt;/AddUserProp&gt;</div></pre></td></tr></table></figure>
+<p>又例如：我们想吧user传递给另外一个Foo组件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;AddUserProp&gt;</div><div class="line">	&#123;</div><div class="line">		(user)=&gt; &lt;Foo user=&#123;user&#125; /&gt;</div><div class="line">	&#125;</div><div class="line">&lt;/AddUserProp&gt;</div></pre></td></tr></table></figure>
+<p>可以看到，使用函数为子组件非常灵活。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/10/26/react以函数为子组件/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-不错的段子" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -289,102 +358,6 @@
 
 
   
-    <article id="post-完全理解React高阶组件（Higher-Order Components）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/13/完全理解React高阶组件（Higher-Order Components）/">完全理解React高阶组件（Higher-Order Components）</a>
-    </h1>
-  
-
-        
-        <a href="/2017/10/13/完全理解React高阶组件（Higher-Order Components）/" class="archive-article-date">
-  	<time datetime="2017-10-13T02:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-13</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="高阶组件定义"><a href="#高阶组件定义" class="headerlink" title="高阶组件定义"></a>高阶组件定义</h3><blockquote>
-<p>a higher-order component is a function that takes a component and returns a new component.</p>
-</blockquote>
-<p>翻译：高阶组件就是一个函数，且该函数接受一个组件作为参数，并返回一个新的组件。</p>
-<p>理解了吗？看了定义似懂非懂？继续往下看。</p>
-<h3 id="函数模拟高阶组件"><a href="#函数模拟高阶组件" class="headerlink" title="函数模拟高阶组件"></a>函数模拟高阶组件</h3><p>我们通过普通函数来理解什么是高阶组件哦~</p>
-<ul>
-<li>1.最普通的方法，一个welcome，一个goodbye。两个函数先从localStorage读取了username，然后对username做了一些处理。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">function welcome() &#123;</div><div class="line">    let username = localStorage.getItem(&apos;username&apos;);</div><div class="line">    console.log(&apos;welcome &apos; + username);</div><div class="line">&#125;</div><div class="line"></div><div class="line">function goodbey() &#123;</div><div class="line">    let username = localStorage.getItem(&apos;username&apos;);</div><div class="line">    console.log(&apos;goodbey &apos; + username);</div><div class="line">&#125;</div><div class="line"></div><div class="line">welcome();</div><div class="line">goodbey();</div></pre></td></tr></table></figure>
-<ul>
-<li>2.我们发现两个函数有一句代码是一样的，这叫冗余唉。不好不好~（你可以把那一句代码理解成平时的一大堆代码）我们要写一个中间函数，读取username,他来负责把username传递给两个函数。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">function welcome(username) &#123;</div><div class="line">    console.log(&apos;welcome &apos; + username);</div><div class="line">&#125;</div><div class="line"></div><div class="line">function goodbey(username) &#123;</div><div class="line">    console.log(&apos;goodbey &apos; + username);</div><div class="line">&#125;</div><div class="line"></div><div class="line">function wrapWithUsername(wrappedFunc) &#123;</div><div class="line">    let newFunc = () =&gt; &#123;</div><div class="line">        let username = localStorage.getItem(&apos;username&apos;);</div><div class="line">        wrappedFunc(username);</div><div class="line">    &#125;;</div><div class="line">    return newFunc;</div><div class="line">&#125;</div><div class="line"></div><div class="line">welcome = wrapWithUsername(welcome);</div><div class="line">goodbey = wrapWithUsername(goodbey);</div><div class="line"></div><div class="line">welcome();</div><div class="line">goodbey();</div></pre></td></tr></table></figure>
-<p>好了，我们里面的wrapWithUsername函数就是一个“高阶函数”。<br>他做了什么？他帮我们处理了username，传递给目标函数。我们调用最终的函数welcome的时候，根本不用关心username是怎么来的。<br>我们增加个用户study函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">function study(username)&#123;</div><div class="line">    console.log(username+&apos; study&apos;);</div><div class="line">&#125;</div><div class="line">study = wrapWithUsername(study);</div><div class="line"></div><div class="line">study();</div></pre></td></tr></table></figure></p>
-<p>这里你是不是理解了为什么说wrapWithUsername是高阶函数？我们只需要知道，用wrapWithUsername包装我们的study函数后，study函数第一个参数是username。</p>
-<p>我们写平时写代码的时候，不用关心wrapWithUsername内部是如何实现的。</p>
-<h3 id="高阶组件"><a href="#高阶组件" class="headerlink" title="高阶组件"></a>高阶组件</h3><p>高阶组件就是一个没有副作用的纯函数。</p>
-<p>我们把上一节的函数统统改成react组件。</p>
-<p>welcome函数转为react组件。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">import React, &#123;Component&#125; from &apos;react&apos;</div><div class="line"></div><div class="line">class Welcome extends Component &#123;</div><div class="line">    constructor(props) &#123;</div><div class="line">        super(props);</div><div class="line">        this.state = &#123;</div><div class="line">            username: &apos;&apos;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    componentWillMount() &#123;</div><div class="line">        let username = localStorage.getItem(&apos;username&apos;);</div><div class="line">        this.setState(&#123;</div><div class="line">            username: username</div><div class="line">        &#125;)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    render() &#123;</div><div class="line">        return (</div><div class="line">            &lt;div&gt;welcome &#123;this.state.username&#125;&lt;/div&gt;</div><div class="line">        )</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">export default Welcome;</div></pre></td></tr></table></figure>
-<p>goodbey函数转为react组件。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">import React, &#123;Component&#125; from &apos;react&apos;</div><div class="line"></div><div class="line">class Goodbye extends Component &#123;</div><div class="line">    constructor(props) &#123;</div><div class="line">        super(props);</div><div class="line">        this.state = &#123;</div><div class="line">            username: &apos;&apos;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    componentWillMount() &#123;</div><div class="line">        let username = localStorage.getItem(&apos;username&apos;);</div><div class="line">        this.setState(&#123;</div><div class="line">            username: username</div><div class="line">        &#125;)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    render() &#123;</div><div class="line">        return (</div><div class="line">            &lt;div&gt;goodbye &#123;this.state.username&#125;&lt;/div&gt;</div><div class="line">        )</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">export default Goodbye;</div></pre></td></tr></table></figure>
-<p>现在你是不是更能看到问题所在了？两个组件大部分代码都是重复的,按照上一节wrapWithUsername函数的思路，我们来写一个高阶组件(高阶组件就是一个函数，且该函数接受一个组件作为参数，并返回一个新的组件)。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">import React, &#123;Component&#125; from &apos;react&apos;</div><div class="line"></div><div class="line">export default (WrappedComponent) =&gt; &#123;</div><div class="line">    class NewComponent extends Component &#123;</div><div class="line">        constructor() &#123;</div><div class="line">            super();</div><div class="line">            this.state = &#123;</div><div class="line">                username: &apos;&apos;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        componentWillMount() &#123;</div><div class="line">            let username = localStorage.getItem(&apos;username&apos;);</div><div class="line">            this.setState(&#123;</div><div class="line">                username: username</div><div class="line">            &#125;)</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        render() &#123;</div><div class="line">            return &lt;WrappedComponent username=&#123;this.state.username&#125;/&gt;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return NewComponent</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这样我们就能简化Welcome组件和Goodbye组件。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">import React, &#123;Component&#125; from &apos;react&apos;;</div><div class="line">import wrapWithUsername from &apos;wrapWithUsername&apos;;</div><div class="line"></div><div class="line">class Welcome extends Component &#123;</div><div class="line"></div><div class="line">    render() &#123;</div><div class="line">        return (</div><div class="line">            &lt;div&gt;welcome &#123;this.props.username&#125;&lt;/div&gt;</div><div class="line">        )</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Welcome = wrapWithUsername(Welcome);</div><div class="line"></div><div class="line">export default Welcome;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">import React, &#123;Component&#125; from &apos;react&apos;;</div><div class="line">import wrapWithUsername from &apos;wrapWithUsername&apos;;</div><div class="line"></div><div class="line">class Goodbye extends Component &#123;</div><div class="line"></div><div class="line">    render() &#123;</div><div class="line">        return (</div><div class="line">            &lt;div&gt;goodbye &#123;this.props.username&#125;&lt;/div&gt;</div><div class="line">        )</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Goodbye = wrapWithUsername(Goodbye);</div><div class="line"></div><div class="line">export default Goodbye;</div></pre></td></tr></table></figure>
-<p>看到没有，高阶组件就是把username通过props传递给目标组件了。目标组件只管从props里面拿来用就好了。</p>
-<p>到这里位置，高阶组件就讲完了。你再返回去理解下定义，是不是豁然开朗~</p>
-<p>你现在理解react-redux的connect函数~</p>
-<p>把redux的state和action创建函数，通过props注入给了Component。<br>你在目标组件Component里面可以直接用this.props去调用redux state和action创建函数了。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ConnectedComment = connect(mapStateToProps, mapDispatchToProps)(Component);</div></pre></td></tr></table></figure>
-<p>相当于这样</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// connect是一个返回函数的函数（就是个高阶函数）</div><div class="line">const enhance = connect(mapStateToProps, mapDispatchToProps);</div><div class="line">// 返回的函数就是一个高阶组件，该高阶组件返回一个与Redux store</div><div class="line">// 关联起来的新组件</div><div class="line">const ConnectedComment = enhance(Component);</div></pre></td></tr></table></figure>
-<p>antd的Form也是一样的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">const WrappedNormalLoginForm = Form.create()(NormalLoginForm);</div></pre></td></tr></table></figure>
-<p>参考地址：<br>    <a href="http://huziketang.com/books/react/lesson28" target="_blank" rel="external">http://huziketang.com/books/react/lesson28</a><br>    <a href="https://react.bootcss.com/react/docs/higher-order-components.html" target="_blank" rel="external">https://react.bootcss.com/react/docs/higher-order-components.html</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/13/完全理解React高阶组件（Higher-Order Components）/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -501,15 +474,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -518,10 +495,6 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">

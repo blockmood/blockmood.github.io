@@ -147,6 +147,71 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-axios在项目中的使用方法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/26/axios在项目中的使用方法/">axios使用</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/26/axios在项目中的使用方法/" class="archive-article-date">
+  	<time datetime="2017-05-25T16:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在VUE2.0出来以后，官方就不推荐使用vue-resource了，而是使用axios ,使用方法都大同小异，在项目中有俩种使用方法，教程地址: <a href="https://www.npmjs.com/package/axios" target="_blank" rel="external">axios</a></p>
+<h3 id="第一种-配置文件"><a href="#第一种-配置文件" class="headerlink" title="第一种(配置文件)"></a>第一种(配置文件)</h3><p>这里使用的是vue-webpack脚手架，在src目录下，新建一个api目录，里面分别创建这俩个文件 api.js  / config.js,详情看代码。</p>
+<h4 id="api-js"><a href="#api-js" class="headerlink" title="api.js"></a>api.js</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">import axios from <span class="string">'axios'</span>		//导入axios模块</div><div class="line">import config from <span class="string">'./config'</span>	//导入配置文件</div><div class="line">import qs from <span class="string">'qs'</span></div><div class="line"></div><div class="line">//axios(config);</div><div class="line">class API &#123;</div><div class="line">	getList (param) &#123;</div><div class="line">		console.log(config);   //这里打印的是配置文件中的信息</div><div class="line">		//发送请求</div><div class="line">		<span class="built_in">return</span> axios.post(config.url,&#123;</div><div class="line">			id:param</div><div class="line">		&#125;)</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"><span class="built_in">export</span> default API;</div></pre></td></tr></table></figure>
+<h4 id="config-js-这里配置信息可参考上面的连接地址"><a href="#config-js-这里配置信息可参考上面的连接地址" class="headerlink" title="config.js   //这里配置信息可参考上面的连接地址"></a>config.js   //这里配置信息可参考上面的连接地址</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div></pre></td><td class="code"><pre><div class="line">import Qs from <span class="string">'qs'</span></div><div class="line"><span class="built_in">export</span> default&#123;</div><div class="line">	// `url` is the server URL that will be used <span class="keyword">for</span> the request </div><div class="line">  url: <span class="string">'http://localhost:80/cms/getinfo.php'</span>,</div><div class="line"> </div><div class="line">  // `method` is the request method to be used when making the request </div><div class="line">  method: <span class="string">'get'</span>, // default </div><div class="line"> </div><div class="line">  // `baseURL` will be prepended to `url` unless `url` is absolute. </div><div class="line">  // It can be convenient to <span class="built_in">set</span> `baseURL` <span class="keyword">for</span> an instance of axios to pass relative URLs </div><div class="line">  // to methods of that instance. </div><div class="line">  baseURL: <span class="string">'https://some-domain.com/api/'</span>,</div><div class="line"> </div><div class="line">  // `transformRequest` allows changes to the request data before it is sent to the server </div><div class="line">  // This is only applicable <span class="keyword">for</span> request methods <span class="string">'PUT'</span>, <span class="string">'POST'</span>, and <span class="string">'PATCH'</span> </div><div class="line">  // The last <span class="keyword">function</span> <span class="keyword">in</span> the array must <span class="built_in">return</span> a string or an instance of Buffer, ArrayBuffer, </div><div class="line">  // FormData or Stream </div><div class="line">  transformRequest: [<span class="keyword">function</span> (data) &#123;</div><div class="line">    // Do whatever you want to transform the data </div><div class="line"> </div><div class="line">    <span class="built_in">return</span> data;</div><div class="line">  &#125;],</div><div class="line"> </div><div class="line">  // `transformResponse` allows changes to the response data to be made before </div><div class="line">  // it is passed to <span class="keyword">then</span>/catch </div><div class="line">  transformResponse: [<span class="keyword">function</span> (data) &#123;</div><div class="line">    // Do whatever you want to transform the data </div><div class="line"> </div><div class="line">    <span class="built_in">return</span> data;</div><div class="line">  &#125;],</div><div class="line"> </div><div class="line">  // `headers` are custom headers to be sent </div><div class="line">  headers: &#123;<span class="string">'X-Requested-With'</span>: <span class="string">'XMLHttpRequest'</span>&#125;,</div><div class="line">  headers: &#123;<span class="string">'Content-Type'</span>: <span class="string">'application/x-www-form-urlencoded'</span>&#125;,</div><div class="line"> </div><div class="line">  // `params` are the URL parameters to be sent with the request </div><div class="line">  // Must be a plain object or a URLSearchParams object </div><div class="line">  params: &#123;</div><div class="line">    ID: 12345</div><div class="line">  &#125;,</div><div class="line"> </div><div class="line">  // `paramsSerializer` is an optional <span class="keyword">function</span> <span class="keyword">in</span> charge of serializing `params` </div><div class="line">  // (e.g. https://www.npmjs.com/package/qs, http://api.jquery.com/jquery.param/) </div><div class="line">  paramsSerializer: <span class="keyword">function</span>(params) &#123;</div><div class="line">    <span class="built_in">return</span> Qs.stringify(params, &#123;arrayFormat: <span class="string">'brackets'</span>&#125;)</div><div class="line">  &#125;,</div><div class="line"> </div><div class="line">  // `data` is the data to be sent as the request body </div><div class="line">  // Only applicable <span class="keyword">for</span> request methods <span class="string">'PUT'</span>, <span class="string">'POST'</span>, and <span class="string">'PATCH'</span> </div><div class="line">  // When no `transformRequest` is <span class="built_in">set</span>, must be of one of the following types: </div><div class="line">  // - string, plain object, ArrayBuffer, ArrayBufferView, URLSearchParams </div><div class="line">  // - Browser only: FormData, File, Blob </div><div class="line">  // - Node only: Stream, Buffer </div><div class="line">  data: &#123;</div><div class="line">    firstName: <span class="string">'Fred'</span></div><div class="line">  &#125;,</div><div class="line"> </div><div class="line">  // `timeout` specifies the number of milliseconds before the request <span class="built_in">times</span> out. </div><div class="line">  // If the request takes longer than `timeout`, the request will be aborted. </div><div class="line">  timeout: 1000,</div><div class="line"> </div><div class="line">  // `withCredentials` indicates whether or not cross-site Access-Control requests </div><div class="line">  // should be made using credentials </div><div class="line">  withCredentials: <span class="literal">false</span>, // default </div><div class="line"> </div><div class="line">  // `adapter` allows custom handling of requests <span class="built_in">which</span> makes testing easier. </div><div class="line">  // Return a promise and supply a valid response (see lib/adapters/README.md). </div><div class="line">  adapter: <span class="keyword">function</span> (config) &#123;</div><div class="line">    /* ... */</div><div class="line">  &#125;,</div><div class="line"> </div><div class="line">  // `auth` indicates that HTTP Basic auth should be used, and supplies credentials. </div><div class="line">  // This will <span class="built_in">set</span> an `Authorization` header, overwriting any existing </div><div class="line">  // `Authorization` custom headers you have <span class="built_in">set</span> using `headers`. </div><div class="line">  auth: &#123;</div><div class="line">    username: <span class="string">'janedoe'</span>,</div><div class="line">    password: <span class="string">'s00pers3cret'</span></div><div class="line">  &#125;,</div><div class="line"> </div><div class="line">  // `responseType` indicates the <span class="built_in">type</span> of data that the server will respond with </div><div class="line">  // options are <span class="string">'arraybuffer'</span>, <span class="string">'blob'</span>, <span class="string">'document'</span>, <span class="string">'json'</span>, <span class="string">'text'</span>, <span class="string">'stream'</span> </div><div class="line">  responseType: <span class="string">'json'</span>, // default </div><div class="line"> </div><div class="line">  // `xsrfCookieName` is the name of the cookie to use as a value <span class="keyword">for</span> xsrf token </div><div class="line">  xsrfCookieName: <span class="string">'XSRF-TOKEN'</span>, // default </div><div class="line"> </div><div class="line">  // `xsrfHeaderName` is the name of the http header that carries the xsrf token value </div><div class="line">  xsrfHeaderName: <span class="string">'X-XSRF-TOKEN'</span>, // default </div><div class="line"> </div><div class="line">  // `onUploadProgress` allows handling of progress events <span class="keyword">for</span> uploads </div><div class="line">  onUploadProgress: <span class="keyword">function</span> (progressEvent) &#123;</div><div class="line">    // Do whatever you want with the native progress event </div><div class="line">  &#125;,</div><div class="line"> </div><div class="line">  // `onDownloadProgress` allows handling of progress events <span class="keyword">for</span> downloads </div><div class="line">  onDownloadProgress: <span class="keyword">function</span> (progressEvent) &#123;</div><div class="line">    // Do whatever you want with the native progress event </div><div class="line">  &#125;,</div><div class="line"> </div><div class="line">  // `maxContentLength` defines the max size of the http response content allowed </div><div class="line">  maxContentLength: 2000,</div><div class="line"> </div><div class="line">  // `validateStatus` defines whether to resolve or reject the promise <span class="keyword">for</span> a given </div><div class="line">  // HTTP response status code. If `validateStatus` returns `<span class="literal">true</span>` (or is <span class="built_in">set</span> to `null` </div><div class="line">  // or `undefined`), the promise will be resolved; otherwise, the promise will be </div><div class="line">  // rejected. </div><div class="line">  validateStatus: <span class="keyword">function</span> (status) &#123;</div><div class="line">    <span class="built_in">return</span> status &gt;= 200 &amp;&amp; status &lt; 300; // default </div><div class="line">  &#125;,</div><div class="line"> </div><div class="line">  // `maxRedirects` defines the maximum number of redirects to follow <span class="keyword">in</span> node.js. </div><div class="line">  // If <span class="built_in">set</span> to 0, no redirects will be followed. </div><div class="line">  maxRedirects: 5, // default </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="组件中调用"><a href="#组件中调用" class="headerlink" title="组件中调用"></a>组件中调用</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">import API from <span class="string">'../api/API'</span>	//导入模块</div><div class="line"><span class="built_in">let</span> api = new API()      		//实例化对象，然后对象调用不同的方法。</div></pre></td></tr></table></figure>
+<h3 id="第二种方法-组件注入试"><a href="#第二种方法-组件注入试" class="headerlink" title="第二种方法(组件注入试)"></a>第二种方法(组件注入试)</h3><p>在src中的main.js做如下配置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">import axios from <span class="string">'axios'</span>;		//导入模块</div><div class="line">Vue.prototype.<span class="variable">$http</span> = axios;	// 把axios的信息赋值到<span class="variable">$http</span>上，我们组件中就可以使用 this.<span class="variable">$http</span>方法</div></pre></td></tr></table></figure></p>
+<p>以上就是俩种使用方法，不过目前我还没解决跨域问题，如果有知道的可以告诉我一下。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/26/axios在项目中的使用方法/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-vue-lazyload图片懒加载" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -260,70 +325,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/05/24/JavaScript之原型详解/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
-    <article id="post-vue之全面理解MVVM模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/23/vue之全面理解MVVM模式/">vue之全面理解MVVM模式</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/23/vue之全面理解MVVM模式/" class="archive-article-date">
-  	<time datetime="2017-05-23T06:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>之前一直对MVVM这个模式有点模糊，虽然也能做出项目，但是总感觉欠缺点什么东西，所以今天特意回来看了一下vue的这个MVVM，其实理解了还是蛮简单的，可能我一直遵循的是MVC和MCP的这种思想，所有这种思想转变的还是挺难受的。</p>
-<h3 id="关于MVVM"><a href="#关于MVVM" class="headerlink" title="关于MVVM"></a>关于MVVM</h3><p>vue集中在MVVM模式上的视图模型(ViewModel)层，并且通过双向数据绑定连接视图(View)和模型(Model)，实际的DOM操作和输出格式被抽象出来成指令和过滤器，看一个最简单的例子。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// 这是我们的 View</div><div class="line">&lt;div id=<span class="string">"example-1"</span>&gt;</div><div class="line">  Hello &#123;&#123; name &#125;&#125;!</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// 这是我们的 Model</div><div class="line">var exampleData = &#123;</div><div class="line">  name: <span class="string">'Vue.js'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// 创建一个 Vue 实例或 <span class="string">"ViewModel"</span></div><div class="line">// 它连接 上面的View 与 Model</div><div class="line">var exampleVM = new Vue(&#123;</div><div class="line">  el: <span class="string">'#example-1'</span>,</div><div class="line">  data: exampleData</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<p>这里的ViewModel连接着View和Model，因为我们只要修改ViewModel中的data数据，上面的Model和View会自动响应数据的变化。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/23/vue之全面理解MVVM模式/">展开全文 >></a>
         </p>
       
 
@@ -454,15 +455,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -471,10 +476,6 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">

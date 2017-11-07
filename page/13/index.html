@@ -147,6 +147,89 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-es6之Promise" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/07/es6之Promise/">es6之Promise</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/07/es6之Promise/" class="archive-article-date">
+  	<time datetime="2017-06-07T01:11:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>所谓Promise，简单说就是一个容器，里面保存着某个未来才会结束的事件（通常是一个异步操作）的结果。从语法上说，Promise是一个对象，从它可以获取异步操作的消息。Promise提供统一的API，各种异步操作都可以用同样的方法进行处理。</p>
+<p>Promise也有一些缺点。</p>
+<ul>
+<li>无法取消Promise，一旦新建它就会立即执行，无法中途取消。</li>
+<li>如果不设置回调函数，Promise内部抛出的错误，不会反应到外部。</li>
+<li>当处于Pending状态时，无法得知目前进展到哪一个阶段（刚刚开始还是即将完成）。</li>
+</ul>
+<p>如果某些事件不断地反复发生，一般来说，使用stream模式是比部署Promise更好的选择。</p>
+<h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><p>Promise构造函数接受一个函数作为参数，该函数的两个参数分别是resolve和reject。它们是两个函数，由JavaScript引擎提供，不用自己部署。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var promise = new Promise(<span class="keyword">function</span>(resolve, reject) &#123;</div><div class="line">  // ... some code</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (/* 异步操作成功 */)&#123;</div><div class="line">    resolve(value);</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    reject(error);</div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>Promise实例生成以后，可以用then方法分别指定Resolved状态和Reject状态的回调函数。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">promise.then(<span class="keyword">function</span>(value) &#123;</div><div class="line">  // success</div><div class="line">&#125;, <span class="keyword">function</span>(error) &#123;</div><div class="line">  // failure</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>then方法可以接受两个回调函数作为参数。第一个回调函数是Promise对象的状态变为Resolved时调用，第二个回调函数是Promise对象的状态变为Reject时调用。其中，第二个函数是可选的，不一定要提供。这两个函数都接受Promise对象传出的值作为参数。</p>
+<h3 id="Promise-prototype-catch"><a href="#Promise-prototype-catch" class="headerlink" title="Promise.prototype.catch()"></a>Promise.prototype.catch()</h3><p>Promise.prototype.catch方法是.then(null, rejection)的别名，用于指定发生错误时的回调函数。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">getJSON(<span class="string">"/posts.json"</span>).<span class="keyword">then</span>(<span class="keyword">function</span>(posts) &#123;</div><div class="line">  // ...</div><div class="line">&#125;).catch(<span class="keyword">function</span>(error) &#123;</div><div class="line">  // 处理 getJSON 和 前一个回调函数运行时发生的错误</div><div class="line">  console.log(<span class="string">'发生错误！'</span>, error);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>上面代码中，getJSON方法返回一个Promise对象，如果该对象状态变为Resolved，则会调用then方法指定的回调函数；如果异步操作抛出错误，状态就会变为Rejected，就会调用catch方法指定的回调函数，处理这个错误。另外，then方法指定的回调函数，如果运行中抛出错误，也会被catch方法捕获。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">p.then((val) =&gt; console.log(<span class="string">"fulfilled:"</span>, val))</div><div class="line">  .catch((err) =&gt; console.log(<span class="string">"rejected:"</span>, err));</div><div class="line"></div><div class="line">// 等同于</div><div class="line"></div><div class="line">p.then((val) =&gt; console.log(fulfilled:<span class="string">", val))</span></div><div class="line"><span class="string">  .then(null, (err) =&gt; console.log("</span>rejected:<span class="string">", err));</span></div></pre></td></tr></table></figure></p>
+<p>一般来说，不要在then方法里面定义Reject状态的回调函数（即then的第二个参数），总是使用catch方法。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">// bad</div><div class="line">promise</div><div class="line">  .<span class="keyword">then</span>(<span class="keyword">function</span>(data) &#123;</div><div class="line">    // success</div><div class="line">  &#125;, <span class="keyword">function</span>(err) &#123;</div><div class="line">    // error</div><div class="line">  &#125;);</div><div class="line"></div><div class="line">// good</div><div class="line">promise</div><div class="line">  .<span class="keyword">then</span>(<span class="keyword">function</span>(data) &#123; //cb</div><div class="line">    // success</div><div class="line">  &#125;)</div><div class="line">  .catch(<span class="keyword">function</span>(err) &#123;</div><div class="line">    // error</div><div class="line">  &#125;);</div></pre></td></tr></table></figure></p>
+<p>上面代码中，第二种写法要好于第一种写法，理由是第二种写法可以捕获前面then方法执行中的错误，也更接近同步的写法（try/catch）。因此，建议总是使用catch方法，而不使用then方法的第二个参数。</p>
+<p>跟传统的try/catch代码块不同的是，如果没有使用catch方法指定错误处理的回调函数，Promise对象抛出的错误不会传递到外层代码，即不会有任何反应。</p>
+<h3 id="Promise-all"><a href="#Promise-all" class="headerlink" title="Promise.all()"></a>Promise.all()</h3><p>Promise.all方法用于将多个Promise实例，包装成一个新的Promise实例。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var p = Promise.all([p1, p2, p3]);</div></pre></td></tr></table></figure></p>
+<p>上面代码中，Promise.all方法接受一个数组作为参数，p1、p2、p3都是Promise对象的实例，如果不是，就会先调用下面讲到的Promise.resolve方法，将参数转为Promise实例，再进一步处理。（Promise.all方法的参数可以不是数组，但必须具有Iterator接口，且返回的每个成员都是Promise实例。）</p>
+<p>p的状态由p1、p2、p3决定，分成两种情况。</p>
+<ul>
+<li>只有p1、p2、p3的状态都变成fulfilled，p的状态才会变成fulfilled，此时p1、p2、p3的返回值组成一个数组，传递给p的回调函数。</li>
+<li>只要p1、p2、p3之中有一个被rejected，p的状态就变成rejected，此时第一个被reject的实例的返回值，会传递给p的回调函数。</li>
+</ul>
+<p>下面是一个具体的例子。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">// 生成一个Promise对象的数组</div><div class="line">var promises = [2, 3, 5, 7, 11, 13].map(<span class="keyword">function</span> (id) &#123;</div><div class="line">  <span class="built_in">return</span> getJSON(<span class="string">"/post/"</span> + id + <span class="string">".json"</span>);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">Promise.all(promises).<span class="keyword">then</span>(<span class="keyword">function</span> (posts) &#123;</div><div class="line">  // ...</div><div class="line">&#125;).catch(<span class="keyword">function</span>(reason)&#123;</div><div class="line">  // ...</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>上面代码中，promises是包含6个Promise实例的数组，只有这6个实例的状态都变成fulfilled，或者其中有一个变为rejected，才会调用Promise.all方法后面的回调函数。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">es6</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/07/es6之Promise/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-es6之箭头函数" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -282,72 +365,6 @@
 
 
   
-    <article id="post-webpack+vue模块化构建项目" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/02/webpack+vue模块化构建项目/">webpack+vue模块化构建项目</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/02/webpack+vue模块化构建项目/" class="archive-article-date">
-  	<time datetime="2017-06-02T06:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="开始-确认已经安装node环境和npm包管理工具"><a href="#开始-确认已经安装node环境和npm包管理工具" class="headerlink" title="开始(确认已经安装node环境和npm包管理工具)"></a>开始(确认已经安装node环境和npm包管理工具)</h3><p>拓展：npm install 在安装 npm 包时，有两种命令参数可以把它们的信息写入 package.json 文件，一个是npm install –save ，另一个是 npm install –save-dev，他们表面上的区别是–save 会把依赖包名称添加到 package.json 文件 dependencies 键下，–save-dev 则添加到 package.json 文件 devDependencies 键下，–save-dev 是你开发时候依赖的东西，–save 是你发布之后还依赖的东西。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">1、新建项目文件名为demo</div><div class="line">2、npm init -y 初始化项目</div><div class="line">3、npm install --save vue 默认安装最新版vue</div><div class="line">4、npm install --save-dev webpack webpack-dev-server //安装webpack，webpack-dev-server（一个小型服务器）</div><div class="line">5、npm install --save-dev babel-core babel-loader babel-preset-es2015 //安装babel的作用是将es6的语法编译成浏览器认识的语法es5</div><div class="line">6、npm install --save-dev vue-loader vue-template-compiler //用来解析vue的组件，.vue后缀的文件</div><div class="line">7、npm install --save-dev css-loader style-loader   //用来解析css</div><div class="line">8、npm install --save-dev url-loader file-loader    //用于打包文件和图片</div><div class="line">9、npm install --save-dev sass-loader node-sass     //用于编译sass</div><div class="line"></div><div class="line">以下等等(省略)</div></pre></td></tr></table></figure></p>
-<h3 id="项目目录结构"><a href="#项目目录结构" class="headerlink" title="项目目录结构"></a>项目目录结构</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">demo</div><div class="line">-src</div><div class="line">--assets</div><div class="line">---img</div><div class="line">---sass</div><div class="line">---style</div><div class="line">--components</div><div class="line">---...</div><div class="line">--views //这里放详情页面</div><div class="line">---...</div><div class="line">--App.vue</div><div class="line">--main.js</div><div class="line">-index.html</div><div class="line">-package.json</div><div class="line">-webpack.config.js</div></pre></td></tr></table></figure>
-<h3 id="package-json"><a href="#package-json" class="headerlink" title="package.json"></a>package.json</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="string">"name"</span>: <span class="string">"demo"</span>,</div><div class="line">  <span class="string">"version"</span>: <span class="string">"1.0.0"</span>,</div><div class="line">  <span class="string">"description"</span>: <span class="string">""</span>,</div><div class="line">  <span class="string">"main"</span>: <span class="string">"index.js"</span>,</div><div class="line">  <span class="string">"scripts"</span>: &#123;</div><div class="line">    <span class="string">"test"</span>: <span class="string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span>,</div><div class="line">	<span class="string">"dev"</span>: <span class="string">"cross-env NODE_ENV=development webpack-dev-server --open --hot"</span>,</div><div class="line">	<span class="string">"build"</span>: <span class="string">"webpack"</span></div><div class="line">  &#125;,</div><div class="line">  <span class="string">"keywords"</span>: [],</div><div class="line">  <span class="string">"author"</span>: <span class="string">""</span>,</div><div class="line">  <span class="string">"license"</span>: <span class="string">"ISC"</span>,</div><div class="line">  <span class="string">"dependencies"</span>: &#123;</div><div class="line">    <span class="string">"vue"</span>: <span class="string">"^2.3.3"</span></div><div class="line">  &#125;,</div><div class="line">  <span class="string">"devDependencies"</span>: &#123;</div><div class="line">    <span class="string">"babel-core"</span>: <span class="string">"^6.24.1"</span>,</div><div class="line">    <span class="string">"babel-loader"</span>: <span class="string">"^7.0.0"</span>,</div><div class="line">    <span class="string">"babel-preset-es2015"</span>: <span class="string">"^6.24.1"</span>,</div><div class="line">    <span class="string">"cross-env"</span>: <span class="string">"^5.0.0"</span>,</div><div class="line">    <span class="string">"css-loader"</span>: <span class="string">"^0.28.4"</span>,</div><div class="line">    <span class="string">"file-loader"</span>: <span class="string">"^0.11.1"</span>,</div><div class="line">    <span class="string">"style-loader"</span>: <span class="string">"^0.18.1"</span>,</div><div class="line">    <span class="string">"url-loader"</span>: <span class="string">"^0.5.8"</span>,</div><div class="line">    <span class="string">"vue-loader"</span>: <span class="string">"^12.2.1"</span>,</div><div class="line">    <span class="string">"vue-template-compiler"</span>: <span class="string">"^2.3.3"</span>,</div><div class="line">    <span class="string">"webpack"</span>: <span class="string">"^2.6.1"</span>,</div><div class="line">    <span class="string">"webpack-dev-server"</span>: <span class="string">"^2.4.5"</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="webpack-config-js"><a href="#webpack-config-js" class="headerlink" title="webpack.config.js"></a>webpack.config.js</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div></pre></td><td class="code"><pre><div class="line">var path = require(<span class="string">'path'</span>)</div><div class="line">var webpack = require(<span class="string">'webpack'</span>)</div><div class="line"></div><div class="line">module.exports = &#123;</div><div class="line">    entry: <span class="string">'./src/main.js'</span>,</div><div class="line">    output: &#123;</div><div class="line">        path: path.resolve(__dirname, <span class="string">'./dist'</span>),</div><div class="line">        publicPath: <span class="string">'/dist/'</span>,</div><div class="line">        filename: <span class="string">'build.js'</span></div><div class="line">    &#125;,</div><div class="line">    module: &#123;</div><div class="line">        rules: [</div><div class="line">            &#123;</div><div class="line">                <span class="built_in">test</span>: /\.vue$/,</div><div class="line">                loader: <span class="string">'vue-loader'</span>,</div><div class="line">                options: &#123;</div><div class="line">                    loaders: &#123;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;,</div><div class="line">            &#123;</div><div class="line">                <span class="built_in">test</span>: /\.js$/,</div><div class="line">                loader: <span class="string">'babel-loader'</span>,</div><div class="line">                exclude: /node_modules/</div><div class="line">            &#125;,</div><div class="line">            &#123;</div><div class="line">                <span class="built_in">test</span>: /\.(png|jpg|gif|svg)$/,</div><div class="line">                loader: <span class="string">'file-loader'</span>,</div><div class="line">                options: &#123;</div><div class="line">                    name: <span class="string">'[name].[ext]?[hash]'</span></div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            ,</div><div class="line">            &#123;</div><div class="line">                <span class="built_in">test</span>: /\.css$/,</div><div class="line">                loader: <span class="string">"style-loader!css-loader"</span></div><div class="line">            &#125;</div><div class="line">        ]</div><div class="line">    &#125;,</div><div class="line">    resolve: &#123;</div><div class="line">        <span class="built_in">alias</span>: &#123;</div><div class="line">            <span class="string">'vue$'</span>: <span class="string">'vue/dist/vue.esm.js'</span></div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    devServer: &#123;</div><div class="line">        historyApiFallback: <span class="literal">true</span>,</div><div class="line">        noInfo: <span class="literal">true</span>,</div><div class="line">        inline: <span class="literal">true</span></div><div class="line">    &#125;,</div><div class="line">    performance: &#123;</div><div class="line">        hints: <span class="literal">false</span></div><div class="line">    &#125;,</div><div class="line">    devtool: <span class="string">'#eval-source-map'</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">if</span> (process.env.NODE_ENV === <span class="string">'production'</span>) &#123;</div><div class="line">    module.exports.devtool = <span class="string">'#source-map'</span></div><div class="line">    // http://vue-loader.vuejs.org/en/workflow/production.html</div><div class="line">    module.exports.plugins = (module.exports.plugins || []).concat([</div><div class="line">        new webpack.DefinePlugin(&#123;</div><div class="line">            <span class="string">'process.env'</span>: &#123;</div><div class="line">                NODE_ENV: <span class="string">'"production"'</span></div><div class="line">            &#125;</div><div class="line">        &#125;),</div><div class="line">        new webpack.optimize.UglifyJsPlugin(&#123;</div><div class="line">            sourceMap: <span class="literal">true</span>,</div><div class="line">            compress: &#123;</div><div class="line">                warnings: <span class="literal">false</span></div><div class="line">            &#125;</div><div class="line">        &#125;),</div><div class="line">        new webpack.LoaderOptionsPlugin(&#123;</div><div class="line">            minimize: <span class="literal">true</span></div><div class="line">        &#125;)</div><div class="line">    ])</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里webpack配置文件不明白的，可以看 <a href="http://www.jianshu.com/p/42e11515c10f" target="_blank" rel="external">webpack入门</a>，至于更多的配置，可百度。</p>
-<h3 id="项目跑起来"><a href="#项目跑起来" class="headerlink" title="项目跑起来"></a>项目跑起来</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1、webpack</div><div class="line"></div><div class="line">2、webpack-dev-server</div></pre></td></tr></table></figure>
-<h3 id="转换npm命令"><a href="#转换npm命令" class="headerlink" title="转换npm命令"></a>转换npm命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install cross-env --save-dev</div></pre></td></tr></table></figure>
-<p>package.json文件配置添加：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="string">"dev"</span>: <span class="string">"cross-env NODE_ENV=development webpack-dev-server --open --hot"</span>,</div><div class="line"><span class="string">"build"</span>: <span class="string">"webpack"</span></div></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/02/webpack+vue模块化构建项目/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/12/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/14/">Next &raquo;</a>
@@ -464,15 +481,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -481,10 +502,6 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">

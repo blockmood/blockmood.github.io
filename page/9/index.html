@@ -147,6 +147,65 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-gulp配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/06/gulp配置/">gulp配置</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/06/gulp配置/" class="archive-article-date">
+  	<time datetime="2017-07-06T00:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="package-json"><a href="#package-json" class="headerlink" title="package.json"></a>package.json</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="string">"name"</span>: <span class="string">"gulp"</span>,</div><div class="line">  <span class="string">"version"</span>: <span class="string">"1.0.0"</span>,</div><div class="line">  <span class="string">"description"</span>: <span class="string">""</span>,</div><div class="line">  <span class="string">"main"</span>: <span class="string">"index.js"</span>,</div><div class="line">  <span class="string">"scripts"</span>: &#123;</div><div class="line">    <span class="string">"test"</span>: <span class="string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span></div><div class="line">  &#125;,</div><div class="line">  <span class="string">"author"</span>: <span class="string">"iceStone &lt;ice@wedn.net&gt; (http://wedn.net/)"</span>,</div><div class="line">  <span class="string">"license"</span>: <span class="string">"ISC"</span>,</div><div class="line">  <span class="string">"devDependencies"</span>: &#123;</div><div class="line">    <span class="string">"browser-sync"</span>: <span class="string">"^2.11.1"</span>,</div><div class="line">    <span class="string">"del"</span>: <span class="string">"^2.2.0"</span>,</div><div class="line">    <span class="string">"gulp"</span>: <span class="string">"^3.9.0"</span>,</div><div class="line">    <span class="string">"gulp-autoprefixer"</span>: <span class="string">"^3.1.0"</span>,</div><div class="line">    <span class="string">"gulp-base64"</span>: <span class="string">"^0.1.3"</span>,</div><div class="line">    <span class="string">"gulp-concat"</span>: <span class="string">"^2.6.0"</span>,</div><div class="line">    <span class="string">"gulp-cssnano"</span>: <span class="string">"^2.1.0"</span>,</div><div class="line">    <span class="string">"gulp-htmlmin"</span>: <span class="string">"^1.3.0"</span>,</div><div class="line">    <span class="string">"gulp-imagemin"</span>: <span class="string">"^3.3.0"</span>,</div><div class="line">    <span class="string">"gulp-less"</span>: <span class="string">"^3.0.5"</span>,</div><div class="line">	<span class="string">"gulp-rev"</span>: <span class="string">"^7.1.2"</span>,</div><div class="line">    <span class="string">"gulp-rev-collector"</span>: <span class="string">"^1.2.2"</span>,</div><div class="line">    <span class="string">"gulp-uglify"</span>: <span class="string">"^3.0.0"</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="gulpfile-js"><a href="#gulpfile-js" class="headerlink" title="gulpfile.js"></a>gulpfile.js</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div></pre></td><td class="code"><pre><div class="line">var gulp = require(<span class="string">'gulp'</span>);</div><div class="line">var less = require(<span class="string">'gulp-less'</span>);</div><div class="line">var cssnano = require(<span class="string">'gulp-cssnano'</span>);</div><div class="line">var base64 = require(<span class="string">'gulp-base64'</span>);</div><div class="line">var imagemin = require(<span class="string">'gulp-imagemin'</span>);</div><div class="line">var concat = require(<span class="string">'gulp-concat'</span>);</div><div class="line">var uglify = require(<span class="string">'gulp-uglify'</span>);</div><div class="line">var htmlmin = require(<span class="string">'gulp-htmlmin'</span>);</div><div class="line">var browserSync = require(<span class="string">'browser-sync'</span>);</div><div class="line">var rev = require(<span class="string">'gulp-rev'</span>);</div><div class="line">var revCollector = require(<span class="string">'gulp-rev-collector'</span>);</div><div class="line"></div><div class="line">gulp.task(<span class="string">'css'</span>,[<span class="string">'images'</span>],<span class="function"><span class="title">function</span></span>() &#123;</div><div class="line">  gulp.src([<span class="string">'src/css/*.less'</span>, <span class="string">'!src/css/_*.less'</span>])</div><div class="line">     .pipe(less())</div><div class="line">  	 .pipe(base64(&#123;</div><div class="line">  		extensions: [<span class="string">'png'</span>, /\.jpg<span class="comment">#datauri$/i],</span></div><div class="line">  		exclude:    [/\.server\.(com|net)\/dynamic\//, <span class="string">'--live.jpg'</span>],</div><div class="line">  		maxImageSize: 800*1024,</div><div class="line">  		debug: <span class="literal">true</span></div><div class="line">  	&#125;))</div><div class="line">    .pipe(concat(<span class="string">'style.min.css'</span>))</div><div class="line">    .pipe(cssnano())</div><div class="line">    .pipe(gulp.dest(<span class="string">'dist/css'</span>))</div><div class="line">    .pipe(browserSync.reload(&#123;	</div><div class="line">      stream: <span class="literal">true</span></div><div class="line">    &#125;));</div><div class="line">&#125;);</div><div class="line"></div><div class="line"></div><div class="line">gulp.task(<span class="string">'images'</span>,<span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">	gulp.src(<span class="string">'./src/images/*'</span>)</div><div class="line">	 .pipe(gulp.dest(<span class="string">'dist/images'</span>))</div><div class="line">&#125;);</div><div class="line"></div><div class="line">gulp.task(<span class="string">'js'</span>, <span class="function"><span class="title">function</span></span>() &#123;</div><div class="line">  gulp.src(<span class="string">'src/js/*.js'</span>)</div><div class="line">    .pipe(concat(<span class="string">'all.js'</span>))</div><div class="line">    .pipe(uglify())</div><div class="line">    .pipe(gulp.dest(<span class="string">'dist/js'</span>))</div><div class="line">    .pipe(browserSync.reload(&#123;</div><div class="line">      stream: <span class="literal">true</span></div><div class="line">    &#125;));</div><div class="line">&#125;);</div><div class="line"></div><div class="line"></div><div class="line">gulp.task(<span class="string">'html'</span>, <span class="function"><span class="title">function</span></span>() &#123;</div><div class="line">  gulp.src(<span class="string">'src/*.html'</span>)</div><div class="line">    .pipe(htmlmin(&#123;</div><div class="line">      collapseWhitespace: <span class="literal">true</span>,</div><div class="line">      removeComments: <span class="literal">true</span></div><div class="line">    &#125;))</div><div class="line">    .pipe(gulp.dest(<span class="string">'dist'</span>))</div><div class="line">    .pipe(browserSync.reload(&#123;</div><div class="line">      stream: <span class="literal">true</span></div><div class="line">    &#125;));</div><div class="line">&#125;);</div><div class="line"></div><div class="line">gulp.task(<span class="string">'md5'</span>,<span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">    gulp.src(<span class="string">'dist/css/*.css'</span>)</div><div class="line">      .pipe(rev())</div><div class="line">      .pipe(gulp.dest(<span class="string">'dist/css/'</span>))</div><div class="line">      .pipe(rev.manifest())</div><div class="line">      .pipe(gulp.dest(<span class="string">'dist/config'</span>))</div><div class="line">&#125;)</div><div class="line"></div><div class="line">gulp.task(<span class="string">'top'</span>,<span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">    gulp.src([<span class="string">'./dist/config/*.json'</span>, <span class="string">'./dist/*.html'</span>])</div><div class="line">      .pipe(revCollector())</div><div class="line">      .pipe(gulp.dest(<span class="string">'./dist/'</span>))</div><div class="line">&#125;)</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">gulp.task(<span class="string">'server'</span>, <span class="function"><span class="title">function</span></span>() &#123;</div><div class="line">  browserSync(&#123;</div><div class="line">    server: &#123;</div><div class="line">      baseDir: [<span class="string">'dist'</span>]										</div><div class="line">    &#125;,</div><div class="line">  &#125;, <span class="keyword">function</span>(err, bs) &#123;</div><div class="line">    console.log(bs.options.getIn([<span class="string">"urls"</span>, <span class="string">"local"</span>]));	</div><div class="line">  &#125;);</div><div class="line"></div><div class="line">  gulp.watch(<span class="string">'src/*.html'</span>,[<span class="string">'html'</span>]);</div><div class="line">  gulp.watch(<span class="string">'src/css/*.less'</span>,[<span class="string">'css'</span>]);</div><div class="line">  gulp.watch(<span class="string">'src/js/*.js'</span>,[<span class="string">'js'</span>]);</div><div class="line"></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">gulp</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/06/gulp配置/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-gulp + webpack 构建多页面前端项目" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -391,69 +450,6 @@
 
 
   
-    <article id="post-javascript时间戳和日期字符串相互转换" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/03/javascript时间戳和日期字符串相互转换/">javascript时间戳和日期字符串相互转换</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/03/javascript时间戳和日期字符串相互转换/" class="archive-article-date">
-  	<time datetime="2017-07-03T06:12:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-03</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// 获取当前时间戳(以s为单位)</div><div class="line">var timestamp = Date.parse(new Date());</div><div class="line">timestamp = timestamp / 1000;</div><div class="line">//当前时间戳为：1403149534</div><div class="line">console.log(<span class="string">"当前时间戳为："</span> + timestamp);</div></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// 获取某个时间格式的时间戳</div><div class="line">var stringTime = <span class="string">"2014-07-10 10:21:12"</span>;</div><div class="line">var timestamp2 = Date.parse(new Date(stringTime));</div><div class="line">timestamp2 = timestamp2 / 1000;</div><div class="line">//2014-07-10 10:21:12的时间戳为：1404958872 </div><div class="line">console.log(stringTime + <span class="string">"的时间戳为："</span> + timestamp2);</div></pre></td></tr></table></figure>
-<h3 id="时间戳转日期格式"><a href="#时间戳转日期格式" class="headerlink" title="时间戳转日期格式"></a>时间戳转日期格式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;script&gt;     </div><div class="line"><span class="keyword">function</span> getLocalTime(nS) &#123;     </div><div class="line">   <span class="built_in">return</span> new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d&#123;1,2&#125;$/,<span class="string">' '</span>);     </div><div class="line">&#125;     </div><div class="line">alert(getLocalTime(1293072805));     </div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
-<p>结果是 2010-12-23 10:53<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"> &lt;script&gt;     </div><div class="line">    <span class="keyword">function</span> getLocalTime(nS) &#123;     </div><div class="line">       <span class="built_in">return</span> new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, <span class="string">"-"</span>).replace(/日/g, <span class="string">" "</span>);      </div><div class="line">    &#125;     </div><div class="line">    alert(getLocalTime(1177824835));     </div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
-<p>结果是 2010年12月23日 10:53</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">console.log(Date.parse(new Date(<span class="string">'2017-07-03 23:59:59'</span>)) / 1000);	//转为时间戳</div><div class="line">console.log(new Date(parseInt(1499097599) * 1000).toLocaleString());	//转为日期</div></pre></td></tr></table></figure>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/03/javascript时间戳和日期字符串相互转换/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/10/">Next &raquo;</a>
@@ -570,15 +566,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -587,10 +587,6 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">

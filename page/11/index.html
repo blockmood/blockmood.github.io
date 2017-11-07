@@ -147,6 +147,74 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-javascript中的Function和Object" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/29/javascript中的Function和Object/">javascript中的Function和Object</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/29/javascript中的Function和Object/" class="archive-article-date">
+  	<time datetime="2017-06-29T02:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在JavaScript中所有的对象都继承自Object原型，而Function又充当了对象的构造器，那么Funtion和Object到底有着什麽样的关系呢 ？<br>首先，一切都是对象。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">alert(Object instanceof Object); // <span class="literal">true</span>  </div><div class="line">alert(Function instanceof Object);// <span class="literal">true</span>    </div><div class="line">alert(Object instanceof Function);// <span class="literal">true</span>   </div><div class="line">alert(Function instanceof Function);// <span class="literal">true</span></div></pre></td></tr></table></figure></p>
+<p>由此可见，Object继承自己，Funtion继承自己，Object和Function互相是继承对方，也就是说Object和Function都既是函数也是对象。这一点很特别。所有的函数都是对象，可是并不是所有的对象都是函数。证明如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">foo</span></span>()&#123;&#125;;  </div><div class="line">alert(foo instanceof Function); // <span class="literal">true</span>  </div><div class="line">alert(foo instanceof Object); // <span class="literal">true</span>  </div><div class="line">alert(new foo() instanceof Function); // <span class="literal">false</span></div></pre></td></tr></table></figure></p>
+<p>我们看到由new + function的构造器实例化出来的对象不是函数，仅仅是Object的子类。接下来，我们会想所有的对象都有一个Function的构造器存储在原型链的constructor属性中，那么Object的构造器是什麽呢？ 证明：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">alert(Object.constructor); // <span class="keyword">function</span> <span class="function"><span class="title">Function</span></span>()&#123; [native code] &#125;  </div><div class="line">alert(Function.constructor); // <span class="keyword">function</span> <span class="function"><span class="title">Function</span></span>()&#123; [native code] &#125;</div></pre></td></tr></table></figure></p>
+<p>由此我们可以确定Object是由Function这个函数为原型的，而Function是由它自己为原型的。Function函数是由native code构成的，我们不用去深究了。存在function Function(){…}的定义，我们明白了Function其实就是函数指针，也看作函数变量。就相当于function foo(){}中的foo。连Object的构造器都是指向Function的，可以想象Function是一个顶级的函数定义，大大的区别于自定义的如function foo(){}这样的函数定义。</p>
+<p>看这样一个语句，new Function();以Function为原型来实例化一个对象，按照刚才Object.constructor 为 functon Function(){}来说，new Function()产生的对象应该是一个Object啊，我们来验证一下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">alert(new Function() instanceof Object); // <span class="literal">true</span>  </div><div class="line">alert(Object instanceof new Function());// <span class="literal">false</span>  </div><div class="line">alert(typeof new Function());// <span class="keyword">function</span>  </div><div class="line">alert(typeof Object);// <span class="keyword">function</span></div></pre></td></tr></table></figure></p>
+<p>其实new Function();将产生一个匿名函数，由于Function是顶级函数所以可以产生自定义函数，我们可以把所有的函数看作Function的子类。但所有的一切包括函数都是Object的子类这点是不变的，也得到了体现。typeof Object的结果说明Object也是一个函数。继续做实验：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alert(new Object().constructor); // <span class="keyword">function</span> <span class="function"><span class="title">Object</span></span>()&#123; [native code] &#125;</div></pre></td></tr></table></figure></p>
+<p>一个情理之中的疑惑。可以这么说凡是可以放在new后面的都是一个函数构造器，那么Object确实也像其它函数一样，是一个函数的指针或者是函数变量，但Function是顶级的所以Object要由Function来构造。可以这么理解，Function和Object一个是上帝，一个是撒旦同时诞生于宇宙的最开始，拥相当的力量。但是上帝更为光明，所以高高在上。Object要由Function来构造，Function属于顶级函数。但是撒旦并没有绝对的输给上帝，否则上帝就会消灭撒旦。于是或所有的对象都要继承Object包括Function(Object和Function既是对象又是函数)。就相当于所有的人包括上帝都有邪念一样。</p>
+<p>拓展一下，由Object我们会想到Array,Number,String等这些内置对象。有理由相信这些都是Object的子类。如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">alert(Array instanceof Object) // <span class="literal">true</span>  </div><div class="line">alert(String instanceof Object) // <span class="literal">true</span>  </div><div class="line">alert(Number instanceof Object) // <span class="literal">true</span>  </div><div class="line">alert(Object instanceof Array) // <span class="literal">false</span>  </div><div class="line">alert(Object instanceof String) // <span class="literal">false</span>  </div><div class="line">alert(Object instanceof Number) // <span class="literal">false</span></div></pre></td></tr></table></figure></p>
+<p>当然他们也都会有Object的特性就像魔鬼和撒旦的关系一样，也是Function的子类，由Function构造。那么有Array,String,Number构造的对像如：new Array();new Number();new String()的构造器是function Array(){…};function String(){…};function Number(){…};<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">alert(Array instanceof Function) // <span class="literal">true</span>  </div><div class="line">alert(String instanceof Function) // <span class="literal">true</span>  </div><div class="line">alert(Number instanceof Function) // <span class="literal">true</span>  </div><div class="line">alert(Array.constructor) // <span class="keyword">function</span> <span class="function"><span class="title">Function</span></span>()&#123; [native code] &#125;  </div><div class="line">alert(String.constructor) // <span class="keyword">function</span> <span class="function"><span class="title">Function</span></span>()&#123; [native code] &#125;  </div><div class="line">alert(Number.constructor) // <span class="keyword">function</span> <span class="function"><span class="title">Function</span></span>()&#123; [native code] &#125;</div></pre></td></tr></table></figure></p>
+<p>总结一下，像内置的函数或说对象把如:Object,String,Array等等和自定义的function关键字定义的函数,都是Function的子类。new Function()相当于function关键字定义。这里可以引出，Function.prototype原型链上的属性所有函数共享,Object.prototype原型链上的属性所有对象共享。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/29/javascript中的Function和Object/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-http之响应篇" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -280,92 +348,6 @@
 
 
   
-    <article id="post-es6之Set和WeakSet" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/13/es6之Set和WeakSet/">es6之Set和WeakSet</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/13/es6之Set和WeakSet/" class="archive-article-date">
-  	<time datetime="2017-06-13T07:11:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-13</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h3><p>ES6提供了新的数据结构Set。它类似于数组，但是成员的值都是唯一的，没有重复的值。</p>
-<p>Set本身是一个构造函数，用来生成Set数据结构。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">var s = new Set();</div><div class="line"></div><div class="line">[2, 3, 5, 4, 5, 2, 2].map(x =&gt; s.add(x));</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="built_in">let</span> i of s) &#123;</div><div class="line">  console.log(i);</div><div class="line">&#125;</div><div class="line">// 2 3 5 4</div></pre></td></tr></table></figure></p>
-<p>上面代码通过add方法向Set结构加入成员，结果表明Set结构不会添加重复的值。</p>
-<p>Set函数可以接受一个数组（或类似数组的对象）作为参数，用来初始化。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">// 例一</div><div class="line">var <span class="built_in">set</span> = new Set([1, 2, 3, 4, 4]);</div><div class="line">[...<span class="built_in">set</span>]</div><div class="line">// [1, 2, 3, 4]</div><div class="line"></div><div class="line">// 例二</div><div class="line">var items = new Set([1, 2, 3, 4, 5, 5, 5, 5]);</div><div class="line">items.size // 5</div><div class="line"></div><div class="line">// 例三</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">divs</span></span> () &#123;</div><div class="line">  <span class="built_in">return</span> [...document.querySelectorAll(<span class="string">'div'</span>)];</div><div class="line">&#125;</div><div class="line"></div><div class="line">var <span class="built_in">set</span> = new Set(divs());</div><div class="line">set.size // 56</div><div class="line"></div><div class="line">// 类似于</div><div class="line">divs().forEach(div =&gt; set.add(div));</div><div class="line">set.size // 56</div></pre></td></tr></table></figure></p>
-<p>上面代码中，例一和例二都是Set函数接受数组作为参数，例三是接受类似数组的对象作为参数。</p>
-<p>上面代码中，也展示了一种去除数组重复成员的方法。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 去除数组的重复成员</div><div class="line">[...new Set(array)]</div></pre></td></tr></table></figure></p>
-<p>向Set加入值的时候，不会发生类型转换，所以5和”5”是两个不同的值。Set内部判断两个值是否不同，使用的算法叫做“Same-value equality”，它类似于精确相等运算符（===），主要的区别是NaN等于自身，而精确相等运算符认为NaN不等于自身。在Set内部，两个NaN是相等。</p>
-<h4 id="Set实例的属性和方法"><a href="#Set实例的属性和方法" class="headerlink" title="Set实例的属性和方法"></a>Set实例的属性和方法</h4><p>Set结构的实例有以下属性。</p>
-<p>Set.prototype.constructor：构造函数，默认就是Set函数。<br>Set.prototype.size：返回Set实例的成员总数。<br>Set实例的方法分为两大类：操作方法（用于操作数据）和遍历方法（用于遍历成员）。下面先介绍四个操作方法。</p>
-<p>add(value)：添加某个值，返回Set结构本身。<br>delete(value)：删除某个值，返回一个布尔值，表示删除是否成功。<br>has(value)：返回一个布尔值，表示该值是否为Set的成员。<br>clear()：清除所有成员，没有返回值。<br>上面这些属性和方法的实例如下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">s.add(1).add(2).add(2);</div><div class="line">// 注意2被加入了两次</div><div class="line"></div><div class="line">s.size // 2</div><div class="line"></div><div class="line">s.has(1) // <span class="literal">true</span></div><div class="line">s.has(2) // <span class="literal">true</span></div><div class="line">s.has(3) // <span class="literal">false</span></div><div class="line"></div><div class="line">s.delete(2);</div><div class="line">s.has(2) // <span class="literal">false</span></div></pre></td></tr></table></figure></p>
-<p>Array.from方法可以将Set结构转为数组。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">var items = new Set([1, 2, 3, 4, 5]);</div><div class="line">var array = Array.from(items);</div></pre></td></tr></table></figure></p>
-<p>这就提供了去除数组重复成员的另一种方法。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> dedupe(array) &#123;</div><div class="line">  <span class="built_in">return</span> Array.from(new Set(array));</div><div class="line">&#125;</div><div class="line"></div><div class="line">dedupe([1, 1, 2, 3]) // [1, 2, 3]</div></pre></td></tr></table></figure></p>
-<h4 id="遍历操作"><a href="#遍历操作" class="headerlink" title="遍历操作"></a>遍历操作</h4><p>Set结构的实例有四个遍历方法，可以用于遍历成员。</p>
-<p>keys()：返回一个键名的遍历器<br>values()：返回一个键值的遍历器<br>entries()：返回一个键值对的遍历器<br>forEach()：使用回调函数遍历每个成员<br>key方法、value方法、entries方法返回的都是遍历器对象。由于Set结构没有键名，只有键值（或者说键名和键值是同一个值），所以key方法和value方法的行为完全一致。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">let</span> <span class="built_in">set</span> = new Set([<span class="string">'red'</span>, <span class="string">'green'</span>, <span class="string">'blue'</span>]);</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="built_in">let</span> item of set.keys()) &#123;</div><div class="line">  console.log(item);</div><div class="line">&#125;</div><div class="line">// red</div><div class="line">// green</div><div class="line">// blue</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="built_in">let</span> item of set.values()) &#123;</div><div class="line">  console.log(item);</div><div class="line">&#125;</div><div class="line">// red</div><div class="line">// green</div><div class="line">// blue</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="built_in">let</span> item of set.entries()) &#123;</div><div class="line">  console.log(item);</div><div class="line">&#125;</div><div class="line">// [<span class="string">"red"</span>, <span class="string">"red"</span>]</div><div class="line">// [<span class="string">"green"</span>, <span class="string">"green"</span>]</div><div class="line">// [<span class="string">"blue"</span>, <span class="string">"blue"</span>]</div></pre></td></tr></table></figure></p>
-<p>Set结构的实例默认可遍历，它的默认遍历器生成函数就是它的values方法。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Set.prototype[Symbol.iterator] === Set.prototype.values</div><div class="line">// <span class="literal">true</span></div></pre></td></tr></table></figure></p>
-<p>这意味着，可以省略values方法，直接用for…of循环遍历Set。</p>
-<h3 id="WeakSet"><a href="#WeakSet" class="headerlink" title="WeakSet"></a>WeakSet</h3><p>WeakSet结构与Set类似，也是不重复的值的集合。但是，它与Set有两个区别。</p>
-<p>首先，WeakSet的成员只能是对象，而不能是其他类型的值。</p>
-<p>其次，WeakSet中的对象都是弱引用，即垃圾回收机制不考虑WeakSet对该对象的引用，也就是说，如果其他对象都不再引用该对象，那么垃圾回收机制会自动回收该对象所占用的内存，不考虑该对象还存在于WeakSet之中。这个特点意味着，无法引用WeakSet的成员，因此WeakSet是不可遍历的。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">var ws = new WeakSet();</div><div class="line">ws.add(1)</div><div class="line">// TypeError: Invalid value used <span class="keyword">in</span> weak <span class="built_in">set</span></div><div class="line">ws.add(Symbol())</div><div class="line">// TypeError: invalid value used <span class="keyword">in</span> weak <span class="built_in">set</span></div></pre></td></tr></table></figure>
-<p>上面代码试图向WeakSet添加一个数值和Symbol值，结果报错，因为WeakSet只能放置对象。</p>
-<p>WeakSet是一个构造函数，可以使用new命令，创建WeakSet数据结构。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var ws = new WeakSet();</div></pre></td></tr></table></figure>
-<p>作为构造函数，WeakSet可以接受一个数组或类似数组的对象作为参数。（实际上，任何具有iterable接口的对象，都可以作为WeakSet的参数。）该数组的所有成员，都会自动成为WeakSet实例对象的成员。</p>
-<p>WeakSet结构有以下三个方法。</p>
-<p>WeakSet.prototype.add(value)：向WeakSet实例添加一个新成员。<br>WeakSet.prototype.delete(value)：清除WeakSet实例的指定成员。<br>WeakSet.prototype.has(value)：返回一个布尔值，表示某个值是否在WeakSet实例之中。<br>下面是一个例子。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">var ws = new WeakSet();</div><div class="line">var obj = &#123;&#125;;</div><div class="line">var foo = &#123;&#125;;</div><div class="line"></div><div class="line">ws.add(window);</div><div class="line">ws.add(obj);</div><div class="line"></div><div class="line">ws.has(window); // <span class="literal">true</span></div><div class="line">ws.has(foo);    // <span class="literal">false</span></div><div class="line"></div><div class="line">ws.delete(window);</div><div class="line">ws.has(window);    // <span class="literal">false</span></div></pre></td></tr></table></figure></p>
-<p>WeakSet没有size属性，没有办法遍历它的成员。</p>
-<p>WeakSet不能遍历，是因为成员都是弱引用，随时可能消失，遍历机制无法保证成员的存在，很可能刚刚遍历结束，成员就取不到了。WeakSet的一个用处，是储存DOM节点，而不用担心这些节点从文档移除时，会引发内存泄漏。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">es6</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/13/es6之Set和WeakSet/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/10/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/12/">Next &raquo;</a>
@@ -482,15 +464,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -499,10 +485,6 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">

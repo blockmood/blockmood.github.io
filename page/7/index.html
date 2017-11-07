@@ -147,6 +147,131 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JavaScript之闭包详解篇2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/12/JavaScript之闭包详解篇2/">JavaScript之闭包详解篇2</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/12/JavaScript之闭包详解篇2/" class="archive-article-date">
+  	<time datetime="2017-07-12T12:42:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>MDN 对闭包的定义为：</p>
+<ul>
+<li>闭包是指那些能够访问自由变量的函数。<br>那什么是自由变量呢？</li>
+<li>自由变量是指在函数中使用的，但既不是函数参数也不是函数的局部变量的变量。<br>由此，我们可以看出闭包共有两部分组成：</li>
+<li>闭包 = 函数 + 函数能够访问的自由变量</li>
+</ul>
+<p>举个例子：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var a = 1;</div><div class="line"></div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">foo</span></span>() &#123;</div><div class="line">    console.log(a);</div><div class="line">&#125;</div><div class="line"></div><div class="line">foo();</div></pre></td></tr></table></figure>
+<p>foo 函数可以访问变量 a，但是 a 既不是 foo 函数的局部变量，也不是 foo 函数的参数，所以 a 就是自由变量。</p>
+<p>那么，函数 foo + foo 函数访问的自由变量 a 不就是构成了一个闭包嘛……</p>
+<p>还真是这样的！</p>
+<p>所以在《JavaScript权威指南》中就讲到：从技术的角度讲，所有的JavaScript函数都是闭包。</p>
+<p>咦，这怎么跟我们平时看到的讲到的闭包不一样呢！？</p>
+<p>别着急，这是理论上的闭包，其实还有一个实践角度上的闭包，让我们看看汤姆大叔翻译的关于闭包的文章中的定义：</p>
+<p>ECMAScript中，闭包指的是：</p>
+<ul>
+<li>从理论角度：所有的函数。因为它们都在创建的时候就将上层上下文的数据保存起来了。哪怕是简单的全局变量也是如此，因为函数中访问全局变量就相当于是在访问自由变量，这个时候使用最外层的作用域。</li>
+<li>从实践角度：以下函数才算是闭包：<ul>
+<li>即使创建它的上下文已经销毁，它仍然存在（比如，内部函数从父函数中返回）</li>
+<li>在代码中引用了自由变量</li>
+</ul>
+</li>
+</ul>
+<p>接下来就来讲讲实践上的闭包。</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>让我们先写个例子，例子依然是来自《JavaScript权威指南》，稍微做点改动：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">var scope = <span class="string">"global scope"</span>;</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">checkscope</span></span>()&#123;</div><div class="line">    var scope = <span class="string">"local scope"</span>;</div><div class="line">    <span class="keyword">function</span> <span class="function"><span class="title">f</span></span>()&#123;</div><div class="line">        <span class="built_in">return</span> scope;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">return</span> f;</div><div class="line">&#125;</div><div class="line"></div><div class="line">var foo = checkscope();</div><div class="line">foo();</div></pre></td></tr></table></figure></p>
+<p>首先我们要分析一下这段代码中执行上下文栈和执行上下文的变化情况。<br>另一个与这段代码相似的例子，在<a href="https://blockmood.github.io/2017/07/04/JavaScript%E6%B7%B1%E5%85%A5%E4%B9%8B%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87/" target="_blank" rel="external">JavaScript深入之执行上下文</a>中有着非常详细的分析。如果看不懂以下的执行过程，建议先阅读这篇文章。</p>
+<p>这里直接给出简要的执行过程：</p>
+<ul>
+<li>进入全局代码，创建全局执行上下文，全局执行上下文压入执行上下文栈</li>
+<li>全局执行上下文初始化</li>
+<li>执行 checkscope 函数，创建 checkscope 函数执行上下文，checkscope 执行上下文被压入执行上下文栈</li>
+<li>checkscope 执行上下文初始化，创建变量对象、作用域链、this等</li>
+<li>checkscope 函数执行完毕，checkscope 执行上下文从执行上下文栈中弹出</li>
+<li>执行 f 函数，创建 f 函数执行上下文，f 执行上下文被压入执行上下文栈</li>
+<li>f 执行上下文初始化，创建变量对象、作用域链、this等</li>
+<li>f 函数执行完毕，f 函数上下文从执行上下文栈中弹出</li>
+</ul>
+<p>了解到这个过程，我们应该思考一个问题，那就是：</p>
+<p>当 f 函数执行的时候，checkscope 函数上下文已经被销毁了啊(即从执行上下文栈中被弹出)，怎么还会读取到 checkscope 作用域下的 scope 值呢？</p>
+<p>以上的代码，要是转换成 PHP，就会报错，因为在 PHP 中，f 函数只能读取到自己作用域和全局作用域里的值，所以读不到 checkscope 下的 scope 值。(这段我问的PHP同事……)</p>
+<p>然而 JavaScript 却是可以的！</p>
+<p>当我们了解了具体的执行过程后，我们知道 f 执行上下文维护了一个作用域链：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">fContext = &#123;</div><div class="line">    Scope: [AO, checkscopeContext.AO, globalContext.VO],</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>对的，就是因为这个作用域链，f 函数依然可以读取到 checkscopeContext.AO 的值，说明当 f 函数引用了 checkscopeContext.AO 中的值的时候，即使 checkscopeContext 被销毁了，但是 JavaScript 依然会让 checkscopeContext.AO 活在内存中，f 函数依然可以通过 f 函数的作用域链找到它，正是因为 JavaScript 做到了这一点，从而实现了闭包这个概念。</p>
+<p>所以，让我们再看一遍实践角度上闭包的定义：</p>
+<ul>
+<li>即使创建它的上下文已经销毁，它仍然存在（比如，内部函数从父函数中返回）</li>
+<li>在代码中引用了自由变量</li>
+</ul>
+<h3 id="必刷题"><a href="#必刷题" class="headerlink" title="必刷题"></a>必刷题</h3><p>接下来，看这道刷题必刷，面试必考的闭包题：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">var data = [];</div><div class="line"></div><div class="line"><span class="keyword">for</span> (var i = 0; i &lt; 3; i++) &#123;</div><div class="line">  data[i] = <span class="function"><span class="title">function</span></span> () &#123;</div><div class="line">    console.log(i);</div><div class="line">  &#125;;</div><div class="line">&#125;</div><div class="line"></div><div class="line">data[0]();</div><div class="line">data[1]();</div><div class="line">data[2]();</div></pre></td></tr></table></figure>
+<p>答案是都是 3，让我们分析一下原因：</p>
+<p>当执行到 data[0] 函数之前，此时全局上下文的 VO 为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">globalContext = &#123;</div><div class="line">    VO: &#123;</div><div class="line">        data: [...],</div><div class="line">        i: 3</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当执行 data[0] 函数的时候，data[0] 函数的作用域链为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">data[0]Context = &#123;</div><div class="line">    Scope: [AO, globalContext.VO]</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>data[0]Context 的 AO 并没有 i 值，所以会从 globalContext.VO 中查找，i 为 3，所以打印的结果就是 3。</p>
+<p>data[1] 和 data[2] 是一样的道理。</p>
+<p>所以让我们改成闭包看看：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">var data = [];</div><div class="line"></div><div class="line"><span class="keyword">for</span> (var i = 0; i &lt; 3; i++) &#123;</div><div class="line">  data[i] = (<span class="keyword">function</span> (i) &#123;</div><div class="line">        <span class="built_in">return</span> <span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">            console.log(i);</div><div class="line">        &#125;</div><div class="line">  &#125;)(i);</div><div class="line">&#125;</div><div class="line"></div><div class="line">data[0]();</div><div class="line">data[1]();</div><div class="line">data[2]();</div></pre></td></tr></table></figure>
+<p>当执行到 data[0] 函数之前，此时全局上下文的 VO 为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">globalContext = &#123;</div><div class="line">    VO: &#123;</div><div class="line">        data: [...],</div><div class="line">        i: 3</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>跟没改之前一模一样。</p>
+<p>当执行 data[0] 函数的时候，data[0] 函数的作用域链发生了改变：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">data[0]Context = &#123;</div><div class="line">    Scope: [AO, 匿名函数Context.AO globalContext.VO]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>匿名函数执行上下文的AO为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">匿名函数Context = &#123;</div><div class="line">    AO: &#123;</div><div class="line">        arguments: &#123;</div><div class="line">            0: 0,</div><div class="line">            length: 1</div><div class="line">        &#125;,</div><div class="line">        i: 0</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>data[0]Context 的 AO 并没有 i 值，所以会沿着作用域链从匿名函数 Context.AO 中查找，这时候就会找 i 为 0，找到了就不会往 globalContext.VO 中查找了，即使 globalContext.VO 也有 i 的值(值为3)，所以打印的结果就是0。</p>
+<p>data[1] 和 data[2] 是一样的道理。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/12/JavaScript之闭包详解篇2/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-图解TCP三次握手与四次分手" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -282,80 +407,6 @@
 
 
   
-    <article id="post-webpack独立打包和缓存处理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/10/webpack独立打包和缓存处理/">webpack独立打包和缓存处理</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/10/webpack独立打包和缓存处理/" class="archive-article-date">
-  	<time datetime="2017-07-10T03:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-10</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="独立打包"><a href="#独立打包" class="headerlink" title="独立打包"></a>独立打包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">var webpack = require(<span class="string">'webpack'</span>);</div><div class="line">var path = require(<span class="string">'path'</span>);</div><div class="line"> </div><div class="line">module.exports = &#123;</div><div class="line"> entry: &#123;</div><div class="line">  main: <span class="string">'./app/index.js'</span>,</div><div class="line">  vendor: [<span class="string">'jquery'</span>]</div><div class="line"> &#125;,</div><div class="line"> output: &#123;</div><div class="line">  filename: <span class="string">'[name].js'</span>,</div><div class="line">  path: path.resolve(__dirname, <span class="string">'dist'</span>)</div><div class="line"> &#125;,</div><div class="line"> plugins:[</div><div class="line">  new webpack.optimize.CommonsChunkPlugin(&#123;</div><div class="line">   name: <span class="string">'vendor'</span></div><div class="line">  &#125;),</div><div class="line"> ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上方我们将原本的单入口文件改成了多入口文件，并加入了vendor属性。vendor属性用于配置打包第三方类库，写入数组的类库名将统一打包到一个文件里。<br>同时我们将输出的filename用[name]变量来自动生成文件名，最后我们添加了一个CommonsChunkPlugin的插件，用于提取vendor。<br>配置完成后我们运行webpack命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Hash: ee1daf95c1986768927a</div><div class="line">Version: webpack 2.3.2</div><div class="line">Time: 573ms</div><div class="line">  Asset  Size Chunks     Chunk Names</div><div class="line">  main.js 340 bytes  0 [emitted]   main</div><div class="line">vendor.js  274 kB  1 [emitted] [big] vendor</div><div class="line"> [0] ./~/jquery/dist/jquery.js 267 kB &#123;1&#125; [built]</div><div class="line"> [1] ./app/hello.js 53 bytes &#123;0&#125; [built]</div><div class="line"> [2] ./app/index.js 114 bytes &#123;0&#125; [built]</div><div class="line"> [3] multi jquery 28 bytes &#123;1&#125; [built]</div></pre></td></tr></table></figure></p>
-<p>最终发现我们成功将jQuery打包到了vendor.js中，实现了独立打包，但是问题又来了：每次打包后生成的文件名都是一样的，浏览器可能缓存上一次的结果而无法加载最新数据。</p>
-<h3 id="添加hash"><a href="#添加hash" class="headerlink" title="添加hash"></a>添加hash</h3><p>为了解决上述问题，我们需要为打包后的文件名添加hash值，这样每次修改后打包的文件hash值将改变，修改配置文件如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">module.exports = &#123;</div><div class="line"> ...</div><div class="line">  output: &#123;</div><div class="line">   filename: <span class="string">'[name].[chunkHash:5].js'</span>,</div><div class="line">   path: path.resolve(__dirname, <span class="string">'dist'</span>)</div><div class="line">  &#125;,</div><div class="line"> ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>上方我们在输出文件名中增加了[chunkHash:5]变量，表示打包后的文件中加入保留5位的hash值。我们再次运行打包命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Hash: c7d1295f2f9a27c412d2</div><div class="line">Version: webpack 2.3.2</div><div class="line">Time: 603ms</div><div class="line">   Asset  Size Chunks     Chunk Names</div><div class="line"> main.2a7ad.js 337 bytes  0 [emitted]   main</div><div class="line">vendor.49eb4.js  274 kB  1 [emitted] [big] vendor</div><div class="line"> [0] ./~/jquery/dist/jquery.js 267 kB &#123;1&#125; [built]</div><div class="line"> [1] ./app/hello.js 50 bytes &#123;0&#125; [built]</div><div class="line"> [2] ./app/index.js 114 bytes &#123;0&#125; [built]</div><div class="line"> [3] multi jquery 28 bytes &#123;1&#125; [built]</div></pre></td></tr></table></figure>
-<p>上方我们发现打包后的文件成功加上了hash值，这样每次修改文件后hash值也会跟着变，就不怕浏览器缓存了，但是当我们尝试去修改一个js文件后再次打包，问题又来了：vendor.js的hash值也变了，我们并没有修改jQuery的源码。</p>
-<h3 id="修改vendor配置"><a href="#修改vendor配置" class="headerlink" title="修改vendor配置"></a>修改vendor配置</h3><p>上述问题产生的原因是因为CommonsChunkPlugin插件是用于提取公共代码的，上方我们只是提取了vendor作为公共代码。为了继续解决上述问题，其实方法很简单，我们需要修改CommonsChunkPlugin的配置，如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">module.exports = &#123;</div><div class="line"> ...</div><div class="line">  plugins:[</div><div class="line">   new webpack.optimize.CommonsChunkPlugin(&#123;</div><div class="line">    names: [<span class="string">'vendor'</span>, <span class="string">'manifest'</span>]</div><div class="line">   &#125;),</div><div class="line">  ]</div><div class="line"> ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>如此我们修改一下hello.js中的代码，发现vendor的hash值并未改变，并且多了一个manifest.js的小文件。manifest.js为webpack的启动文件代码，它会直接影响到hash值，用mainfest单独抽出来了，这样vendor的hash就不会变了。</p>
-<h3 id="生成index-html"><a href="#生成index-html" class="headerlink" title="生成index.html"></a>生成index.html</h3><p>通过以上对webpack配置文件的一系列修改，我们成功实现了webpack的独立打包与缓存处理，但是还差最后一步。<br>因为我们最终打包后生成的文件名中带有hash值，每次都是会变的，所以我们不能像目前这样在index.html中写死路径。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">&lt;body&gt;</div><div class="line"> &lt;script src=<span class="string">"./dist/main.js"</span>&gt;&lt;/script&gt;</div><div class="line"> &lt;script src=<span class="string">"./dist/vendor.js"</span>&gt;&lt;/script&gt;</div><div class="line"> &lt;script src=<span class="string">"./dist/manifest.js"</span>&gt;&lt;/script&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">...</div></pre></td></tr></table></figure></p>
-<p>以上写法是不对的，因为缺少了可变的hash值，因此我们希望每次打包后index.html中的路径也会自动加上hash值，解决方法如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">var HtmlWebpackPlugin = require(<span class="string">'html-webpack-plugin'</span>);</div><div class="line"> </div><div class="line">module.exports = &#123;</div><div class="line"> ...</div><div class="line">  plugins:[</div><div class="line">   ...</div><div class="line">   new HtmlWebpackPlugin(&#123;</div><div class="line">    title: <span class="string">'demo'</span>,</div><div class="line">    template: <span class="string">'index.html'</span> // 模板路径</div><div class="line">   &#125;),</div><div class="line">   ...</div><div class="line">  ]</div><div class="line"> ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>上方我们引入了html-webpack-plugin这一个插件，该插件可以帮助我们根据模板生成html文件。在plugins设置中，title配置了生成html中的title部分，template为模板html的路径地址。<br>我们需要下载html-webpack-plugin：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install html-webpack-plugin --save-dev</div></pre></td></tr></table></figure></p>
-<p>安装和配置完毕后，运行打包命令：webpack<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">Hash: 0c4b91e206579b31544d</div><div class="line">Version: webpack 2.3.2</div><div class="line">Time: 856ms</div><div class="line">   Asset  Size Chunks     Chunk Names</div><div class="line"> vendor.e1868.js  268 kB  0 [emitted] [big] vendor</div><div class="line"> main.44412.js 337 bytes  1 [emitted]   main</div><div class="line">manifest.ed186.js 5.81 kB  2 [emitted]   manifest</div><div class="line">  index.html 292 bytes   [emitted]</div><div class="line"> [0] ./~/jquery/dist/jquery.js 267 kB &#123;0&#125; [built]</div><div class="line"> [1] ./app/hello.js 50 bytes &#123;1&#125; [built]</div><div class="line"> [2] ./app/index.js 114 bytes &#123;1&#125; [built]</div><div class="line"> [3] multi jquery 28 bytes &#123;0&#125; [built]</div></pre></td></tr></table></figure></p>
-<p>我们发现在dist目录下生成了一个index.html文件，打开该文件后代码如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line"> &lt;meta charset=<span class="string">"UTF-8"</span>&gt;</div><div class="line"> &lt;title&gt;demo&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">&lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span> src=<span class="string">"manifest.ed186.js"</span>&gt;&lt;/script&gt;</div><div class="line">&lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span> src=<span class="string">"vendor.e1868.js"</span>&gt;&lt;/script&gt;</div><div class="line">&lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span> src=<span class="string">"main.44412.js"</span>&gt;&lt;/script&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
-<p>至此我们实现了每次打包后index.html中的路径也会自动加上hash值的功能，因此dist目录下的index.html即为以后的首页文件，最后我们在浏览器中打开该文件成功显示：</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/10/webpack独立打包和缓存处理/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
@@ -472,15 +523,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -489,10 +544,6 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">

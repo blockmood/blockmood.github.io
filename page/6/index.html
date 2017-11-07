@@ -147,6 +147,83 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-vue之vuex" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/26/vue之vuex/">vue之vuex</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/26/vue之vuex/" class="archive-article-date">
+  	<time datetime="2017-07-26T06:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在vue里，组件之间的作用域是独立的，父组件跟子组件之间的通讯可以通过prop属性来传参，但是在兄弟组件之间通讯就比较麻烦了。比如A组件要告诉一件事给B组件，那么A就要先告诉他们的爸组件，然后爸组件再告诉B。当组件比较多，要互相通讯的事情很多的话，爸组件要管他们那么多事，很累的。vuex正是为了解决这个问题，让多个子组件之间可以方便的通讯。<br>待办事项中的一个事件，它可能拥有几个状态，未完成、已完成、已取消或被删除等。这个事件需要在这多种状态之间切换，那么使用vuex来管理也是非常方便的。</p>
+<p>来看一下vuex怎么完成状态管理的：<br><img src="/img/vuex.png" alt="vuex"></p>
+<p>以上的图分为以下几步：</p>
+<ul>
+<li>1.所有的组件都是调用actions</li>
+<li>2.分发mutation去修改state</li>
+<li>3.然后state又通过getter更新到各个组件中</li>
+</ul>
+<h3 id="模块化"><a href="#模块化" class="headerlink" title="模块化"></a>模块化</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">|-store/                   // 存放vuex代码</div><div class="line">|   |-eventModule          // 事件模块</div><div class="line">|   |   |-actions.js</div><div class="line">|   |   |-getters.js</div><div class="line">|   |   |-index.js</div><div class="line">|   |   |-mutations.js</div><div class="line">|   |   |-state.js</div><div class="line">|   |-themeModule           // 主题颜色模块</div><div class="line">|   |   |-actions.js</div><div class="line">|   |   |-getters.js</div><div class="line">|   |   |-index.js</div><div class="line">|   |   |-mutations.js</div><div class="line">|   |   |-state.js</div><div class="line">|   |-index.js              // vuex的核心，创建一个store</div></pre></td></tr></table></figure>
+<p>可以看到，每个模块拥有自己的state、mutation、action、getter，这样子我们就可以把我们的项目根据功能划分为多个模块去使用vuex了，而且后期维护也不会一脸懵逼。</p>
+<h3 id="状态管理"><a href="#状态管理" class="headerlink" title="状态管理"></a>状态管理</h3><p>接下来，我们来看看vuex完成状态管理的一个流程。<br>举个栗子：一个待办事项，勾选之后，会在未完成列表里移除，并在已完成的列表里出现。这个过程，是这个待办事项的状态发生了改变。勾选的时候，是执行了一个方法，那我们就先写这个方法。在 event_list.vue 文件里新建一个moveToDone方法。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">methods: &#123;</div><div class="line">    moveToDone(id)&#123; //移至已完成</div><div class="line">        this.<span class="variable">$store</span>.dispatch(<span class="string">'eventdone'</span>, id);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在 moveToDone 方法中通过 store.dispatch 方法触发 action, 接下来我们在 eventModule/actions.js 中来注册这个 action, 接受一个 id 的参数。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> default &#123;</div><div class="line">    eventdone = (&#123; commit &#125;, param) =&gt;&#123;</div><div class="line">        commit(<span class="string">'EVENTDONE'</span>,&#123;id: param&#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>action 通过调用 store.commit 提交载荷(也就是{id: param}这个对象)到名为’EVENTDONE’的 mutation，那我们再来注册这个 mutation<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> default &#123;</div><div class="line">    EVENTDONE(states,obj)&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="built_in">let</span> i = 0; i &lt; states.event.length; i++) &#123;</div><div class="line">            <span class="keyword">if</span> (states.event[i].id === obj.id) &#123;</div><div class="line">                states.event[i].<span class="built_in">type</span> = 2;</div><div class="line">                states.event[i].time = getDate();</div><div class="line">                var item = states.event[i];</div><div class="line">                states.event.splice(i, 1);          // 把该事件在数组中删除</div><div class="line">                <span class="built_in">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        states.event.unshift(item);                 // 把该事件存到数组的第一个元素</div><div class="line">        local.set(states);                          // 将整个状态存到本地</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>通过 mutation 去修改 state, state里我们存放了一个 event 属性<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> default &#123;</div><div class="line">    event: []</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>在组件中要获得这个 state 里的 event, 那就需要写个getters<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> default &#123;</div><div class="line">    getDone(states)&#123;</div><div class="line">        <span class="built_in">return</span> states.event.filter(<span class="keyword">function</span> (d) &#123;</div><div class="line">            <span class="keyword">if</span> (d.type === 2) &#123;                 // <span class="built_in">type</span> == 2表示已完成</div><div class="line">                <span class="built_in">return</span> d;                       // 返回已完成的事件</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>然后每个module里都有一个index.js文件，把自己的state、mutation、action、getters都集合起来，就是一个module<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">import * as func from <span class="string">'../function'</span>;</div><div class="line">import actions from <span class="string">'./actions.js'</span>;</div><div class="line">import mutations from <span class="string">'./mutations.js'</span>;</div><div class="line">import state from <span class="string">'./state.js'</span>;</div><div class="line">import getters from <span class="string">'./getters.js'</span>;</div><div class="line"></div><div class="line"><span class="built_in">export</span> default &#123;</div><div class="line">    state,</div><div class="line">    getters,</div><div class="line">    actions,</div><div class="line">    mutations</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在 store/index.js 里创建一个 store 对象来存放这个module<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">import Vue from <span class="string">'vue'</span>;</div><div class="line">import Vuex from <span class="string">'vuex'</span>;</div><div class="line">import event from <span class="string">'./eventModule'</span>;</div><div class="line">Vue.use(Vuex);</div><div class="line"><span class="built_in">export</span> default new Vuex.Store(&#123;</div><div class="line">    modules: &#123;</div><div class="line">        event</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>最后在 event_list.vue 组件上，我们通过计算属性 computed 来获取到这个从未完成的状态改变到已完成的状态，我们要用到 store 这个对象里的getters<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">computed: &#123;</div><div class="line">    <span class="function"><span class="title">getDone</span></span>()&#123;</div><div class="line">        <span class="built_in">return</span> this.<span class="variable">$store</span>.getters.getDone;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><a href="https://github.com/lin-xin/notepad/" target="_blank" rel="external">源码地址</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/26/vue之vuex/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-es6之Class" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -365,131 +442,6 @@
 
 
   
-    <article id="post-JavaScript之闭包详解篇2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/12/JavaScript之闭包详解篇2/">JavaScript之闭包详解篇2</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/12/JavaScript之闭包详解篇2/" class="archive-article-date">
-  	<time datetime="2017-07-12T12:42:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-12</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>MDN 对闭包的定义为：</p>
-<ul>
-<li>闭包是指那些能够访问自由变量的函数。<br>那什么是自由变量呢？</li>
-<li>自由变量是指在函数中使用的，但既不是函数参数也不是函数的局部变量的变量。<br>由此，我们可以看出闭包共有两部分组成：</li>
-<li>闭包 = 函数 + 函数能够访问的自由变量</li>
-</ul>
-<p>举个例子：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var a = 1;</div><div class="line"></div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">foo</span></span>() &#123;</div><div class="line">    console.log(a);</div><div class="line">&#125;</div><div class="line"></div><div class="line">foo();</div></pre></td></tr></table></figure>
-<p>foo 函数可以访问变量 a，但是 a 既不是 foo 函数的局部变量，也不是 foo 函数的参数，所以 a 就是自由变量。</p>
-<p>那么，函数 foo + foo 函数访问的自由变量 a 不就是构成了一个闭包嘛……</p>
-<p>还真是这样的！</p>
-<p>所以在《JavaScript权威指南》中就讲到：从技术的角度讲，所有的JavaScript函数都是闭包。</p>
-<p>咦，这怎么跟我们平时看到的讲到的闭包不一样呢！？</p>
-<p>别着急，这是理论上的闭包，其实还有一个实践角度上的闭包，让我们看看汤姆大叔翻译的关于闭包的文章中的定义：</p>
-<p>ECMAScript中，闭包指的是：</p>
-<ul>
-<li>从理论角度：所有的函数。因为它们都在创建的时候就将上层上下文的数据保存起来了。哪怕是简单的全局变量也是如此，因为函数中访问全局变量就相当于是在访问自由变量，这个时候使用最外层的作用域。</li>
-<li>从实践角度：以下函数才算是闭包：<ul>
-<li>即使创建它的上下文已经销毁，它仍然存在（比如，内部函数从父函数中返回）</li>
-<li>在代码中引用了自由变量</li>
-</ul>
-</li>
-</ul>
-<p>接下来就来讲讲实践上的闭包。</p>
-<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>让我们先写个例子，例子依然是来自《JavaScript权威指南》，稍微做点改动：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">var scope = <span class="string">"global scope"</span>;</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">checkscope</span></span>()&#123;</div><div class="line">    var scope = <span class="string">"local scope"</span>;</div><div class="line">    <span class="keyword">function</span> <span class="function"><span class="title">f</span></span>()&#123;</div><div class="line">        <span class="built_in">return</span> scope;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">return</span> f;</div><div class="line">&#125;</div><div class="line"></div><div class="line">var foo = checkscope();</div><div class="line">foo();</div></pre></td></tr></table></figure></p>
-<p>首先我们要分析一下这段代码中执行上下文栈和执行上下文的变化情况。<br>另一个与这段代码相似的例子，在<a href="https://blockmood.github.io/2017/07/04/JavaScript%E6%B7%B1%E5%85%A5%E4%B9%8B%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87/" target="_blank" rel="external">JavaScript深入之执行上下文</a>中有着非常详细的分析。如果看不懂以下的执行过程，建议先阅读这篇文章。</p>
-<p>这里直接给出简要的执行过程：</p>
-<ul>
-<li>进入全局代码，创建全局执行上下文，全局执行上下文压入执行上下文栈</li>
-<li>全局执行上下文初始化</li>
-<li>执行 checkscope 函数，创建 checkscope 函数执行上下文，checkscope 执行上下文被压入执行上下文栈</li>
-<li>checkscope 执行上下文初始化，创建变量对象、作用域链、this等</li>
-<li>checkscope 函数执行完毕，checkscope 执行上下文从执行上下文栈中弹出</li>
-<li>执行 f 函数，创建 f 函数执行上下文，f 执行上下文被压入执行上下文栈</li>
-<li>f 执行上下文初始化，创建变量对象、作用域链、this等</li>
-<li>f 函数执行完毕，f 函数上下文从执行上下文栈中弹出</li>
-</ul>
-<p>了解到这个过程，我们应该思考一个问题，那就是：</p>
-<p>当 f 函数执行的时候，checkscope 函数上下文已经被销毁了啊(即从执行上下文栈中被弹出)，怎么还会读取到 checkscope 作用域下的 scope 值呢？</p>
-<p>以上的代码，要是转换成 PHP，就会报错，因为在 PHP 中，f 函数只能读取到自己作用域和全局作用域里的值，所以读不到 checkscope 下的 scope 值。(这段我问的PHP同事……)</p>
-<p>然而 JavaScript 却是可以的！</p>
-<p>当我们了解了具体的执行过程后，我们知道 f 执行上下文维护了一个作用域链：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">fContext = &#123;</div><div class="line">    Scope: [AO, checkscopeContext.AO, globalContext.VO],</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>对的，就是因为这个作用域链，f 函数依然可以读取到 checkscopeContext.AO 的值，说明当 f 函数引用了 checkscopeContext.AO 中的值的时候，即使 checkscopeContext 被销毁了，但是 JavaScript 依然会让 checkscopeContext.AO 活在内存中，f 函数依然可以通过 f 函数的作用域链找到它，正是因为 JavaScript 做到了这一点，从而实现了闭包这个概念。</p>
-<p>所以，让我们再看一遍实践角度上闭包的定义：</p>
-<ul>
-<li>即使创建它的上下文已经销毁，它仍然存在（比如，内部函数从父函数中返回）</li>
-<li>在代码中引用了自由变量</li>
-</ul>
-<h3 id="必刷题"><a href="#必刷题" class="headerlink" title="必刷题"></a>必刷题</h3><p>接下来，看这道刷题必刷，面试必考的闭包题：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">var data = [];</div><div class="line"></div><div class="line"><span class="keyword">for</span> (var i = 0; i &lt; 3; i++) &#123;</div><div class="line">  data[i] = <span class="function"><span class="title">function</span></span> () &#123;</div><div class="line">    console.log(i);</div><div class="line">  &#125;;</div><div class="line">&#125;</div><div class="line"></div><div class="line">data[0]();</div><div class="line">data[1]();</div><div class="line">data[2]();</div></pre></td></tr></table></figure>
-<p>答案是都是 3，让我们分析一下原因：</p>
-<p>当执行到 data[0] 函数之前，此时全局上下文的 VO 为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">globalContext = &#123;</div><div class="line">    VO: &#123;</div><div class="line">        data: [...],</div><div class="line">        i: 3</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>当执行 data[0] 函数的时候，data[0] 函数的作用域链为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">data[0]Context = &#123;</div><div class="line">    Scope: [AO, globalContext.VO]</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>data[0]Context 的 AO 并没有 i 值，所以会从 globalContext.VO 中查找，i 为 3，所以打印的结果就是 3。</p>
-<p>data[1] 和 data[2] 是一样的道理。</p>
-<p>所以让我们改成闭包看看：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">var data = [];</div><div class="line"></div><div class="line"><span class="keyword">for</span> (var i = 0; i &lt; 3; i++) &#123;</div><div class="line">  data[i] = (<span class="keyword">function</span> (i) &#123;</div><div class="line">        <span class="built_in">return</span> <span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">            console.log(i);</div><div class="line">        &#125;</div><div class="line">  &#125;)(i);</div><div class="line">&#125;</div><div class="line"></div><div class="line">data[0]();</div><div class="line">data[1]();</div><div class="line">data[2]();</div></pre></td></tr></table></figure>
-<p>当执行到 data[0] 函数之前，此时全局上下文的 VO 为：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">globalContext = &#123;</div><div class="line">    VO: &#123;</div><div class="line">        data: [...],</div><div class="line">        i: 3</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>跟没改之前一模一样。</p>
-<p>当执行 data[0] 函数的时候，data[0] 函数的作用域链发生了改变：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">data[0]Context = &#123;</div><div class="line">    Scope: [AO, 匿名函数Context.AO globalContext.VO]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>匿名函数执行上下文的AO为：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">匿名函数Context = &#123;</div><div class="line">    AO: &#123;</div><div class="line">        arguments: &#123;</div><div class="line">            0: 0,</div><div class="line">            length: 1</div><div class="line">        &#125;,</div><div class="line">        i: 0</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>data[0]Context 的 AO 并没有 i 值，所以会沿着作用域链从匿名函数 Context.AO 中查找，这时候就会找 i 为 0，找到了就不会往 globalContext.VO 中查找了，即使 globalContext.VO 也有 i 的值(值为3)，所以打印的结果就是0。</p>
-<p>data[1] 和 data[2] 是一样的道理。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/12/JavaScript之闭包详解篇2/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
@@ -606,15 +558,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -623,10 +579,6 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">

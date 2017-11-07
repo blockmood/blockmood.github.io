@@ -147,6 +147,70 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-vue之全面理解MVVM模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/23/vue之全面理解MVVM模式/">vue之全面理解MVVM模式</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/23/vue之全面理解MVVM模式/" class="archive-article-date">
+  	<time datetime="2017-05-23T06:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前一直对MVVM这个模式有点模糊，虽然也能做出项目，但是总感觉欠缺点什么东西，所以今天特意回来看了一下vue的这个MVVM，其实理解了还是蛮简单的，可能我一直遵循的是MVC和MCP的这种思想，所有这种思想转变的还是挺难受的。</p>
+<h3 id="关于MVVM"><a href="#关于MVVM" class="headerlink" title="关于MVVM"></a>关于MVVM</h3><p>vue集中在MVVM模式上的视图模型(ViewModel)层，并且通过双向数据绑定连接视图(View)和模型(Model)，实际的DOM操作和输出格式被抽象出来成指令和过滤器，看一个最简单的例子。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// 这是我们的 View</div><div class="line">&lt;div id=<span class="string">"example-1"</span>&gt;</div><div class="line">  Hello &#123;&#123; name &#125;&#125;!</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// 这是我们的 Model</div><div class="line">var exampleData = &#123;</div><div class="line">  name: <span class="string">'Vue.js'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// 创建一个 Vue 实例或 <span class="string">"ViewModel"</span></div><div class="line">// 它连接 上面的View 与 Model</div><div class="line">var exampleVM = new Vue(&#123;</div><div class="line">  el: <span class="string">'#example-1'</span>,</div><div class="line">  data: exampleData</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>这里的ViewModel连接着View和Model，因为我们只要修改ViewModel中的data数据，上面的Model和View会自动响应数据的变化。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/23/vue之全面理解MVVM模式/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-vue-scroller列表上拉下拉加载更多" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -258,69 +322,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/05/19/vue-router在项目中如何正确配置/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
-    <article id="post-vue-cli通过参数动态更新组件内容" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/18/vue-cli通过参数动态更新组件内容/">vue-cli通过参数动态更新组件内容</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/18/vue-cli通过参数动态更新组件内容/" class="archive-article-date">
-  	<time datetime="2017-05-18T13:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-18</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>平时开发时候都是一个导航对应一个组件，现在有一个需求，就是点击不同的导航（通过ID传递），更换不同的内容，而组件的样式都是一样的，这时候就需要用到这个了。</p>
-<h3 id="同一个组件通过参数动态渲染的做法"><a href="#同一个组件通过参数动态渲染的做法" class="headerlink" title="同一个组件通过参数动态渲染的做法"></a>同一个组件通过参数动态渲染的做法</h3><p>vue-router中提供了一个导航钩子的方法 beforeRouteUpdate(to, from, next),这个方法很有用，意思就是在当前路由改变，但是该组件被复用时调用。 if/for语句中），它在代码块外是可以被访问的。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">beforeRouteUpdate(to, from, next)&#123;</div><div class="line">	//这里可以动态渲染我们想要的数据,就不需要一个导航对应一个组件了。</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="其他方法"><a href="#其他方法" class="headerlink" title="其他方法"></a>其他方法</h3><p>当然还有其他方法也可以实现，就是通过监听的方法，大概的思路就是监听我们传递过来的这个ID，如果这个这个ID发生变化了，然后就重新获取内容。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">watch:&#123;</div><div class="line">	id(传递过来的值:比如我是id) ()&#123;</div><div class="line">		//里面写判断的业务逻辑</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/18/vue-cli通过参数动态更新组件内容/">展开全文 >></a>
         </p>
       
 
@@ -451,15 +452,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -468,10 +473,6 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">

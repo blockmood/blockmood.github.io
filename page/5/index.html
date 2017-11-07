@@ -147,6 +147,66 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-webpack之代理请求接口" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/04/webpack之代理请求接口/">webpack之代理请求接口</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/04/webpack之代理请求接口/" class="archive-article-date">
+  	<time datetime="2017-08-04T05:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前提依赖axios，<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var axios = require(<span class="string">'axios'</span>)</div></pre></td></tr></table></figure></p>
+<p>原理大概为 去们请求axios服务，axios伪造host等信息请求数据，大概配置如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">//请求代理</div><div class="line">var apiRoutes = express.Router()</div><div class="line">apiRoutes.get(<span class="string">'/getDiscList'</span>, <span class="keyword">function</span> (req, res) &#123;</div><div class="line">  var url = <span class="string">'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'</span></div><div class="line">  axios.get(url, &#123;</div><div class="line">    headers: &#123;</div><div class="line">      referer: <span class="string">'https://c.y.qq.com/'</span>,</div><div class="line">      host: <span class="string">'c.y.qq.com'</span></div><div class="line">    &#125;,</div><div class="line">    params: req.query</div><div class="line">  &#125;).<span class="keyword">then</span>((response) =&gt; &#123;</div><div class="line">    res.json(response.data)</div><div class="line">  &#125;).catch((e) =&gt; &#123;</div><div class="line">    console.log(e)</div><div class="line">  &#125;)</div><div class="line">&#125;)</div><div class="line"></div><div class="line">app.use(<span class="string">'/api'</span>,apiRoutes)</div></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/04/webpack之代理请求接口/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-JavaScript Async . Await" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -376,83 +436,6 @@
 
 
   
-    <article id="post-vue之vuex" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/26/vue之vuex/">vue之vuex</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/26/vue之vuex/" class="archive-article-date">
-  	<time datetime="2017-07-26T06:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在vue里，组件之间的作用域是独立的，父组件跟子组件之间的通讯可以通过prop属性来传参，但是在兄弟组件之间通讯就比较麻烦了。比如A组件要告诉一件事给B组件，那么A就要先告诉他们的爸组件，然后爸组件再告诉B。当组件比较多，要互相通讯的事情很多的话，爸组件要管他们那么多事，很累的。vuex正是为了解决这个问题，让多个子组件之间可以方便的通讯。<br>待办事项中的一个事件，它可能拥有几个状态，未完成、已完成、已取消或被删除等。这个事件需要在这多种状态之间切换，那么使用vuex来管理也是非常方便的。</p>
-<p>来看一下vuex怎么完成状态管理的：<br><img src="/img/vuex.png" alt="vuex"></p>
-<p>以上的图分为以下几步：</p>
-<ul>
-<li>1.所有的组件都是调用actions</li>
-<li>2.分发mutation去修改state</li>
-<li>3.然后state又通过getter更新到各个组件中</li>
-</ul>
-<h3 id="模块化"><a href="#模块化" class="headerlink" title="模块化"></a>模块化</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">|-store/                   // 存放vuex代码</div><div class="line">|   |-eventModule          // 事件模块</div><div class="line">|   |   |-actions.js</div><div class="line">|   |   |-getters.js</div><div class="line">|   |   |-index.js</div><div class="line">|   |   |-mutations.js</div><div class="line">|   |   |-state.js</div><div class="line">|   |-themeModule           // 主题颜色模块</div><div class="line">|   |   |-actions.js</div><div class="line">|   |   |-getters.js</div><div class="line">|   |   |-index.js</div><div class="line">|   |   |-mutations.js</div><div class="line">|   |   |-state.js</div><div class="line">|   |-index.js              // vuex的核心，创建一个store</div></pre></td></tr></table></figure>
-<p>可以看到，每个模块拥有自己的state、mutation、action、getter，这样子我们就可以把我们的项目根据功能划分为多个模块去使用vuex了，而且后期维护也不会一脸懵逼。</p>
-<h3 id="状态管理"><a href="#状态管理" class="headerlink" title="状态管理"></a>状态管理</h3><p>接下来，我们来看看vuex完成状态管理的一个流程。<br>举个栗子：一个待办事项，勾选之后，会在未完成列表里移除，并在已完成的列表里出现。这个过程，是这个待办事项的状态发生了改变。勾选的时候，是执行了一个方法，那我们就先写这个方法。在 event_list.vue 文件里新建一个moveToDone方法。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">methods: &#123;</div><div class="line">    moveToDone(id)&#123; //移至已完成</div><div class="line">        this.<span class="variable">$store</span>.dispatch(<span class="string">'eventdone'</span>, id);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在 moveToDone 方法中通过 store.dispatch 方法触发 action, 接下来我们在 eventModule/actions.js 中来注册这个 action, 接受一个 id 的参数。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> default &#123;</div><div class="line">    eventdone = (&#123; commit &#125;, param) =&gt;&#123;</div><div class="line">        commit(<span class="string">'EVENTDONE'</span>,&#123;id: param&#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>action 通过调用 store.commit 提交载荷(也就是{id: param}这个对象)到名为’EVENTDONE’的 mutation，那我们再来注册这个 mutation<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> default &#123;</div><div class="line">    EVENTDONE(states,obj)&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="built_in">let</span> i = 0; i &lt; states.event.length; i++) &#123;</div><div class="line">            <span class="keyword">if</span> (states.event[i].id === obj.id) &#123;</div><div class="line">                states.event[i].<span class="built_in">type</span> = 2;</div><div class="line">                states.event[i].time = getDate();</div><div class="line">                var item = states.event[i];</div><div class="line">                states.event.splice(i, 1);          // 把该事件在数组中删除</div><div class="line">                <span class="built_in">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        states.event.unshift(item);                 // 把该事件存到数组的第一个元素</div><div class="line">        local.set(states);                          // 将整个状态存到本地</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>通过 mutation 去修改 state, state里我们存放了一个 event 属性<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> default &#123;</div><div class="line">    event: []</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
-<p>在组件中要获得这个 state 里的 event, 那就需要写个getters<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> default &#123;</div><div class="line">    getDone(states)&#123;</div><div class="line">        <span class="built_in">return</span> states.event.filter(<span class="keyword">function</span> (d) &#123;</div><div class="line">            <span class="keyword">if</span> (d.type === 2) &#123;                 // <span class="built_in">type</span> == 2表示已完成</div><div class="line">                <span class="built_in">return</span> d;                       // 返回已完成的事件</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
-<p>然后每个module里都有一个index.js文件，把自己的state、mutation、action、getters都集合起来，就是一个module<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">import * as func from <span class="string">'../function'</span>;</div><div class="line">import actions from <span class="string">'./actions.js'</span>;</div><div class="line">import mutations from <span class="string">'./mutations.js'</span>;</div><div class="line">import state from <span class="string">'./state.js'</span>;</div><div class="line">import getters from <span class="string">'./getters.js'</span>;</div><div class="line"></div><div class="line"><span class="built_in">export</span> default &#123;</div><div class="line">    state,</div><div class="line">    getters,</div><div class="line">    actions,</div><div class="line">    mutations</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在 store/index.js 里创建一个 store 对象来存放这个module<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">import Vue from <span class="string">'vue'</span>;</div><div class="line">import Vuex from <span class="string">'vuex'</span>;</div><div class="line">import event from <span class="string">'./eventModule'</span>;</div><div class="line">Vue.use(Vuex);</div><div class="line"><span class="built_in">export</span> default new Vuex.Store(&#123;</div><div class="line">    modules: &#123;</div><div class="line">        event</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<p>最后在 event_list.vue 组件上，我们通过计算属性 computed 来获取到这个从未完成的状态改变到已完成的状态，我们要用到 store 这个对象里的getters<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">computed: &#123;</div><div class="line">    <span class="function"><span class="title">getDone</span></span>()&#123;</div><div class="line">        <span class="built_in">return</span> this.<span class="variable">$store</span>.getters.getDone;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><a href="https://github.com/lin-xin/notepad/" target="_blank" rel="external">源码地址</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/26/vue之vuex/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
@@ -569,15 +552,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -586,10 +573,6 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">react</a>
               </li>
              
               <li class="article-tag-list-item">
