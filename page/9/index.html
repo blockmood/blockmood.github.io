@@ -147,6 +147,66 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-webpack编译es6 之babel" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/07/webpack编译es6 之babel/">webpack编译es6之babel配置</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/07/webpack编译es6 之babel/" class="archive-article-date">
+  	<time datetime="2017-07-07T05:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="安插件"><a href="#安插件" class="headerlink" title="安插件"></a>安插件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install --save-dev babel-core babel-loader babel-preset-es2015</div></pre></td></tr></table></figure>
+<h3 id="banelrc-文件配置"><a href="#banelrc-文件配置" class="headerlink" title=".banelrc 文件配置"></a>.banelrc 文件配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	<span class="string">"presets"</span>: [<span class="string">"es2015"</span>]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="webpack-配置"><a href="#webpack-配置" class="headerlink" title="webpack 配置"></a>webpack 配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="built_in">test</span>: /\.js$/,</div><div class="line">    loader: <span class="string">'babel-loader'</span>,</div><div class="line">    query: &#123;presets: [<span class="string">'es2015'</span>]&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/07/webpack编译es6 之babel/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-gulp配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -344,115 +404,9 @@
 
 
   
-    <article id="post-JavaScript深入之执行上下文" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/04/JavaScript深入之执行上下文/">JavaScript深入之执行上下文</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/04/JavaScript深入之执行上下文/" class="archive-article-date">
-  	<time datetime="2017-07-04T01:12:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在上篇<a href="https://blockmood.github.io/2017/07/01/JavaScript%E6%B7%B1%E5%85%A5%E4%B9%8B%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E6%A0%88/" target="_blank" rel="external">JavaScript深入之执行上下文栈</a>中讲到，当 JavaScript 代码执行一段可执行代码(executable code)时，会创建对应的执行上下文(execution context)。<br>对于每个执行上下文，都有三个重要属性：</p>
-<ul>
-<li>变量对象(Variable object，VO)</li>
-<li>作用域链(Scope chain)</li>
-<li>this</li>
-</ul>
-<h3 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var scope = <span class="string">"global scope"</span>;</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">checkscope</span></span>()&#123;</div><div class="line">    var scope = <span class="string">"local scope"</span>;</div><div class="line">    <span class="keyword">function</span> <span class="function"><span class="title">f</span></span>()&#123;</div><div class="line">        <span class="built_in">return</span> scope;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">return</span> f();</div><div class="line">&#125;</div><div class="line">checkscope();</div></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var scope = <span class="string">"global scope"</span>;</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">checkscope</span></span>()&#123;</div><div class="line">    var scope = <span class="string">"local scope"</span>;</div><div class="line">    <span class="keyword">function</span> <span class="function"><span class="title">f</span></span>()&#123;</div><div class="line">        <span class="built_in">return</span> scope;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">return</span> f;</div><div class="line">&#125;</div><div class="line">checkscope()();</div></pre></td></tr></table></figure>
-<p>这俩段代码到底哪里不一样呢，然后就在<a href="https://blockmood.github.io/2017/07/01/JavaScript%E6%B7%B1%E5%85%A5%E4%B9%8B%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E6%A0%88/" target="_blank" rel="external">JavaScript深入之执行上下文栈</a>中，讲到了两者的区别在于执行上下文栈的变化不一样，然而，如果是这样笼统的回答，依然显得不够详细，本篇就会详细的解析执行上下文栈和执行上下文的具体变化过程。</p>
-<h3 id="具体执行分析"><a href="#具体执行分析" class="headerlink" title="具体执行分析"></a>具体执行分析</h3><p>我们分析第一段代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var scope = <span class="string">"global scope"</span>;</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">checkscope</span></span>()&#123;</div><div class="line">    var scope = <span class="string">"local scope"</span>;</div><div class="line">    <span class="keyword">function</span> <span class="function"><span class="title">f</span></span>()&#123;</div><div class="line">        <span class="built_in">return</span> scope;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">return</span> f();</div><div class="line">&#125;</div><div class="line">checkscope();</div></pre></td></tr></table></figure></p>
-<h4 id="执行过程如下："><a href="#执行过程如下：" class="headerlink" title="执行过程如下："></a>执行过程如下：</h4><ul>
-<li><p>1.执行全局代码，创建全局执行上下文，全局上下文被压入执行上下文栈</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ECStack = [</div><div class="line">    globalContext</div><div class="line">];</div></pre></td></tr></table></figure>
-</li>
-<li><p>2.全局上下文初始化</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">globalContext = &#123;</div><div class="line">    VO: [global, scope, checkscope],</div><div class="line">    Scope: [globalContext.VO],</div><div class="line">    this: globalContext.VO</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>2.初始化的同时，checkscope 函数被创建，保存作用域链到函数的内部属性[[scope]]</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">checkscope.[[scope]] = [</div><div class="line">    globalContext.VO</div><div class="line">  ];</div></pre></td></tr></table></figure>
-</li>
-<li><p>3.执行 checkscope 函数，创建 checkscope 函数执行上下文，checkscope 函数执行上下文被压入执行上下文栈</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ECStack = [</div><div class="line">    checkscopeContext,</div><div class="line">    globalContext</div><div class="line">   ];</div></pre></td></tr></table></figure>
-</li>
-<li><p>4.checkscope 函数执行上下文初始化：</p>
-<ul>
-<li>复制函数 [[scope]] 属性创建作用域链，</li>
-<li>用 arguments 创建活动对象，</li>
-<li>初始化活动对象，即加入形参、函数声明、变量声明，</li>
-<li>将活动对象压入 checkscope 作用域链顶端。<br>同时 f 函数被创建，保存作用域链到 f 函数的内部属性[[scope]]<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">checkscopeContext = &#123;</div><div class="line">        AO: &#123;</div><div class="line">            arguments: &#123;</div><div class="line">                length: 0</div><div class="line">            &#125;,</div><div class="line">            scope: undefined,</div><div class="line">            f: reference to <span class="keyword">function</span> <span class="function"><span class="title">f</span></span>()&#123;&#125;</div><div class="line">        &#125;,</div><div class="line">        Scope: [AO, globalContext.VO],</div><div class="line">        this: undefined</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-<li><p>5.执行 f 函数，创建 f 函数执行上下文，f 函数执行上下文被压入执行上下文栈</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ECStack = [</div><div class="line">       fContext,</div><div class="line">       checkscopeContext,</div><div class="line">       globalContext</div><div class="line">   ];</div></pre></td></tr></table></figure>
-</li>
-<li><p>6.f 函数执行上下文初始化, 以下跟第 4 步相同：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">fContext = &#123;</div><div class="line">        AO: &#123;</div><div class="line">            arguments: &#123;</div><div class="line">                length: 0</div><div class="line">            &#125;</div><div class="line">        &#125;,</div><div class="line">        Scope: [AO, checkscopeContext.AO, globalContext.VO],</div><div class="line">        this: undefined</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>7.f 函数执行，沿着作用域链查找 scope 值，返回 scope 值</p>
-</li>
-<li><p>8.f 函数执行完毕，f 函数上下文从执行上下文栈中弹出</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ECStack = [</div><div class="line">        checkscopeContext,</div><div class="line">        globalContext</div><div class="line">    ];</div></pre></td></tr></table></figure>
-</li>
-<li><p>9.checkscope 函数执行完毕，checkscope 执行上下文从执行上下文栈中弹出</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ECStack = [</div><div class="line">    globalContext</div><div class="line">];</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>第二段代码的执行过程很以上同理。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var scope = <span class="string">"global scope"</span>;</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">checkscope</span></span>()&#123;</div><div class="line">    var scope = <span class="string">"local scope"</span>;</div><div class="line">    <span class="keyword">function</span> <span class="function"><span class="title">f</span></span>()&#123;</div><div class="line">        <span class="built_in">return</span> scope;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">return</span> f;</div><div class="line">&#125;</div><div class="line">checkscope()();</div></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/04/JavaScript深入之执行上下文/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/10/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/10/">Next &raquo;</a>
     </nav>
   
 
@@ -554,15 +508,15 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">react</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">vue</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">es6</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -574,11 +528,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">php</a>
+                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">react</a>
+                <a href="javascript:void(0)" class="js-tag color4">php</a>
               </li>
              
               <li class="article-tag-list-item">

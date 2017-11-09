@@ -147,51 +147,105 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-es6之Promise" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-JavaScript中defer的作用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/07/es6之Promise/">es6之Promise</a>
+      <a class="article-title" href="/2017/06/13/JavaScript中defer的作用/">JavaScript中defer的作用</a>
     </h1>
   
 
         
-        <a href="/2017/06/07/es6之Promise/" class="archive-article-date">
-  	<time datetime="2017-06-07T01:11:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-07</time>
+        <a href="/2017/06/13/JavaScript中defer的作用/" class="archive-article-date">
+  	<time datetime="2017-06-13T05:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-13</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>所谓Promise，简单说就是一个容器，里面保存着某个未来才会结束的事件（通常是一个异步操作）的结果。从语法上说，Promise是一个对象，从它可以获取异步操作的消息。Promise提供统一的API，各种异步操作都可以用同样的方法进行处理。</p>
-<p>Promise也有一些缺点。</p>
-<ul>
-<li>无法取消Promise，一旦新建它就会立即执行，无法中途取消。</li>
-<li>如果不设置回调函数，Promise内部抛出的错误，不会反应到外部。</li>
-<li>当处于Pending状态时，无法得知目前进展到哪一个阶段（刚刚开始还是即将完成）。</li>
-</ul>
-<p>如果某些事件不断地反复发生，一般来说，使用stream模式是比部署Promise更好的选择。</p>
-<h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><p>Promise构造函数接受一个函数作为参数，该函数的两个参数分别是resolve和reject。它们是两个函数，由JavaScript引擎提供，不用自己部署。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var promise = new Promise(<span class="keyword">function</span>(resolve, reject) &#123;</div><div class="line">  // ... some code</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (/* 异步操作成功 */)&#123;</div><div class="line">    resolve(value);</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    reject(error);</div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<p>Promise实例生成以后，可以用then方法分别指定Resolved状态和Reject状态的回调函数。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">promise.then(<span class="keyword">function</span>(value) &#123;</div><div class="line">  // success</div><div class="line">&#125;, <span class="keyword">function</span>(error) &#123;</div><div class="line">  // failure</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<p>then方法可以接受两个回调函数作为参数。第一个回调函数是Promise对象的状态变为Resolved时调用，第二个回调函数是Promise对象的状态变为Reject时调用。其中，第二个函数是可选的，不一定要提供。这两个函数都接受Promise对象传出的值作为参数。</p>
-<h3 id="Promise-prototype-catch"><a href="#Promise-prototype-catch" class="headerlink" title="Promise.prototype.catch()"></a>Promise.prototype.catch()</h3><p>Promise.prototype.catch方法是.then(null, rejection)的别名，用于指定发生错误时的回调函数。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">getJSON(<span class="string">"/posts.json"</span>).<span class="keyword">then</span>(<span class="keyword">function</span>(posts) &#123;</div><div class="line">  // ...</div><div class="line">&#125;).catch(<span class="keyword">function</span>(error) &#123;</div><div class="line">  // 处理 getJSON 和 前一个回调函数运行时发生的错误</div><div class="line">  console.log(<span class="string">'发生错误！'</span>, error);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<p>上面代码中，getJSON方法返回一个Promise对象，如果该对象状态变为Resolved，则会调用then方法指定的回调函数；如果异步操作抛出错误，状态就会变为Rejected，就会调用catch方法指定的回调函数，处理这个错误。另外，then方法指定的回调函数，如果运行中抛出错误，也会被catch方法捕获。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">p.then((val) =&gt; console.log(<span class="string">"fulfilled:"</span>, val))</div><div class="line">  .catch((err) =&gt; console.log(<span class="string">"rejected:"</span>, err));</div><div class="line"></div><div class="line">// 等同于</div><div class="line"></div><div class="line">p.then((val) =&gt; console.log(fulfilled:<span class="string">", val))</span></div><div class="line"><span class="string">  .then(null, (err) =&gt; console.log("</span>rejected:<span class="string">", err));</span></div></pre></td></tr></table></figure></p>
-<p>一般来说，不要在then方法里面定义Reject状态的回调函数（即then的第二个参数），总是使用catch方法。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">// bad</div><div class="line">promise</div><div class="line">  .<span class="keyword">then</span>(<span class="keyword">function</span>(data) &#123;</div><div class="line">    // success</div><div class="line">  &#125;, <span class="keyword">function</span>(err) &#123;</div><div class="line">    // error</div><div class="line">  &#125;);</div><div class="line"></div><div class="line">// good</div><div class="line">promise</div><div class="line">  .<span class="keyword">then</span>(<span class="keyword">function</span>(data) &#123; //cb</div><div class="line">    // success</div><div class="line">  &#125;)</div><div class="line">  .catch(<span class="keyword">function</span>(err) &#123;</div><div class="line">    // error</div><div class="line">  &#125;);</div></pre></td></tr></table></figure></p>
-<p>上面代码中，第二种写法要好于第一种写法，理由是第二种写法可以捕获前面then方法执行中的错误，也更接近同步的写法（try/catch）。因此，建议总是使用catch方法，而不使用then方法的第二个参数。</p>
-<p>跟传统的try/catch代码块不同的是，如果没有使用catch方法指定错误处理的回调函数，Promise对象抛出的错误不会传递到外层代码，即不会有任何反应。</p>
-<h3 id="Promise-all"><a href="#Promise-all" class="headerlink" title="Promise.all()"></a>Promise.all()</h3><p>Promise.all方法用于将多个Promise实例，包装成一个新的Promise实例。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var p = Promise.all([p1, p2, p3]);</div></pre></td></tr></table></figure></p>
-<p>上面代码中，Promise.all方法接受一个数组作为参数，p1、p2、p3都是Promise对象的实例，如果不是，就会先调用下面讲到的Promise.resolve方法，将参数转为Promise实例，再进一步处理。（Promise.all方法的参数可以不是数组，但必须具有Iterator接口，且返回的每个成员都是Promise实例。）</p>
-<p>p的状态由p1、p2、p3决定，分成两种情况。</p>
-<ul>
-<li>只有p1、p2、p3的状态都变成fulfilled，p的状态才会变成fulfilled，此时p1、p2、p3的返回值组成一个数组，传递给p的回调函数。</li>
-<li>只要p1、p2、p3之中有一个被rejected，p的状态就变成rejected，此时第一个被reject的实例的返回值，会传递给p的回调函数。</li>
-</ul>
-<p>下面是一个具体的例子。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">// 生成一个Promise对象的数组</div><div class="line">var promises = [2, 3, 5, 7, 11, 13].map(<span class="keyword">function</span> (id) &#123;</div><div class="line">  <span class="built_in">return</span> getJSON(<span class="string">"/post/"</span> + id + <span class="string">".json"</span>);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">Promise.all(promises).<span class="keyword">then</span>(<span class="keyword">function</span> (posts) &#123;</div><div class="line">  // ...</div><div class="line">&#125;).catch(<span class="keyword">function</span>(reason)&#123;</div><div class="line">  // ...</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<p>上面代码中，promises是包含6个Promise实例的数组，只有这6个实例的状态都变成fulfilled，或者其中有一个变为rejected，才会调用Promise.all方法后面的回调函数。</p>
+        <p>很多人都已经把 Javascript的用的炉火纯青了，但见到defer未必就知道他是做什么用的；很多人也都遇到过这样的问题，需要直接执行别且操作DOM对象的js 总是报找不到对象的错误，原因大家也都知道就是页面还有没有加载完毕，js的操作对象还在下载中。但很多人都不知道，添加defer标签就能轻而易举的解决这个问题。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;script src=<span class="string">"../CGI-bin/delscript.js"</span> defer&gt;&lt;/script&gt;</div><div class="line">中的defer作用是文档加载完毕了再执行脚本,这样回避免找不到对象的问题---有点问题</div><div class="line"></div><div class="line">&lt;button id=<span class="string">"myButton"</span> onclick=<span class="string">"alert('ok')"</span>&gt;<span class="built_in">test</span>&lt;/button&gt;</div><div class="line">&lt;script&gt;</div><div class="line">myButton.click();</div><div class="line">&lt;/script&gt;</div><div class="line"></div><div class="line">&lt;script&gt;</div><div class="line">myButton.click();</div><div class="line">&lt;/script&gt;</div><div class="line">&lt;button id=<span class="string">"myButton"</span> onclick=<span class="string">"alert('ok')"</span>&gt;<span class="built_in">test</span>&lt;/button&gt;</div><div class="line"></div><div class="line">&lt;script defer&gt;</div><div class="line"><span class="keyword">function</span> document.body.<span class="function"><span class="title">onload</span></span>() &#123;</div><div class="line">alert(document.body.offsetHeight);</div><div class="line">&#125;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<p>加上 defer 等于在页面完全在入后再执行，相当于 window.onload ，但应用上比 window.onload 更灵活！<br>defer是脚本程序强大功能中的一个“无名英雄”。它告诉浏览器Script段包含了无需立即执行的代码，并且，与SRC属性联合使用，它还可以使这些脚本在后台被下载，前台的内容则正常显示给用户。<br>–但是 文档加载完毕了再执行脚本</p>
+<p>请注意两点：<br>1、不要在defer型的脚本程序段中调用document.write命令，因为document.write将产生直接输出效果。<br>2、而且，不要在defer型脚本程序段中包括任何立即执行脚本要使用的全局变量或者函数。 </p>
+<p>一个常用的优化性能的方法是：当脚本不需要立即运行时，在<code>&lt;SCRIPT&gt;</code>标签中设置“defer”属性。 (立即脚本没有被包含在一个function块中,因此会在加载过程中执行。) 设置“defer”属性后，IE就不必等待该脚本装载和执行完毕。这样页面加载会更快。一般来说，这也表明立即脚本最好放在function块中，并在 document或者body对象的onload 句柄中处理该函数。在有一些脚本需要依赖用户操作而执行时—-例如点击按钮，或者移动鼠标到某个区域—-使用该属性非常有用。但当有一些脚本需要在页面加载过程中或加载完成后执行，使用defer属性得到的好处就不太大。</p>
+<p><code>script</code>中的defer属性默认情况下是false的。按照DHTML编程宝典中的描述，对于Defer属性是这样写的：<br>Using the attribute at design time can improve the download performance of a page because the browser does not need to parse and execute the script and can continue downloading and parsing the page instead.<br>也就是说：如果是编写脚本的时候加入defer属性，那么浏览器在下载脚本的时候就不必立即对其进行处理，而是继续对页面进行下载和解析，这样会提高下载的性能。<br>这样的情况有很多种。比如你定义了很多javascript变量，或者在引用文件（.inc）中写了很多的脚本需要处理，那不妨在这些脚本中加入defer属性，对性能的提高肯定有所帮助。<br>举例如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;script language=<span class="string">"javascript"</span> defer&gt;</div><div class="line">var object = new Object();</div><div class="line">....</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<p>因为defer属性默认是为false的，那么在这里<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script language=<span class="string">"javascript"</span> defer&gt;</div></pre></td></tr></table></figure></p>
+<p>显式声明defer属性后等同于<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script language=<span class="string">"javascript"</span> defer=<span class="literal">true</span>&gt;</div></pre></td></tr></table></figure></p>
+<p>声明了defer属性之后，需要判断是否有别的变量引用了defer脚本块中的变量，否则的话会导致脚本错误的产生。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/13/JavaScript中defer的作用/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
+    <article id="post-es6之数组扩展" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/08/es6之数组扩展/">es6之数组扩展</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/08/es6之数组扩展/" class="archive-article-date">
+  	<time datetime="2017-06-08T11:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Array-from"><a href="#Array-from" class="headerlink" title="Array.from()"></a>Array.from()</h3><p>Array.from方法用于将两类对象转为真正的数组：类似数组的对象（array-like object）和可遍历（iterable）的对象（包括ES6新增的数据结构Set和Map）。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">let</span> arrayLike = &#123;</div><div class="line">    <span class="string">'0'</span>: <span class="string">'a'</span>,</div><div class="line">    <span class="string">'1'</span>: <span class="string">'b'</span>,</div><div class="line">    <span class="string">'2'</span>: <span class="string">'c'</span>,</div><div class="line">    length: 3</div><div class="line">&#125;;</div><div class="line"></div><div class="line">// ES5的写法</div><div class="line">var arr1 = [].slice.call(arrayLike); // [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>]</div><div class="line"></div><div class="line">// ES6的写法</div><div class="line"><span class="built_in">let</span> arr2 = Array.from(arrayLike); // [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>]</div></pre></td></tr></table></figure></p>
+<p>Array.from方法则是还支持类似数组的对象。所谓类似数组的对象，本质特征只有一点，即必须有length属性。因此，任何有length属性的对象，都可以通过Array.from方法转为数组，而此时扩展运算符就无法转换。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Array.from(&#123; length: 3 &#125;);</div><div class="line">// [ undefined, undefined, undefinded ]</div></pre></td></tr></table></figure></p>
+<p>上面代码中，Array.from返回了一个具有三个成员的数组，每个位置的值都是undefined。扩展运算符转换不了这个对象。Array.from还可以接受第二个参数，作用类似于数组的map方法，用来对每个元素进行处理，将处理后的值放入返回的数组。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Array.from(arrayLike, x =&gt; x * x);</div><div class="line">// 等同于</div><div class="line">Array.from(arrayLike).map(x =&gt; x * x);</div><div class="line"></div><div class="line">Array.from([1, 2, 3], (x) =&gt; x * x)</div><div class="line">// [1, 4, 9]</div></pre></td></tr></table></figure></p>
+<h3 id="Array-of"><a href="#Array-of" class="headerlink" title="Array.of()"></a>Array.of()</h3><p>Array.of方法用于将一组值，转换为数组。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Array.of(3, 11, 8) // [3,11,8]</div><div class="line">Array.of(3) // [3]</div><div class="line">Array.of(3).length // 1</div></pre></td></tr></table></figure></p>
+<p>这个方法的主要目的，是弥补数组构造函数Array()的不足。因为参数个数的不同，会导致Array()的行为有差异。Array.of总是返回参数值组成的数组。如果没有参数，就返回一个空数组。Array.of基本上可以用来替代Array()或new Array()，并且不存在由于参数不同而导致的重载。它的行为非常统一。</p>
+<h3 id="数组实例的copyWithin"><a href="#数组实例的copyWithin" class="headerlink" title="数组实例的copyWithin()"></a>数组实例的copyWithin()</h3><p>数组实例的copyWithin方法，在当前数组内部，将指定位置的成员复制到其他位置（会覆盖原有成员），然后返回当前数组。也就是说，使用这个方法，会修改当前数组。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Array.prototype.copyWithin(target, start = 0, end = this.length)</div></pre></td></tr></table></figure></p>
+<p>它接受三个参数。</p>
+<p>target（必需）：从该位置开始替换数据。<br>start（可选）：从该位置开始读取数据，默认为0。如果为负值，表示倒数。<br>end（可选）：到该位置前停止读取数据，默认等于数组长度。如果为负值，表示倒数。<br>这三个参数都应该是数值，如果不是，会自动转为数值。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[1, 2, 3, 4, 5].copyWithin(0, 3)</div><div class="line">// [4, 5, 3, 4, 5]</div></pre></td></tr></table></figure></p>
+<p>上面代码表示将从3号位直到数组结束的成员（4和5），复制到从0号位开始的位置，结果覆盖了原来的1和2。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[].copyWithin.call(new Int32Array([1, 2, 3, 4, 5]), 0, 3, 4);</div><div class="line">// Int32Array [4, 2, 3, 4, 5]</div></pre></td></tr></table></figure></p>
+<h3 id="数组实例的find-和findIndex"><a href="#数组实例的find-和findIndex" class="headerlink" title="数组实例的find()和findIndex()"></a>数组实例的find()和findIndex()</h3><p>数组实例的find方法，用于找出第一个符合条件的数组成员。它的参数是一个回调函数，所有数组成员依次执行该回调函数，直到找出第一个返回值为true的成员，然后返回该成员。如果没有符合条件的成员，则返回undefined。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[1, 4, -5, 10].find((n) =&gt; n &lt; 0)</div><div class="line">// -5</div></pre></td></tr></table></figure></p>
+<p>上面代码找出数组中第一个小于0的成员。数组实例的findIndex方法的用法与find方法非常类似，返回第一个符合条件的数组成员的位置，如果所有成员都不符合条件，则返回-1。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[1, 5, 10, 15].findIndex(<span class="keyword">function</span>(value, index, arr) &#123;</div><div class="line">  <span class="built_in">return</span> value &gt; 9;</div><div class="line">&#125;) </div><div class="line">// 2</div></pre></td></tr></table></figure></p>
+<h3 id="数组实例的fill"><a href="#数组实例的fill" class="headerlink" title="数组实例的fill()"></a>数组实例的fill()</h3><p>fill方法使用给定值，填充一个数组。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>].fill(7)</div><div class="line">// [7, 7, 7]</div><div class="line"></div><div class="line">new Array(3).fill(7)</div><div class="line">// [7, 7, 7]</div></pre></td></tr></table></figure></p>
+<p>上面代码表明，fill方法用于空数组的初始化非常方便。数组中已有的元素，会被全部抹去。<br>ES6提供三个新的方法——entries()，keys()和values()——用于遍历数组。它们都返回一个遍历器对象（详见《Iterator》一章），可以用for…of循环进行遍历，唯一的区别是keys()是对键名的遍历、values()是对键值的遍历，entries()是对键值对的遍历。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="built_in">let</span> index of [<span class="string">'a'</span>, <span class="string">'b'</span>].keys()) &#123;</div><div class="line">  console.log(index);</div><div class="line">&#125;</div><div class="line">// 0</div><div class="line">// 1</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="built_in">let</span> elem of [<span class="string">'a'</span>, <span class="string">'b'</span>].values()) &#123;</div><div class="line">  console.log(elem);</div><div class="line">&#125;</div><div class="line">// <span class="string">'a'</span></div><div class="line">// <span class="string">'b'</span></div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="built_in">let</span> [index, elem] of [<span class="string">'a'</span>, <span class="string">'b'</span>].entries()) &#123;</div><div class="line">  console.log(index, elem);</div><div class="line">&#125;</div><div class="line">// 0 <span class="string">"a"</span></div><div class="line">// 1 <span class="string">"b"</span></div></pre></td></tr></table></figure></p>
 
       
 
@@ -215,7 +269,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/07/es6之Promise/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/06/08/es6之数组扩展/">展开全文 >></a>
         </p>
       
 
@@ -304,70 +358,9 @@
 
 
   
-    <article id="post-JavaScript之FileReader接口" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/06/JavaScript之FileReader接口/">JavaScript之FileReader接口</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/06/JavaScript之FileReader接口/" class="archive-article-date">
-  	<time datetime="2017-06-06T07:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>记得以前做网站时，曾经需要实现一个图片上传到服务器前，先预览的功能。当时用html的file标签一直实现不了，最后舍弃了这个标签，使用了其他方式来实现了这个功能。今天无意发现了一个知识点，用html的file标签就能实现图片上传前预览，感觉很棒，记录一下！就是通过file标签和js的FileReader接口，把选择的图片文件调用readAsDataURL方法，把图片数据转成base64字符串形式显示在页面上。</p>
-<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">&lt;div style=<span class="string">"border:2px dashed red;"</span>&gt;</div><div class="line">          &lt;p&gt;</div><div class="line">              图片上传前预览：&lt;input <span class="built_in">type</span>=<span class="string">"file"</span> id=<span class="string">"xdaTanFileImg"</span> onchange=<span class="string">"xmTanUploadImg(this)"</span>/&gt;</div><div class="line">          &lt;/p&gt;</div><div class="line">          &lt;img id=<span class="string">"xmTanImg"</span>/&gt;</div><div class="line">          &lt;div id=<span class="string">"xmTanDiv"</span>&gt;&lt;/div&gt;</div><div class="line">      &lt;/div&gt;</div><div class="line">      &lt;hr /&gt;</div><div class="line">      &lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span>&gt;            </div><div class="line">          //判断浏览器是否支持FileReader接口</div><div class="line">          <span class="keyword">if</span> (typeof FileReader == <span class="string">'undefined'</span>) &#123;</div><div class="line">              document.getElementById(<span class="string">"xmTanDiv"</span>).InnerHTML = <span class="string">"&lt;h1&gt;当前浏览器不支持FileReader接口&lt;/h1&gt;"</span>;</div><div class="line">              //使选择控件不可操作</div><div class="line">              document.getElementById(<span class="string">"xdaTanFileImg"</span>).setAttribute(<span class="string">"disabled"</span>, <span class="string">"disabled"</span>);</div><div class="line">          &#125;</div><div class="line"></div><div class="line">          //选择图片</div><div class="line">          <span class="keyword">function</span> xmTanUploadImg(obj) &#123;</div><div class="line">              var file = obj.files[0];</div><div class="line">              </div><div class="line">              console.log(obj);console.log(file);</div><div class="line">              console.log(<span class="string">"file.size = "</span> + file.size);  //file.size 单位为byte</div><div class="line"></div><div class="line">              var reader = new FileReader();</div><div class="line"></div><div class="line">              //读取文件过程方法</div><div class="line">              reader.onloadstart = <span class="keyword">function</span> (e) &#123;</div><div class="line">                  console.log(<span class="string">"开始读取...."</span>);</div><div class="line">              &#125;</div><div class="line">              reader.onprogress = <span class="keyword">function</span> (e) &#123;</div><div class="line">                  console.log(<span class="string">"正在读取中...."</span>);</div><div class="line">              &#125;</div><div class="line">              reader.onabort = <span class="keyword">function</span> (e) &#123;</div><div class="line">                  console.log(<span class="string">"中断读取...."</span>);</div><div class="line">              &#125;</div><div class="line">              reader.onerror = <span class="keyword">function</span> (e) &#123;</div><div class="line">                  console.log(<span class="string">"读取异常...."</span>);</div><div class="line">              &#125;</div><div class="line">              reader.onload = <span class="keyword">function</span> (e) &#123;</div><div class="line">                  console.log(<span class="string">"成功读取...."</span>);</div><div class="line"></div><div class="line">                  var img = document.getElementById(<span class="string">"xmTanImg"</span>);</div><div class="line">                  img.src = e.target.result;</div><div class="line">                  //或者 img.src = this.result;  //e.target == this</div><div class="line">              &#125;</div><div class="line">		//图片数据转成base64字符串形式。</div><div class="line">              reader.readAsDataURL(file)</div><div class="line">          &#125;</div><div class="line">      &lt;/script&gt;</div></pre></td></tr></table></figure>
-<p>另外 FileReader除了有函数readAsDataURL，另外还有另外两个函数readAsBinaryString 和 readAsText，分别可以将选择的文件读取成二进制和文本格式 </p>
-<h3 id="代码实现-1"><a href="#代码实现-1" class="headerlink" title="代码实现"></a>代码实现</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line">&lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span>&gt;</div><div class="line">            //判断浏览器是否支持FileReader接口</div><div class="line">            <span class="keyword">if</span> (typeof FileReader == <span class="string">'undefined'</span>) &#123;</div><div class="line">                document.getElementById(<span class="string">"xmTanContentDiv"</span>).InnerHTML = <span class="string">"&lt;p&gt;当前浏览器不支持FileReader接口！&lt;/p&gt;"</span>;</div><div class="line">                document.getElementById(<span class="string">"xmTanFile"</span>).setAttribute(<span class="string">"disabled"</span>, <span class="string">"disabled"</span>);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            //选择文件</div><div class="line">            <span class="keyword">function</span> xmTanUploadFile(obj)&#123;</div><div class="line">                <span class="keyword">if</span> (obj.files.length &lt; 1) <span class="built_in">return</span>;</div><div class="line"></div><div class="line">                var file = obj.files[0];</div><div class="line">                </div><div class="line">                <span class="keyword">if</span> (file.size &gt; 1024 * 1024) &#123;</div><div class="line">                    alert(<span class="string">"文件大于1M， 太大了，小点吧！"</span>);</div><div class="line">                    obj.value = <span class="string">""</span>;</div><div class="line">                    <span class="built_in">return</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            //读取文件为二进制</div><div class="line">            <span class="keyword">function</span> <span class="function"><span class="title">readAsBinaryString</span></span>() &#123;</div><div class="line">                var obj = document.getElementById(<span class="string">"xmTanFile"</span>);</div><div class="line">                <span class="keyword">if</span> (obj.files.length &lt; 1) <span class="built_in">return</span>;</div><div class="line"></div><div class="line">                var file = obj.files[0];</div><div class="line">                var reader = new FileReader();</div><div class="line"></div><div class="line">                //将文件以二进制形式读入页面</div><div class="line">                reader.readAsBinaryString(file);</div><div class="line">                reader.onload = <span class="keyword">function</span> (f) &#123;</div><div class="line">                    document.getElementById(<span class="string">"xmTanContentDiv"</span>).innerHTML = this.result;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            //读取文件为文本</div><div class="line">            <span class="keyword">function</span> <span class="function"><span class="title">readAsText</span></span>() &#123;</div><div class="line">                var obj = document.getElementById(<span class="string">"xmTanFile"</span>);</div><div class="line">                <span class="keyword">if</span> (obj.files.length &lt; 1) <span class="built_in">return</span>;</div><div class="line"></div><div class="line">                var file = obj.files[0];</div><div class="line">                var reader = new FileReader();</div><div class="line"></div><div class="line">                //将文件以文本形式读入页面</div><div class="line">                reader.readAsText(file);</div><div class="line">                reader.onload = <span class="keyword">function</span> (f) &#123;</div><div class="line">                    document.getElementById(<span class="string">"xmTanContentDiv"</span>).innerHTML = this.result;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &lt;/script&gt;</div><div class="line">        &lt;div style=<span class="string">"border: 2px dashed red; padding: 20px 0px;"</span>&gt;</div><div class="line">            &lt;label&gt;选择文件：&lt;/label&gt;</div><div class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"file"</span> id=<span class="string">"xmTanFile"</span> accept=<span class="string">".html,.js,.css,.txt,.cs,.xml"</span> onchange=<span class="string">"xmTanUploadFile(this)"</span>/&gt;</div><div class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"button"</span> value=<span class="string">"读取成二进制数据"</span> onclick=<span class="string">"readAsBinaryString()"</span> /&gt;</div><div class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"button"</span> value=<span class="string">"读取成文本数据"</span> onclick=<span class="string">"readAsText()"</span> /&gt;</div><div class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"button"</span> value=<span class="string">"隐藏读取内容"</span> onclick=<span class="string">"document.getElementById('xmTanContentDiv').style.display = 'none';"</span>/&gt;</div><div class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"button"</span> value=<span class="string">"显示读取内容"</span> onclick=<span class="string">"document.getElementById('xmTanContentDiv').style.display = 'block';"</span>/&gt;</div><div class="line">            &lt;div id=<span class="string">"xmTanContentDiv"</span>&gt;&lt;/div&gt;</div><div class="line">        &lt;/div&gt;</div></pre></td></tr></table></figure>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/06/JavaScript之FileReader接口/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/12/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/14/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/12/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/14/">Next &raquo;</a>
     </nav>
   
 
@@ -469,15 +462,15 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">react</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">vue</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">es6</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -489,11 +482,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">php</a>
+                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">react</a>
+                <a href="javascript:void(0)" class="js-tag color4">php</a>
               </li>
              
               <li class="article-tag-list-item">
