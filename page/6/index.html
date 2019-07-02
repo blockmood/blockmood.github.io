@@ -148,6 +148,72 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-create-react-app中ES7装饰器配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/02/02/create-react-app中ES7装饰器配置/">create-react-app中ES7装饰器配置</a>
+    </h1>
+  
+
+        
+        <a href="/2018/02/02/create-react-app中ES7装饰器配置/" class="archive-article-date">
+  	<time datetime="2018-02-02T00:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="第一种方式"><a href="#第一种方式" class="headerlink" title="第一种方式"></a>第一种方式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev babel-plugin-transform-decorators-legacy</span><br></pre></td></tr></table></figure>
+<p>然后在</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node_modules/babel-preset-react-app/index.js plugins</span><br></pre></td></tr></table></figure>
+<p>中添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">require.resolve(&apos;babel-plugin-transform-decorators-legacy&apos;)</span><br></pre></td></tr></table></figure>
+<p>详情： <a href="https://segmentfault.com/q/1010000010491983" target="_blank" rel="noopener">https://segmentfault.com/q/1010000010491983</a></p>
+<h3 id="第二种方式"><a href="#第二种方式" class="headerlink" title="第二种方式"></a>第二种方式</h3><p>.babelrc<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;presets&quot;: [</span><br><span class="line">        [&quot;env&quot;, &#123;</span><br><span class="line">            &quot;modules&quot;: false</span><br><span class="line">        &#125;],</span><br><span class="line">        &quot;es2015&quot;,</span><br><span class="line">        &quot;stage-0&quot;,</span><br><span class="line">        &quot;stage-2&quot;,</span><br><span class="line">        &quot;react&quot;</span><br><span class="line"></span><br><span class="line">    ],</span><br><span class="line">    &quot;plugins&quot;: [</span><br><span class="line">        &quot;transform-decorators-legacy&quot;,</span><br><span class="line">        &quot;transform-runtime&quot;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;devDependencies&quot;: &#123;</span><br><span class="line">    &quot;babel-plugin-transform-decorators-legacy&quot;: &quot;^1.3.4&quot;,</span><br><span class="line">    &quot;babel-plugin-transform-runtime&quot;: &quot;^6.23.0&quot;,</span><br><span class="line">    &quot;babel-preset-es2015&quot;: &quot;^6.24.1&quot;,</span><br><span class="line">    &quot;babel-preset-stage-0&quot;: &quot;^6.24.1&quot;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">create-react-app</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/02/02/create-react-app中ES7装饰器配置/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-create-react-app+antd+react-css-modules配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -279,110 +345,9 @@
 
 
   
-    <article id="post-Flux架构再回顾" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/22/Flux架构再回顾/">Flux</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/22/Flux架构再回顾/" class="archive-article-date">
-  	<time datetime="2018-01-21T16:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Flux是什么"><a href="#Flux是什么" class="headerlink" title="Flux是什么"></a>Flux是什么</h3><p>简单说，Flux 是一种架构思想，专门解决软件的结构问题。它跟MVC 架构是同一类东西，但是更加简单和清晰。</p>
-<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>Flux将一个应用分成4个部分</p>
-<blockquote>
-<p>View层</p>
-</blockquote>
-<blockquote>
-<p>Action(动作) 视图层触发的消息(比如mouseClick)</p>
-</blockquote>
-<blockquote>
-<p>Dispatcher(派发器) 用来接收到Action 执行回调函数</p>
-</blockquote>
-<blockquote>
-<p>Store (数据层) 用来存放应用的数据，一旦发生改变，就提示view进行更新</p>
-</blockquote>
-<p>Flux最大的特点就是 数据是”单向流动”的</p>
-<p>一般的流程</p>
-<blockquote>
-<p>1.用户访问view</p>
-</blockquote>
-<blockquote>
-<p>2.view发出action</p>
-</blockquote>
-<blockquote>
-<p>3.Dispatcher接收到action，要求store进行相应的更新</p>
-</blockquote>
-<blockquote>
-<p>4.Store更新后，向view成发送一个”change”事件</p>
-</blockquote>
-<blockquote>
-<p>5.view收到”change”事件后，更新页面</p>
-</blockquote>
-<p>上面的过程，数据总是”单向流动”的，任何相邻的部分都不会发生数据的”数据的双向流动”，这保证了流程的清晰，这也是Flux最大的优点。</p>
-<p>在<code>MVC</code>架构中，我们无法杜绝<code>Model</code>和<code>View</code>之间的直接对话，这样如果项目很大的话，就会造成数据的逻辑混乱，但是如果是<code>Flux</code>架构的话，如果想要改变<code>Store</code>就必须触发<code>Action</code>，这就是一个规矩，说直白点,<code>Store</code>只有<code>get</code>方法,根本无法去直接<code>set</code>它，这看起来是一个限制，但是这种限制正好限制了数据之间的混乱流动。</p>
-<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><p>Flux的缺点</p>
-<blockquote>
-<p>每一个Store都需要通过<code>AppDispatcher.register()</code>方法监听<code>Action</code>的触发</p>
-</blockquote>
-<blockquote>
-<p>难以通过服务器端渲染</p>
-</blockquote>
-<blockquote>
-<p>再哪里发请求，如何处理异步流</p>
-</blockquote>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Flux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/22/Flux架构再回顾/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/29/">29</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
     </nav>
   
 
@@ -480,11 +445,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -504,6 +469,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">create-react-app</a>
               </li>
              
@@ -512,15 +481,7 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">es6</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -528,11 +489,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ios</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -545,6 +506,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ios</a>
               </li>
              
               <li class="article-tag-list-item">

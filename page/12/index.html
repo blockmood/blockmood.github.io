@@ -148,6 +148,70 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-react打包首页空白解决办法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/07/react打包首页空白解决办法/">react打包首页空白解决办法</a>
+    </h1>
+  
+
+        
+        <a href="/2017/11/07/react打包首页空白解决办法/" class="archive-article-date">
+  	<time datetime="2017-11-07T07:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><blockquote>
+<p>在package.json配置文件中加一句：　“homepage”: “./” </p>
+</blockquote>
+<blockquote>
+<p>这是build之后的路径问题，改为相对路径后再次打开这个index.html文件就可以正常浏览了。</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/11/07/react打包首页空白解决办法/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-配置SSH Keys" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -291,78 +355,9 @@
 
 
   
-    <article id="post-react以函数为子组件" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/26/react以函数为子组件/">react以函数为子组件</a>
-    </h1>
-  
-
-        
-        <a href="/2017/10/26/react以函数为子组件/" class="archive-article-date">
-  	<time datetime="2017-10-26T07:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="代理方式的高阶组件"><a href="#代理方式的高阶组件" class="headerlink" title="代理方式的高阶组件"></a>代理方式的高阶组件</h3><p>react高阶组件不是唯一可用于提高组件代码重用的方法，高阶组件扩展现有组件功能的方式主要是通过props，以代理方式的高阶组件为例子，新产生的组件和原有的组件说到底是父子关系的组件，而俩个组件之间的通信自然是props,看下面的代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import React from &apos;react&apos;;</span><br><span class="line"></span><br><span class="line">const addNewProps = (WrappedComponent, newProps) =&gt; &#123;</span><br><span class="line">  return class WrappingComponent extends React.Component &#123;</span><br><span class="line">    render() &#123;</span><br><span class="line">      return &lt;WrappedComponent &#123;...this.props&#125; &#123;...newProps&#125; /&gt;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default addNewProps;</span><br></pre></td></tr></table></figure>
-<p>如果要使用这个组件，作为参数的组件必须要能够接受名为 newProps 的prop，不然应用这个组件就完全没有意义，这就是代理组件的一个缺点，对原有组件的props有了固化的要求。</p>
-<h3 id="以函数为子组件"><a href="#以函数为子组件" class="headerlink" title="以函数为子组件"></a>以函数为子组件</h3><p>以函数为子组件就是为了克服这种局限性的，在这种模式下，实现代码重用的不是一个函数，而是一个真正的react组件，这样的组件有一个特点，就是要求必须有子组件的存在，而且这个子组件必须是一个函数。在实例的生命周期中，this.props.children()引用的就是子组件，render函数会直接把this.props.children当做函数来调用，得到的结果就可以作为render函数返回结果的一部分。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import React from &apos;react&apos;;</span><br><span class="line"></span><br><span class="line">const loggedinUser = &apos;mock user&apos;;</span><br><span class="line"></span><br><span class="line">class AddUserProp extends React.Component &#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    const user = loggedinUser;</span><br><span class="line">    return this.props.children(user)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">AddUserProp.propTypes = &#123;</span><br><span class="line">  children: React.PropTypes.func.isRequired</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default AddUserProp;</span><br></pre></td></tr></table></figure>
-<p>使用这个组件的灵活之处在于他没有被对增强的组件有任何的props的要求，只是传递过去一个参数，至于使用的话</p>
-<p>例如：我们想让一个组件吧user显示出来</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;AddUserProp&gt;</span><br><span class="line">	&#123;</span><br><span class="line">		(user)=&gt; &lt;div&gt;&#123;user&#125;&lt;/div&gt;</span><br><span class="line">	&#125;</span><br><span class="line">&lt;/AddUserProp&gt;</span><br></pre></td></tr></table></figure>
-<p>又例如：我们想吧user传递给另外一个Foo组件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;AddUserProp&gt;</span><br><span class="line">	&#123;</span><br><span class="line">		(user)=&gt; &lt;Foo user=&#123;user&#125; /&gt;</span><br><span class="line">	&#125;</span><br><span class="line">&lt;/AddUserProp&gt;</span><br></pre></td></tr></table></figure>
-<p>可以看到，使用函数为子组件非常灵活。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/26/react以函数为子组件/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/11/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/13/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/11/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/29/">29</a><a class="extend next" rel="next" href="/page/13/">Next &raquo;</a>
     </nav>
   
 
@@ -460,11 +455,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -484,6 +479,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">create-react-app</a>
               </li>
              
@@ -492,15 +491,7 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">es6</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -508,11 +499,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ios</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -525,6 +516,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ios</a>
               </li>
              
               <li class="article-tag-list-item">

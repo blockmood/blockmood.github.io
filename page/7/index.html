@@ -148,6 +148,107 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Flux架构再回顾" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/22/Flux架构再回顾/">Flux</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/22/Flux架构再回顾/" class="archive-article-date">
+  	<time datetime="2018-01-21T16:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Flux是什么"><a href="#Flux是什么" class="headerlink" title="Flux是什么"></a>Flux是什么</h3><p>简单说，Flux 是一种架构思想，专门解决软件的结构问题。它跟MVC 架构是同一类东西，但是更加简单和清晰。</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>Flux将一个应用分成4个部分</p>
+<blockquote>
+<p>View层</p>
+</blockquote>
+<blockquote>
+<p>Action(动作) 视图层触发的消息(比如mouseClick)</p>
+</blockquote>
+<blockquote>
+<p>Dispatcher(派发器) 用来接收到Action 执行回调函数</p>
+</blockquote>
+<blockquote>
+<p>Store (数据层) 用来存放应用的数据，一旦发生改变，就提示view进行更新</p>
+</blockquote>
+<p>Flux最大的特点就是 数据是”单向流动”的</p>
+<p>一般的流程</p>
+<blockquote>
+<p>1.用户访问view</p>
+</blockquote>
+<blockquote>
+<p>2.view发出action</p>
+</blockquote>
+<blockquote>
+<p>3.Dispatcher接收到action，要求store进行相应的更新</p>
+</blockquote>
+<blockquote>
+<p>4.Store更新后，向view成发送一个”change”事件</p>
+</blockquote>
+<blockquote>
+<p>5.view收到”change”事件后，更新页面</p>
+</blockquote>
+<p>上面的过程，数据总是”单向流动”的，任何相邻的部分都不会发生数据的”数据的双向流动”，这保证了流程的清晰，这也是Flux最大的优点。</p>
+<p>在<code>MVC</code>架构中，我们无法杜绝<code>Model</code>和<code>View</code>之间的直接对话，这样如果项目很大的话，就会造成数据的逻辑混乱，但是如果是<code>Flux</code>架构的话，如果想要改变<code>Store</code>就必须触发<code>Action</code>，这就是一个规矩，说直白点,<code>Store</code>只有<code>get</code>方法,根本无法去直接<code>set</code>它，这看起来是一个限制，但是这种限制正好限制了数据之间的混乱流动。</p>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><p>Flux的缺点</p>
+<blockquote>
+<p>每一个Store都需要通过<code>AppDispatcher.register()</code>方法监听<code>Action</code>的触发</p>
+</blockquote>
+<blockquote>
+<p>难以通过服务器端渲染</p>
+</blockquote>
+<blockquote>
+<p>再哪里发请求，如何处理异步流</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Flux</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/22/Flux架构再回顾/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-react源码解读" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -318,87 +419,9 @@
 
 
   
-    <article id="post-react之shouldComponentUpdate性能优化详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/06/react之shouldComponentUpdate性能优化详解/">react之shouldComponentUpdate性能优化详解</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/06/react之shouldComponentUpdate性能优化详解/" class="archive-article-date">
-  	<time datetime="2018-01-06T00:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在<code>react</code>中最重要的俩个生命周期方法，一个是<code>render()</code>，它决定的是组件该渲染什么，而另一个<code>shouldComponentUpdate</code>则决定组件什么时候不需要重新渲染。</p>
-<p><code>react</code>组件类的父类<code>Component</code>提供了<code>shouldComponentUpdate</code>的默认实现，这个默认实现就是返回一个<code>true</code>，也就说，每次更新的时候都需要调用所有的生命周期函数，也包括<code>render()</code>方法，然后根据<code>render()</code>返回的结果计算<code>Virtual DOM</code>。</p>
-<p>当然，默认方法提供了一种最保险的办法，毕竟<code>react</code>不知道组件的内部实现，就算全部重新渲染一遍浪费一点，但至少保证不会出错。</p>
-<p>但是要达到更好的性能，就有必要定义我们自己的<code>shouldComponentUpdate</code>的方法，让它在需要更新的时候才返回<code>true</code>，这样节省了大量的计算资源。</p>
-<p>假设对于一个组件而言，影响组件渲染的<code>prop</code>只有<code>completed</code>和<code>text</code>,所以只要确保这俩个prop没有改变，<code>shouldComponentUpdate</code>就可以返回<code>false</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">shouldComponentUpdate(nextProps,nextState)&#123;</span><br><span class="line">	return (nextProps.completed !== this.props.completed) ||</span><br><span class="line">	(nextState.text !== this.props.text)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>根据自己组件内部不同状态，实现的方法也不同，但是大体意思都一致。</p>
-<p>如果每一个组件都要重新实现<code>shouldComponentUpdate</code>，从代码的脚本是一件非常麻烦的事情，但是如果我们使用了<code>react-redux</code>库，一切都变的简单了。</p>
-<h3 id="react-redux、shouldComponentUpdate-默认实现"><a href="#react-redux、shouldComponentUpdate-默认实现" class="headerlink" title="react-redux、shouldComponentUpdate 默认实现"></a>react-redux、shouldComponentUpdate 默认实现</h3><p><code>react-redux</code>默认实现了<code>shouldComponentUpdate</code>，实现的逻辑是比对传递给展示组件的<code>props</code>和上一次的<code>props</code>,因为展示组件完全是一个无状态组件，组件渲染什么完全由<code>props</code>决定,如果<code>props</code>没有变化，那就可以认为组件渲染没有变化。</p>
-<p>相比<code>react</code>的<code>shouldComponentUpdate</code>的实现，<code>react-redux</code>的默认实现当前比较牛逼一些，但是在对比<code>props</code>方面，用的依然是浅比较，也就是<code>===</code>,若果<code>prop</code>的值是数字或者是字符串，只要值相同，都会返回<code>true</code>，但是如果是对象形式，浅比较只看这俩个对象的引用地址是不是相同，如果不是，哪怕这俩个对象的内容一致，都会返回<code>false</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Foo style=&#123;&#123;color:red&#125;&#125;/&gt;</span><br></pre></td></tr></table></figure>
-<p>像上面这样的方法，Foo组件利用<code>react-redux</code>提供的<code>shouldComponentUpdate</code>默认实现，每一次渲染都会认为这个prop发生变化，因为每次都会产生一个新的对象。</p>
-<p>既然这样，那为什么不用深比较呢？</p>
-<p>但其实这是一个比较正确的决定，因为对象到底有多少层无法预料，如果一直使用递归所有层次进行深层次的比较的话，无疑消耗的性能可能大。</p>
-<p>这时，有一个库，<code>Immutable</code>,可以帮我们实现简单而又不需要消耗太多性能的深比较。</p>
-<h3 id="Immutable-js"><a href="#Immutable-js" class="headerlink" title="Immutable.js"></a>Immutable.js</h3><p>在<code>javascript</code>中对象一般是可变的，因为都是使用的引用赋值，新的对象简单引用了原始对象，假设改变了新的对象，原始对象也会随着改变。</p>
-<p><code>Immutable Data</code>就是一旦创建，就不能再改变的数据，对<code>Immutable</code>的对象进行 修改 添加 或者删除，都会返回一个新的<code>Immutable</code>对象，<code>Immutable</code>的实现原理就是持久化数据结构，也就是旧数据在改变的情况下，要保证旧数据可用并且不改变。为了避免深拷贝把所有节点都复制一遍带来的性能问题，<code>Immutable</code>使用了结构共享，就是如果对象树中的一个节点发生变化，只修这个节点和受这个节点所影响的父节点，其他节点则进行共享。</p>
-<p>前面我们说了可在<code>shouldComponentUpdate</code>中使用浅比较来比较<code>prop</code>，但是有一定的局限性，但是深比较的话又比较损耗性能，这时就可以在<code>shouldComponentUpdate</code>中使用<code>Immutable</code>来实现深层比较。</p>
-<p><code>Immutable</code>提供了简洁，高效的判断数据变化方法，只要<code>===</code>和<code>is</code>简便的API就可以知道是否要执行<code>render()，</code>这个操作几乎零成本，所以可以极大的提高性能。</p>
-<p><a href="https://github.com/lucaong/immutable" target="_blank" rel="noopener">Immutable API</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/06/react之shouldComponentUpdate性能优化详解/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/29/">29</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
     </nav>
   
 
@@ -496,11 +519,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -520,6 +543,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">create-react-app</a>
               </li>
              
@@ -528,15 +555,7 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">es6</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -544,11 +563,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ios</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -561,6 +580,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ios</a>
               </li>
              
               <li class="article-tag-list-item">

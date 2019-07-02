@@ -148,6 +148,73 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Centos7下mysql Can’t connect to local MySQL server" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/30/Centos7下mysql Can’t connect to local MySQL server/">mysql Can’t connect to local MySQL server through socket</a>
+    </h1>
+  
+
+        
+        <a href="/2019/05/30/Centos7下mysql Can’t connect to local MySQL server/" class="archive-article-date">
+  	<time datetime="2019-05-30T00:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="centos7-下解决mysql-server找不到安装包问题"><a href="#centos7-下解决mysql-server找不到安装包问题" class="headerlink" title="centos7 下解决mysql-server找不到安装包问题"></a>centos7 下解决mysql-server找不到安装包问题</h2><h3 id="第一步：安装从网上下载文件的wget命令"><a href="#第一步：安装从网上下载文件的wget命令" class="headerlink" title="第一步：安装从网上下载文件的wget命令"></a>第一步：安装从网上下载文件的wget命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# yum -y install wget</span><br></pre></td></tr></table></figure>
+<h3 id="第二步：下载mysql的repo源"><a href="#第二步：下载mysql的repo源" class="headerlink" title="第二步：下载mysql的repo源"></a>第二步：下载mysql的repo源</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm</span><br></pre></td></tr></table></figure>
+<h3 id="第三步：安装mysql-community-release-el7-5-noarch-rpm包"><a href="#第三步：安装mysql-community-release-el7-5-noarch-rpm包" class="headerlink" title="第三步：安装mysql-community-release-el7-5.noarch.rpm包"></a>第三步：安装mysql-community-release-el7-5.noarch.rpm包</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# rpm -ivh mysql-community-release-el7-5.noarch.rpm</span><br></pre></td></tr></table></figure>
+<h3 id="第四步：查看下"><a href="#第四步：查看下" class="headerlink" title="第四步：查看下"></a>第四步：查看下</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# ls -1 /etc/yum.repos.d/mysql-community*</span><br><span class="line">/etc/yum.repos.d/mysql-community.repo</span><br><span class="line">/etc/yum.repos.d/mysql-community-source.repo</span><br></pre></td></tr></table></figure>
+<p>会获得两个mysql的yum repo源：/etc/yum.repos.d/mysql-community.repo，/etc/yum.repos.d/mysql-community-source.repo。</p>
+<h3 id="第五步：安装mysql"><a href="#第五步：安装mysql" class="headerlink" title="第五步：安装mysql"></a>第五步：安装mysql</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# yum install mysql-server ||  mysql</span><br></pre></td></tr></table></figure>
+<p>如果发现 Centos7下mysql Can’t connect to local MySQL server through socket的解决方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/my.cnf 置空  然后 mysql 直接登录</span><br></pre></td></tr></table></figure>
+<h2 id="支持用户允许远程连接数据库"><a href="#支持用户允许远程连接数据库" class="headerlink" title="支持用户允许远程连接数据库"></a>支持用户允许远程连接数据库</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grant all privileges on *.* to &apos;root&apos;@&apos;%&apos; identified by &apos;123456&apos; with grant option;</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+<h2 id="新建用户远程连接数据库"><a href="#新建用户远程连接数据库" class="headerlink" title="新建用户远程连接数据库"></a>新建用户远程连接数据库</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grant all on *.* to admin@&apos;%&apos; identified by &apos;123456&apos; with grant option; </span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Centos</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/05/30/Centos7下mysql Can’t connect to local MySQL server/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-利用n轻松切换nodejs的版本" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -290,104 +357,9 @@
 
 
   
-    <article id="post-ios开发到上线全部流程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/19/ios开发到上线全部流程/">ios开发到上线流程</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/19/ios开发到上线全部流程/" class="archive-article-date">
-  	<time datetime="2019-03-19T04:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>下面教程介绍了如何利用web技术从零开始开发到上线一个IOS应用。采用cordova框架初始化项目，放入需要打包的页面，再用XCode运行项目，构建打包，就得到一个IOS应用。</p>
-<h2 id="1、安装xcode"><a href="#1、安装xcode" class="headerlink" title="1、安装xcode"></a>1、安装xcode</h2><p>开发IOS前提是要有一台mac电脑，然后在app store下载安装最新版Xcode</p>
-<p><img src="/img/xcode.png" alt="xcode"></p>
-<h2 id="2、安装node"><a href="#2、安装node" class="headerlink" title="2、安装node"></a>2、安装node</h2><p>进入node官网下载安装，建议安装最新稳定版<br>终端运行结果如下，证明安装成功</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$node -v</span><br><span class="line">v8.1.2</span><br></pre></td></tr></table></figure>
-<h2 id="3、安装cordova"><a href="#3、安装cordova" class="headerlink" title="3、安装cordova"></a>3、安装cordova</h2><p>在终端运行，全局安装cordova，保证兼容性问题，最好安装7.0版本</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$sudo npm install -g cordova@7.0</span><br><span class="line">$cordova -v</span><br><span class="line">7.0.0</span><br></pre></td></tr></table></figure>
-<h2 id="新建一个cordova项目"><a href="#新建一个cordova项目" class="headerlink" title="新建一个cordova项目"></a>新建一个cordova项目</h2><p>进入一个目录，运行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$cordova create hello com.example.hello HelloWorld</span><br><span class="line">$cordova platforms add ios</span><br></pre></td></tr></table></figure>
-<p>将需要打包的html代码放置到 www下，或者可以将项目用svn导入，然后执行下面命令可以将代码自动复制到 /platforms/ios/www中（为了配合安卓项目一块使用）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$cordova prepare</span><br></pre></td></tr></table></figure>
-<h2 id="5、离线打包IOS应用"><a href="#5、离线打包IOS应用" class="headerlink" title="5、离线打包IOS应用"></a>5、离线打包IOS应用</h2><p>使用xcode打开项目/platforms/ios/xx.xcodeproj，连接苹果手机（也可以打开模拟器）,右上角device选择当前手机或者ipad，点开general，填写signing，到<a href="http://developer.apple.com/" target="_blank" rel="noopener">苹果官网</a>注册一个苹果开发者账号，添加到signing中，点击右上角运行按钮，或者快捷键cmd + R，即可在手机上看到打包好的app，已经成功了一大半了。<br>修改/platforms/ios/www/index.html内容，再打包试下</p>
-<h2 id="6、页面上下滑动出现黑边bug"><a href="#6、页面上下滑动出现黑边bug" class="headerlink" title="6、页面上下滑动出现黑边bug"></a>6、页面上下滑动出现黑边bug</h2><p>打开当前根目录下config.xml，在最下面添加下面代码即可解决页面滑动时，页面上下会脱离APP视图。<br>然后再执行$cordova prepare命令，使配置生效（相当于覆盖ios目录下面的config.xml文件）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;preference name=&quot;WebViewBounce&quot; value=&quot;false&quot; /&gt;</span><br><span class="line">&lt;preference name=&quot;DisallowOverscroll&quot; value=&quot;true&quot; /&gt;</span><br></pre></td></tr></table></figure>
-<h2 id="7、IOS状态栏往下顶20像素"><a href="#7、IOS状态栏往下顶20像素" class="headerlink" title="7、IOS状态栏往下顶20像素"></a>7、IOS状态栏往下顶20像素</h2><p>把文件MainViewController.m中的方法viewWillAppear改成下面这样，如果要往上顶20像素，可以把20改为-20</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> - (void)viewWillAppear:(BOOL)animated</span><br><span class="line">&#123;</span><br><span class="line">// View defaults to full size.  If you want to customize the view&apos;s size, or its subviews (e.g. webView),</span><br><span class="line">// you can do so here.</span><br><span class="line">//Lower screen 20px on ios 7</span><br><span class="line">if ([[[UIDevice currentDevice] systemVersion] floatValue] &gt;= 7) &#123;</span><br><span class="line">    CGRect viewBounds = [self.webView bounds];</span><br><span class="line">    viewBounds.origin.y = 20;</span><br><span class="line">    viewBounds.size.height = viewBounds.size.height - 20;</span><br><span class="line">    self.webView.frame = viewBounds;</span><br><span class="line">&#125;</span><br><span class="line">[super viewWillAppear:animated];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="8、启动界面延迟加载"><a href="#8、启动界面延迟加载" class="headerlink" title="8、启动界面延迟加载"></a>8、启动界面延迟加载</h2><p>执行命令，添加插件cordova plugin add cordova-plugin-splashscreen，然后在/platforms/ios/app名字/config.xml中，添加</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;preference name=&quot;AutoHideSplashScreen&quot; value=&quot;true&quot; /&gt;</span><br><span class="line">&lt;preference name=&quot;SplashScreenDelay&quot; value=&quot;1000&quot; /&gt;</span><br></pre></td></tr></table></figure>
-<h2 id="9、app中嵌入外部链接"><a href="#9、app中嵌入外部链接" class="headerlink" title="9、app中嵌入外部链接"></a>9、app中嵌入外部链接</h2><p>如果要在app中嵌入外链显示，需要在/platforms/ios/app名字/config.xml中，添加</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;allow-navigation href=&quot;*&quot;/&gt;</span><br><span class="line">&lt;allow-intent href=&quot;*&quot;/&gt;</span><br></pre></td></tr></table></figure>
-<h2 id="10、启动图标路劲"><a href="#10、启动图标路劲" class="headerlink" title="10、启动图标路劲"></a>10、启动图标路劲</h2><p>系统所在图片地址/platforms/ios/xxx/Images.xcassets/，AppIcon.appiconset里面放着所有不同大小启动图标图片，LaunchImage.launchimage里面放着为所有启动图片，最好全部替换</p>
-<h2 id="11、根据需要安装插件"><a href="#11、根据需要安装插件" class="headerlink" title="11、根据需要安装插件"></a>11、根据需要安装插件</h2><p>根据具体需求安装对应插件，比如QQ，微信，微博登录分享，调用支付宝支付，调用系统自带相机，消息<br>推送，获取设备信息等，下面介绍几个常用的插件使用办法</p>
-<p>极光推送</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova plugin add jpush-phonegap-plugin --variable APP_KEY=your_jpush_appkey</span><br></pre></td></tr></table></figure>
-<p>插件配置：<br>1、进入<a href="https://www.jiguang.cn/" target="_blank" rel="noopener">官网</a>，注册账号密码，申请一个app，并且通过企业认证<br>2、极光推送中需要安装证书，参考<br><a href="http://www.jianshu.com/p/6f8233ece1b2" target="_blank" rel="noopener">http://www.jianshu.com/p/6f8233ece1b2</a><br>3、启动极光推送，项目js中添加以下代码，具体设置<a href="https://github.com/jpush/jpush-phonegap-plugin/blob/master/doc/iOS_API.md" target="_blank" rel="noopener">文档地址</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">window.plugins.jPushPlugin.startJPushSDK()  js启动极光推送服务</span><br><span class="line">window.plugins.jPushPlugin.getRegistrationID(function(data) &#123;   获取用户Registration ID</span><br><span class="line">  console.log(&quot;JPushPlugin:registrationID is &quot; + data)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>QQ分享，微信分享，微博分享</p>
-<p>进入<a href="https://cordova.apache.org/plugins/" target="_blank" rel="noopener">cordova</a>官网，找到对应插件查看文档安装（cordova-plugin-wechat cordova-plugin-qqsdk cordova-plugin-weibosdk jpush-phonegap-plugin参考api安装）</p>
-<p>常用插件安装，可以参考常用<a href="https://www.cnblogs.com/huazai/p/5439640.html" target="_blank" rel="noopener">插件列表</a></p>
-<h2 id="12、本地热更新调试"><a href="#12、本地热更新调试" class="headerlink" title="12、本地热更新调试"></a>12、本地热更新调试</h2><p>让app直接运行外部服务器下的网址，方便调试。<br>直接在/platforms/ios/app名字/config.xml中，修改content配置信息，比如我们的web应用运行在本机3000端口上，地址可以改为本机ip加端口号方式，并且手机跟电脑连在同一wifi下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;content src=&quot;http://172.16.20.58:3000/&quot; /&gt;</span><br></pre></td></tr></table></figure>
-<h2 id="13、打包上线"><a href="#13、打包上线" class="headerlink" title="13、打包上线"></a>13、打包上线</h2><p>1、填好相关信息</p>
-<p><img src="/img/ios1.png" alt="ios1"></p>
-<p>2、注册苹果证书，信息太长，参考博文</p>
-<p><a href="https://www.jianshu.com/p/01224fc523d4" target="_blank" rel="noopener">参考链接</a></p>
-<p>3、往苹果商店打包：product -&gt; archive -&gt; upload to app store -&gt; 上传成功 -&gt; 进入苹果官网填好相关基本信息，介绍图片等，再点击发布app，等待审核结果，一般首次3~7天，再次审核2天左右。</p>
-<p>注意：如果官网找不到上传的APP，请检查证书是否有问题，或者app信息是否填写有误，或者App不合规范，一般会给你发邮件告知具体问题。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ios</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/19/ios开发到上线全部流程/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/29/">29</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
     </nav>
   
 
@@ -485,11 +457,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -509,6 +481,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">create-react-app</a>
               </li>
              
@@ -517,15 +493,7 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">es6</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -533,11 +501,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ios</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -550,6 +518,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ios</a>
               </li>
              
               <li class="article-tag-list-item">

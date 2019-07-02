@@ -148,6 +148,71 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JavaScript操作cookie" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/07/13/JavaScript操作cookie/">JavaScript操作cookie</a>
+    </h1>
+  
+
+        
+        <a href="/2018/07/13/JavaScript操作cookie/" class="archive-article-date">
+  	<time datetime="2018-07-13T12:42:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-13</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>//写cookies<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function setCookie(name,value)&#123;</span><br><span class="line">	var Days = 30;</span><br><span class="line">	var exp = new Date(); </span><br><span class="line">	exp.setTime(exp.getTime() + Days*24*60*60*1000);</span><br><span class="line">	document.cookie = name + &quot;=&quot;+ escape (value) + &quot;;expires=&quot; + exp.toGMTString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>//读取cookies<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function getCookie(name)&#123;</span><br><span class="line">	var arr,reg=new RegExp(&quot;(^| )&quot;+name+&quot;=([^;]*)(;|$)&quot;);</span><br><span class="line">	if(arr=document.cookie.match(reg)) return unescape(arr[2]);</span><br><span class="line">	else return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>//删除cookies<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function delCookie(name)&#123;</span><br><span class="line">	var exp = new Date();</span><br><span class="line">	exp.setTime(exp.getTime() - 1);</span><br><span class="line">	var cval=getCookie(name);</span><br><span class="line">	if(cval!=null) document.cookie= name + &quot;=&quot;+cval+&quot;;expires=&quot;+exp.toGMTString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>//使用示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">setCookie(&quot;name&quot;,&quot;hayden&quot;);</span><br><span class="line">alert(getCookie(&quot;name&quot;));</span><br></pre></td></tr></table></figure></p>
+<p>//如果需要设定自定义过期时间<br>//那么把上面的setCookie　函数换成下面两个函数就ok;</p>
+<p>//程序代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">function setCookie(name,value,time)&#123;</span><br><span class="line">var strsec = getsec(time);</span><br><span class="line">var exp = new Date();</span><br><span class="line">exp.setTime(exp.getTime() + strsec*1);</span><br><span class="line">document.cookie = name + &quot;=&quot;+ escape (value) + &quot;;expires=&quot; + exp.toGMTString();</span><br><span class="line">&#125;</span><br><span class="line">function getsec(str)&#123;</span><br><span class="line">    alert(str);</span><br><span class="line">    var str1=str.substring(1,str.length)*1; </span><br><span class="line">    var str2=str.substring(0,1); </span><br><span class="line">    if (str2==&quot;s&quot;)&#123;</span><br><span class="line">    return str1*1000;</span><br><span class="line">    &#125;else if (str2==&quot;h&quot;)&#123;</span><br><span class="line">    return str1*60*60*1000;</span><br><span class="line">    &#125;else if (str2==&quot;d&quot;)&#123;</span><br><span class="line">    return str1*24*60*60*1000;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>//这是有设定过期时间的使用示例：<br>//s20是代表20秒<br>//h是指小时，如12小时则是：h12<br>//d是天数，30天则：d30<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setCookie(&quot;name&quot;,&quot;hayden&quot;,&quot;s20&quot;);</span><br></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/07/13/JavaScript操作cookie/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-koa2实现jwt验证" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -303,67 +368,9 @@
 
 
   
-    <article id="post-vscode不支持element办法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/26/vscode不支持element办法/">vscode不支持element办法</a>
-    </h1>
-  
-
-        
-        <a href="/2018/03/26/vscode不支持element办法/" class="archive-article-date">
-  	<time datetime="2018-03-26T13:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">emmet.triggerExpansionOnTab&quot;: true</span><br></pre></td></tr></table></figure>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">es6</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/26/vscode不支持element办法/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/29/">29</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
     </nav>
   
 
@@ -461,11 +468,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -485,6 +492,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">create-react-app</a>
               </li>
              
@@ -493,15 +504,7 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">es6</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -509,11 +512,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ios</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -526,6 +529,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ios</a>
               </li>
              
               <li class="article-tag-list-item">

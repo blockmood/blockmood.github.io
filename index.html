@@ -216,6 +216,89 @@
 
 
   
+    <article id="post-Flutter学习的一些笔记" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/02/Flutter学习的一些笔记/">Flutter学习的一些笔记</a>
+    </h1>
+  
+
+        
+        <a href="/2019/07/02/Flutter学习的一些笔记/" class="archive-article-date">
+  	<time datetime="2019-07-02T03:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>具体api参照官网。</p>
+<h2 id="布局-部件"><a href="#布局-部件" class="headerlink" title="布局(部件)"></a>布局(部件)</h2><blockquote>
+<p>Row 横向布局<br>Column 纵向布局</p>
+</blockquote>
+<h2 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h2><blockquote>
+<p>点击</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">InkWell</span><br></pre></td></tr></table></figure>
+<h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><blockquote>
+<p>GridView.count </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">常用9宫格方式布局</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>ListView.builder</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">常用上下列表布局</span><br></pre></td></tr></table></figure>
+<h2 id="网络布局"><a href="#网络布局" class="headerlink" title="网络布局"></a>网络布局</h2><blockquote>
+<p>FutureBuilder(…)</p>
+</blockquote>
+<p>案列</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">body:SingleChildScrollView(</span><br><span class="line">	child:FutureBuilder(</span><br><span class="line">		future: //远程请求方法</span><br><span class="line">		builder:(context,snapshot//当前数据)&#123;</span><br><span class="line">			return Column(</span><br><span class="line">				chidren:[</span><br><span class="line">					...</span><br><span class="line">				]</span><br><span class="line">			)</span><br><span class="line">		&#125;</span><br><span class="line">	)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h2 id="BUG"><a href="#BUG" class="headerlink" title="BUG"></a>BUG</h2><blockquote>
+<p>1.高度超过指定设备报错解决方案</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">外层套 SingleChildScrollView</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Flutter</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/07/02/Flutter学习的一些笔记/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-Flutter GridView.Count 禁止上下滑动" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -275,76 +358,9 @@
 
 
   
-    <article id="post-Centos7下mysql Can’t connect to local MySQL server" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/30/Centos7下mysql Can’t connect to local MySQL server/">mysql Can’t connect to local MySQL server through socket</a>
-    </h1>
-  
-
-        
-        <a href="/2019/05/30/Centos7下mysql Can’t connect to local MySQL server/" class="archive-article-date">
-  	<time datetime="2019-05-30T00:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="centos7-下解决mysql-server找不到安装包问题"><a href="#centos7-下解决mysql-server找不到安装包问题" class="headerlink" title="centos7 下解决mysql-server找不到安装包问题"></a>centos7 下解决mysql-server找不到安装包问题</h2><h3 id="第一步：安装从网上下载文件的wget命令"><a href="#第一步：安装从网上下载文件的wget命令" class="headerlink" title="第一步：安装从网上下载文件的wget命令"></a>第一步：安装从网上下载文件的wget命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# yum -y install wget</span><br></pre></td></tr></table></figure>
-<h3 id="第二步：下载mysql的repo源"><a href="#第二步：下载mysql的repo源" class="headerlink" title="第二步：下载mysql的repo源"></a>第二步：下载mysql的repo源</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm</span><br></pre></td></tr></table></figure>
-<h3 id="第三步：安装mysql-community-release-el7-5-noarch-rpm包"><a href="#第三步：安装mysql-community-release-el7-5-noarch-rpm包" class="headerlink" title="第三步：安装mysql-community-release-el7-5.noarch.rpm包"></a>第三步：安装mysql-community-release-el7-5.noarch.rpm包</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# rpm -ivh mysql-community-release-el7-5.noarch.rpm</span><br></pre></td></tr></table></figure>
-<h3 id="第四步：查看下"><a href="#第四步：查看下" class="headerlink" title="第四步：查看下"></a>第四步：查看下</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# ls -1 /etc/yum.repos.d/mysql-community*</span><br><span class="line">/etc/yum.repos.d/mysql-community.repo</span><br><span class="line">/etc/yum.repos.d/mysql-community-source.repo</span><br></pre></td></tr></table></figure>
-<p>会获得两个mysql的yum repo源：/etc/yum.repos.d/mysql-community.repo，/etc/yum.repos.d/mysql-community-source.repo。</p>
-<h3 id="第五步：安装mysql"><a href="#第五步：安装mysql" class="headerlink" title="第五步：安装mysql"></a>第五步：安装mysql</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# yum install mysql-server ||  mysql</span><br></pre></td></tr></table></figure>
-<p>如果发现 Centos7下mysql Can’t connect to local MySQL server through socket的解决方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/my.cnf 置空  然后 mysql 直接登录</span><br></pre></td></tr></table></figure>
-<h2 id="支持用户允许远程连接数据库"><a href="#支持用户允许远程连接数据库" class="headerlink" title="支持用户允许远程连接数据库"></a>支持用户允许远程连接数据库</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grant all privileges on *.* to &apos;root&apos;@&apos;%&apos; identified by &apos;123456&apos; with grant option;</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
-<h2 id="新建用户远程连接数据库"><a href="#新建用户远程连接数据库" class="headerlink" title="新建用户远程连接数据库"></a>新建用户远程连接数据库</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grant all on *.* to admin@&apos;%&apos; identified by &apos;123456&apos; with grant option; </span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Centos</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/30/Centos7下mysql Can’t connect to local MySQL server/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/29/">29</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
@@ -442,11 +458,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -466,6 +482,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">create-react-app</a>
               </li>
              
@@ -474,15 +494,7 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">es6</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -490,11 +502,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ios</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -507,6 +519,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ios</a>
               </li>
              
               <li class="article-tag-list-item">

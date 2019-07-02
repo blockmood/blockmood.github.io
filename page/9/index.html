@@ -148,6 +148,180 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JavaScript高性能优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/28/JavaScript高性能优化/">JavaScript高性能优化</a>
+    </h1>
+  
+
+        
+        <a href="/2017/12/28/JavaScript高性能优化/" class="archive-article-date">
+  	<time datetime="2017-12-28T00:42:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-28</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文章列出了《高性能javascript》一书中的一些常用性能优化，并分为几大类归类总结一下。（持续更新….）</p>
+<h2 id="加载和执行"><a href="#加载和执行" class="headerlink" title="加载和执行"></a>加载和执行</h2><p>javascript代码执行过程会阻塞浏览器的其他进程，比如界面的绘制，每次遇到<code>&lt;script&gt;</code>标签，页面都必须停下来等待代码下载并执行,然后才继续处理其他部分，尽管如此，还是有几种办法能够减少对javascript对性能的影响。</p>
+<blockquote>
+<p>1.<code>&lt;body/&gt;</code>标签闭合之前，将所有的<code>&lt;script&gt;</code>标签放到页面的底部，能够确保脚本执行前页面已经渲染</p>
+</blockquote>
+<blockquote>
+<p>2.合并脚本，页面中<code>&lt;script&gt;</code>标签越少，加载速度也就越快。</p>
+</blockquote>
+<blockquote>
+<p>3.有多种无阻塞下载javascript的方法</p>
+<ul>
+<li>使用<code>&lt;script&gt;</code>的defer属性</li>
+<li>使用动态的<code>&lt;script&gt;</code>元素来下载并执行代码</li>
+<li>使用XHR对象下来javascript代码并注入到页面</li>
+</ul>
+</blockquote>
+<h2 id="数据存储"><a href="#数据存储" class="headerlink" title="数据存储"></a>数据存储</h2><p>在javascript中，数据存储的位置会对代码性能整体产生重大影响，数据存储分为4中方式，字面量、变量、数组项、对象成员。</p>
+<blockquote>
+<p>1.访问字面量和局部变量的速度最快</p>
+</blockquote>
+<blockquote>
+<p>2.由于局部变量存储在作用域链的起始位置（属性搜索机制），所有访问局部变量比访问跨域变量的速度更快，由于全局变量总处于作用域链的最末端，所以访问速度是最慢的。</p>
+</blockquote>
+<blockquote>
+<p>3.循环嵌套对象成员会明显的影响性能（可能会导致引用计数无法回收干净），净量少用</p>
+</blockquote>
+<blockquote>
+<p>4.属性或者方法在原型链中的位置越深，访问的速度也就越慢</p>
+</blockquote>
+<blockquote>
+<p>5.通常，可以把常用的对象成员，数组元素，跨域变量保存在局部变量中来改善<code>javascript</code>的性能。</p>
+</blockquote>
+<h2 id="DOM编程"><a href="#DOM编程" class="headerlink" title="DOM编程"></a>DOM编程</h2><p>访问DOM是Web应用的重要部分，但是每次穿越<code>ECMAScript</code>和<code>DOM</code>之间，都需要一定的性能，为了减少<code>DOM</code>编程带来的性能损失，总结为以下几点：</p>
+<blockquote>
+<p>1.最小化<code>DOM</code>访问次数，尽可能在<code>javascript</code>端处理</p>
+</blockquote>
+<blockquote>
+<p>2.如果需要多次访问<code>DOM</code>节点，请使用局部变量存储它的引用</p>
+</blockquote>
+<blockquote>
+<p>3.小心处理<code>HTML</code>集合，因为他实时连接着底层文档，把集合长度缓存到一个变量中，并在迭代中使用他。</p>
+</blockquote>
+<blockquote>
+<p>4.如果有可能的话，尽可能使用更快速的<code>API</code></p>
+</blockquote>
+<blockquote>
+<p>5.尽量减少重绘和重排的次数，批量修改样式时，“离线” 操作<code>DOM</code>树，使用缓存，并减少布局重排次数。</p>
+</blockquote>
+<blockquote>
+<p>6.动画中使用绝对定位，使用拖放代理</p>
+</blockquote>
+<blockquote>
+<p>7.使用事件委托来减少事件处理程序。</p>
+</blockquote>
+<h2 id="算法和流程控制"><a href="#算法和流程控制" class="headerlink" title="算法和流程控制"></a>算法和流程控制</h2><p><code>javascript</code>和与他编程语言一样，代码的写法和算法会影响运行时间，与其他语言不同的是，<code>javascript</code>的运行资源有限。</p>
+<blockquote>
+<p>1.<code>for</code>、<code>where</code>、<code>do-while</code>循环性能相当</p>
+</blockquote>
+<blockquote>
+<p>2.避免使用<code>for-in</code>循环，除非是你需要遍历一个属性数量未知的对象</p>
+</blockquote>
+<blockquote>
+<p>3.减少循环性能的最佳方式是减少迭代的运算量和减少循环迭代的次数</p>
+</blockquote>
+<blockquote>
+<p>4.通常来说<code>switch</code>总是比<code>if-else</code>快</p>
+</blockquote>
+<blockquote>
+<p>5.浏览器调用栈大小限制了递归算法，调用栈错误会导致其他程序终止运行（净量少用） IE调用栈与系统内存空闲有关，现代浏览器则跟调用栈大小有关。</p>
+</blockquote>
+<h2 id="字符串和正则表达式"><a href="#字符串和正则表达式" class="headerlink" title="字符串和正则表达式"></a>字符串和正则表达式</h2><blockquote>
+<p>1.当连接数量巨大或者尺寸巨大的字符串时，数组项合并是唯一在IE7及更早版本中性能合理的方法</p>
+</blockquote>
+<blockquote>
+<p>2.如果不需要考虑IE7及更早版本的性能，数组项合并是最慢的字符串连接方法之一。推荐使用简单的+和+=操作符来替换，避免不必要的中间字符串。</p>
+</blockquote>
+<blockquote>
+<p>3.正则部分（持续更新….）</p>
+</blockquote>
+<h2 id="快速响应的用户界面"><a href="#快速响应的用户界面" class="headerlink" title="快速响应的用户界面"></a>快速响应的用户界面</h2><p><code>javascript</code>和用户界面在同一个进程中运行，因此一次只能处理一件事情。这意味着当<code>javascript</code>代码正在运行时，用户界面不能响应输入。反之也一样。</p>
+<blockquote>
+<p>1.任何<code>javascript</code>任务都不应该执行超过100毫秒，过长的时间会导致<code>UI</code>更新出现明显的迟钝。</p>
+</blockquote>
+<blockquote>
+<p>2.<code>javascript</code>长时间运行会导致用户体验出现混乱或者脱节。</p>
+</blockquote>
+<blockquote>
+<p>3.定时器可用来安排代码延迟执行，它使得你可以把长时间运行的脚本分解成一系列的小人物（<code>setInterval</code>和<code>setTimeout</code>都是用于执行任务的，除了前者会不断向<code>UI</code>队列中添加任务，本质区别在于如果<code>UI</code>队列中已经存在<code>setInterval</code>创建的任务，那么后续任务不会被添加到<code>UI</code>队列中。）</p>
+</blockquote>
+<blockquote>
+<p>4.<code>Web Worker</code>是新版浏览器的特性，它允许你在UI线程外部执行<code>javascript</code>代码，从而避免锁定UI</p>
+</blockquote>
+<h2 id="编程实践"><a href="#编程实践" class="headerlink" title="编程实践"></a>编程实践</h2><blockquote>
+<p>1.通过避免使用<code>eval()</code>和<code>Function()</code>构造器来避免双重求值带来的性能消耗(每次都会创建一个解释器/编译器实例),同样的，给<code>setTimeout()</code>和<code>setInterval()</code>传递函数而不是字符串作为参数</p>
+</blockquote>
+<blockquote>
+<p>2.尽量直接使用对象和数组字面量形式。</p>
+</blockquote>
+<blockquote>
+<p>3.尽量保证使用原生方法，原生的方法比任何优化代码速度都要快。</p>
+</blockquote>
+<h2 id="构建并部署高性能应用"><a href="#构建并部署高性能应用" class="headerlink" title="构建并部署高性能应用"></a>构建并部署高性能应用</h2><blockquote>
+<p>1.合并<code>javascript</code>文件减少<code>http</code>请求数</p>
+</blockquote>
+<blockquote>
+<p>2.压缩<code>javascript</code>文件大小</p>
+</blockquote>
+<blockquote>
+<p>3.在服务器端压缩<code>javascript</code>文件（<code>Gzip</code>）编码</p>
+</blockquote>
+<blockquote>
+<p>4.设置<code>Http</code>响应头来缓存<code>javascript</code>文件，通过向文件名添加时间戳处理缓存</p>
+</blockquote>
+<blockquote>
+<p>5.使用<code>CDN</code>(<code>CDN</code>不仅可以提升性能，它也为你管理文件的压缩和缓存)</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能优化</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/12/28/JavaScript高性能优化/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-react-router+React Transition Group实现动画" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -280,121 +454,9 @@
 
 
   
-    <article id="post-JavaScript中的对象拷贝" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/08/JavaScript中的对象拷贝/">JavaScript中的对象拷贝</a>
-    </h1>
-  
-
-        
-        <a href="/2017/12/08/JavaScript中的对象拷贝/" class="archive-article-date">
-  	<time datetime="2017-12-08T00:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>如你所知，赋值运算符不会创建一个对象的副本，它只分配一个引用，我们来看下面的代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">let obj = &#123;</span><br><span class="line">  a: 1,</span><br><span class="line">  b: 2,</span><br><span class="line">&#125;;</span><br><span class="line">let copy = obj;</span><br><span class="line"> </span><br><span class="line">obj.a = 5;</span><br><span class="line">console.log(copy.a);</span><br><span class="line">// 结果 </span><br><span class="line">// copy.a = 5;</span><br></pre></td></tr></table></figure>
-<p>obj 变量是一个新对象初始化的容器。copy 变量指向同一个对象，是对该对象的引用。所以现在有两种方式可以访问这个 { a: 1, b: 2, } 对象。你必须通过 obj 变量或 copy 变量，无论你是通过何种方式对这个对象进行的任何操作都会影响该对象。</p>
-<p>不变性（Immutability）最近被广泛地谈论，这个很重要！上面示例的方法消除了任何形式的不变性，如果原始对象被你的代码的另一部分使用，则可能导致bug。</p>
-<h3 id="复制对象的原始方式"><a href="#复制对象的原始方式" class="headerlink" title="复制对象的原始方式"></a>复制对象的原始方式</h3><p>复制对象的原始方法是循环遍历原始对象，然后一个接一个地复制每个属性。我们来看看这段代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">function copy(mainObj) &#123;</span><br><span class="line">  let objCopy = &#123;&#125;; // objCopy 将存储 mainObj 的副本</span><br><span class="line">  let key;</span><br><span class="line"> </span><br><span class="line">  for (key in mainObj) &#123;</span><br><span class="line">    objCopy[key] = mainObj[key]; // 将每个属性复制到objCopy对象</span><br><span class="line">  &#125;</span><br><span class="line">  return objCopy;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">const mainObj = &#123;</span><br><span class="line">  a: 2,</span><br><span class="line">  b: 5,</span><br><span class="line">  c: &#123;</span><br><span class="line">    x: 7,</span><br><span class="line">    y: 4,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">console.log(copy(mainObj));</span><br></pre></td></tr></table></figure>
-<h4 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h4><blockquote>
-<p>1.objCopy 对象具有一个新的 Object.prototype方法，这与 mainObj 对象的原型方法不同，这不是我们想要的。我们需要精确的拷贝原始对象。</p>
-</blockquote>
-<blockquote>
-<p>2.属性描述符不能被复制。值为 false 的 “可写(writable)” 描述符在 objCopy 对象中为  true 。</p>
-</blockquote>
-<blockquote>
-<p>3.上面的代码只复制了 mainObj 的可枚举属性。(一般直接可以复制的就是 可枚举属性)</p>
-</blockquote>
-<blockquote>
-<p>4.如果原始对象中的一个属性本身就是一个对象，那么副本和原始对象之间将共享这个对象，从而使其各自的属性指向同一个对象。</p>
-</blockquote>
-<h4 id="关于第2点中的-writable-属性："><a href="#关于第2点中的-writable-属性：" class="headerlink" title="关于第2点中的 writable 属性："></a>关于第2点中的 writable 属性：</h4><p>当 writable 设置为false时，表示不可写，也就是说属性不能被修改。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">var o = &#123;&#125;; // Creates a new object</span><br><span class="line"> </span><br><span class="line">Object.defineProperty(o, &apos;a&apos;, &#123;</span><br><span class="line">  value: 37,</span><br><span class="line">  writable: false</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line">console.log(o.a); // logs 37</span><br><span class="line">o.a = 25; // No error thrown</span><br><span class="line">// (it would throw in strict mode,</span><br><span class="line">// even if the value had been the same)</span><br><span class="line">console.log(o.a); // logs 37. The assignment didn&apos;t work.</span><br><span class="line"> </span><br><span class="line">// strict mode</span><br><span class="line">(function() &#123;</span><br><span class="line">  &apos;use strict&apos;;</span><br><span class="line">  var o = &#123;&#125;;</span><br><span class="line">  Object.defineProperty(o, &apos;b&apos;, &#123;</span><br><span class="line">    value: 2,</span><br><span class="line">    writable: false</span><br><span class="line">  &#125;);</span><br><span class="line">  o.b = 3; // throws TypeError: &quot;b&quot; is read-only</span><br><span class="line">  return o.b; // returns 2 without the line above</span><br><span class="line">&#125;());</span><br></pre></td></tr></table></figure>
-<p>正如上例中看到的，修改一个 non-writable 的属性不会改变属性的值，同时也不会报异常。</p>
-<h3 id="浅拷贝对象"><a href="#浅拷贝对象" class="headerlink" title="浅拷贝对象"></a>浅拷贝对象</h3><p>当拷贝源对象的顶级属性被复制而没有任何引用，并且拷贝源对象存在一个值为对象的属性，被复制为一个引用时，那么我说这个对象被浅拷贝。如果拷贝源对象的属性值是对象的引用，则只将该引用值复制到目标对象。</p>
-<p>浅层复制将复制顶级属性，但是嵌套对象将在原始（源）对象和副本（目标）对象之间是共享。</p>
-<h4 id="使用-Object-assign-方法"><a href="#使用-Object-assign-方法" class="headerlink" title="使用 Object.assign() 方法"></a>使用 Object.assign() 方法</h4><p>Object.assign() 方法用于将从一个或多个源对象中的所有可枚举的属性值复制到目标对象。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">let obj = &#123;</span><br><span class="line">  a: 1,</span><br><span class="line">  b: 2,</span><br><span class="line">&#125;;</span><br><span class="line">let objCopy = Object.assign(&#123;&#125;, obj);</span><br><span class="line">console.log(objCopy);</span><br><span class="line">// Result - &#123; a: 1, b: 2 &#125;</span><br></pre></td></tr></table></figure>
-<p>到目前为止。我们创建了一个 obj 的副本。让我们看看是否存在不变性：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">let obj = &#123;</span><br><span class="line">  a: 1,</span><br><span class="line">  b: 2,</span><br><span class="line">&#125;;</span><br><span class="line">let objCopy = Object.assign(&#123;&#125;, obj);</span><br><span class="line"> </span><br><span class="line">console.log(objCopy); // result - &#123; a: 1, b: 2 &#125;</span><br><span class="line">objCopy.b = 89;</span><br><span class="line">console.log(objCopy); // result - &#123; a: 1, b: 89 &#125;</span><br><span class="line">console.log(obj); // result - &#123; a: 1, b: 2 &#125;</span><br></pre></td></tr></table></figure>
-<p>在上面的代码中，我们将 objCopy 对象中的属性 b 的值更改为 89 ，并且当我们在控制台中 log 修改后的 objCopy 对象时，这些更改仅应用于 objCopy 。我们可以看到最后一行代码检查 obj 对象并没有被修改。这意味着我们已经成功地创建了拷贝源对象的副本，而且它没有引用。</p>
-<h4 id="Object-assign-的陷阱"><a href="#Object-assign-的陷阱" class="headerlink" title="Object.assign()的陷阱"></a>Object.assign()的陷阱</h4><p>虽然我们成功地创建了一个副本，一切似乎都正常工作，记得我们讨论了浅拷贝？ 我们来看看这个例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">let obj = &#123;</span><br><span class="line">  a: 1,</span><br><span class="line">  b: &#123;</span><br><span class="line">    c: 2,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line">let newObj = Object.assign(&#123;&#125;, obj);</span><br><span class="line">console.log(newObj); // &#123; a: 1, b: &#123; c: 2&#125; &#125;</span><br><span class="line"> </span><br><span class="line">obj.a = 10;</span><br><span class="line">console.log(obj); // &#123; a: 10, b: &#123; c: 2&#125; &#125;</span><br><span class="line">console.log(newObj); // &#123; a: 1, b: &#123; c: 2&#125; &#125;</span><br><span class="line"> </span><br><span class="line">newObj.a = 20;</span><br><span class="line">console.log(obj); // &#123; a: 10, b: &#123; c: 2&#125; &#125;</span><br><span class="line">console.log(newObj); // &#123; a: 20, b: &#123; c: 2&#125; &#125;</span><br><span class="line"> </span><br><span class="line">newObj.b.c = 30;</span><br><span class="line">console.log(obj); // &#123; a: 10, b: &#123; c: 30&#125; &#125;</span><br><span class="line">console.log(newObj); // &#123; a: 20, b: &#123; c: 30&#125; &#125;</span><br><span class="line"> </span><br><span class="line">// 注意: newObj.b.c = 30; 为什么呢..</span><br></pre></td></tr></table></figure>
-<p>obj.b.c = 30 ?</p>
-<p>这就是 Object.assign() 的陷阱。Object.assign 只是浅拷贝。 newObj.b 和 obj.b 都引用同一个对象，没有单独拷贝，而是复制了对该对象的引用。任何对对象属性的更改都适用于使用该对象的所有引用。我们如何解决这个问题？继续阅读…我们会在下一节给出修复方案。</p>
-<p>注意：原型链上的属性和不可枚举的属性不能复制。 看这里：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">let someObj = &#123;</span><br><span class="line">  a: 2,</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">let obj = Object.create(someObj, &#123; </span><br><span class="line">  b: &#123;</span><br><span class="line">    value: 2,  </span><br><span class="line">  &#125;,</span><br><span class="line">  c: &#123;</span><br><span class="line">    value: 3,</span><br><span class="line">    enumerable: true,  </span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line">let objCopy = Object.assign(&#123;&#125;, obj);</span><br><span class="line">console.log(objCopy); // &#123; c: 3 &#125;</span><br></pre></td></tr></table></figure>
-<p>someObj 是在 obj 的原型链，所以它不会被复制。</p>
-<p>属性 b 是不可枚举属性。</p>
-<p>属性 c 具有 可枚举(enumerable) 属性描述符，所以它可以枚举。 这就是为什么它会被复制。</p>
-<h3 id="深度拷贝对象"><a href="#深度拷贝对象" class="headerlink" title="深度拷贝对象"></a>深度拷贝对象</h3><p>深度拷贝将拷贝遇到的每个对象。副本和原始对象不会共享任何东西，所以它将是原件的副本。以下是使用 Object.assign() 遇到问题的修复方案。让我们探索一下。</p>
-<h4 id="使用-JSON-parse-JSON-stringify-object"><a href="#使用-JSON-parse-JSON-stringify-object" class="headerlink" title="使用 JSON.parse(JSON.stringify(object));"></a>使用 JSON.parse(JSON.stringify(object));</h4><p>这可以修复了我们之前提出的问题。现在 newObj.b 有一个副本而不是一个引用！这是深度拷贝对象的一种方式。 这里有一个例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">let obj = &#123; </span><br><span class="line">  a: 1,</span><br><span class="line">  b: &#123; </span><br><span class="line">    c: 2,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">let newObj = JSON.parse(JSON.stringify(obj));</span><br><span class="line"> </span><br><span class="line">obj.b.c = 20;</span><br><span class="line">console.log(obj); // &#123; a: 1, b: &#123; c: 20 &#125; &#125;</span><br><span class="line">console.log(newObj); // &#123; a: 1, b: &#123; c: 2 &#125; &#125; (一个新的对象)</span><br></pre></td></tr></table></figure>
-<h4 id="陷阱"><a href="#陷阱" class="headerlink" title="陷阱"></a>陷阱</h4><p>不幸的是，此方法不能用于复制用户定义的对象方法。 见下文。</p>
-<h3 id="复制对象方法"><a href="#复制对象方法" class="headerlink" title="复制对象方法"></a>复制对象方法</h3><p>方法是一个对象的属性，它是一个函数。在以上的示例中，我们还没有复制对象的方法。现在让我们尝试一下，使用我们学过的方法来创建副本。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">let obj = &#123;</span><br><span class="line">  name: &apos;scotch.io&apos;,</span><br><span class="line">  exec: function exec() &#123;</span><br><span class="line">    return true;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">let method1 = Object.assign(&#123;&#125;, obj);</span><br><span class="line">let method2 = JSON.parse(JSON.stringify(obj));</span><br><span class="line"> </span><br><span class="line">console.log(method1); //Object.assign(&#123;&#125;, obj)</span><br><span class="line">/* result</span><br><span class="line">&#123;</span><br><span class="line">  exec: function exec() &#123;</span><br><span class="line">    return true;</span><br><span class="line">  &#125;,</span><br><span class="line">  name: &quot;scotch.io&quot;</span><br><span class="line">&#125;</span><br><span class="line">*/</span><br><span class="line"> </span><br><span class="line">console.log(method2); // JSON.parse(JSON.stringify(obj))</span><br><span class="line">/* result</span><br><span class="line">&#123;</span><br><span class="line">  name: &quot;scotch.io&quot;</span><br><span class="line">&#125;</span><br><span class="line">*/</span><br></pre></td></tr></table></figure>
-<p>结果表明，Object.assign() 可以用于复制对象的方法，而使用  JSON.parse(JSON.stringify(obj)) 则不行。</p>
-<h3 id="复制循环引用对象"><a href="#复制循环引用对象" class="headerlink" title="复制循环引用对象"></a>复制循环引用对象</h3><p>循环引用对象是具有引用自身属性的对象。让我们使用已学的复制对象的方法来复制一个循环引用对象的副本，看看它是否有效。</p>
-<h4 id="使用-JSON-parse-JSON-stringify-object-1"><a href="#使用-JSON-parse-JSON-stringify-object-1" class="headerlink" title="使用 JSON.parse(JSON.stringify(object))"></a>使用 JSON.parse(JSON.stringify(object))</h4><p>我们尝试使用 JSON.parse(JSON.stringify(object))：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 循环引用对象</span><br><span class="line">let obj = &#123; </span><br><span class="line">  a: &apos;a&apos;,</span><br><span class="line">  b: &#123; </span><br><span class="line">    c: &apos;c&apos;,</span><br><span class="line">    d: &apos;d&apos;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">obj.c = obj.b;</span><br><span class="line">obj.e = obj.a;</span><br><span class="line">obj.b.c = obj.c;</span><br><span class="line">obj.b.d = obj.b;</span><br><span class="line">obj.b.e = obj.b.c;</span><br><span class="line"> </span><br><span class="line">let newObj = JSON.parse(JSON.stringify(obj));</span><br><span class="line"> </span><br><span class="line">console.log(newObj);</span><br></pre></td></tr></table></figure>
-<p>结果是： 报错 ， 很明显，JSON.parse(JSON.stringify(object)) 不能用于复制循环引用对象</p>
-<h4 id="使用-Object-assign"><a href="#使用-Object-assign" class="headerlink" title="使用 Object.assign()"></a>使用 Object.assign()</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 循环引用对象</span><br><span class="line">let obj = &#123; </span><br><span class="line">  a: &apos;a&apos;,</span><br><span class="line">  b: &#123; </span><br><span class="line">    c: &apos;c&apos;,</span><br><span class="line">    d: &apos;d&apos;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">obj.c = obj.b;</span><br><span class="line">obj.e = obj.a;</span><br><span class="line">obj.b.c = obj.c;</span><br><span class="line">obj.b.d = obj.b;</span><br><span class="line">obj.b.e = obj.b.c;</span><br><span class="line"> </span><br><span class="line">let newObj2 = Object.assign(&#123;&#125;, obj);</span><br><span class="line"> </span><br><span class="line">console.log(newObj2);</span><br></pre></td></tr></table></figure>
-<p>Object.assign() 适用于浅拷贝循环引用对象，但不适用于深度拷贝。随意浏览浏览器控制台上的循环引用对象树。我相信你会发现很多有趣的工作在那里。</p>
-<h3 id="使用展开操作符-…"><a href="#使用展开操作符-…" class="headerlink" title="使用展开操作符(…)"></a>使用展开操作符(…)</h3><p>ES6已经有了用于数组解构赋值的 rest 元素，和实现的数组字面展开的操作符。看一看这里的数组的展开操作符的实现：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const array = [</span><br><span class="line">  &quot;a&quot;,</span><br><span class="line">  &quot;c&quot;,</span><br><span class="line">  &quot;d&quot;, &#123;</span><br><span class="line">    four: 4</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br><span class="line">const newArray = [...array];</span><br><span class="line">console.log(newArray);</span><br><span class="line">// 结果 </span><br><span class="line">// [&quot;a&quot;, &quot;c&quot;, &quot;d&quot;, &#123; four: 4 &#125;]</span><br></pre></td></tr></table></figure>
-<p>对象字面量的展开操作符目前是ECMAScript 的第 3 阶段提案。对象字面量的展开操作符能将源对象中的可枚举的属性复制到目标对象上。下面的例子展示了在提案被接受后复制一个对象是多么的容易。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">let obj = &#123;</span><br><span class="line">  one: 1,</span><br><span class="line">  two: 2,</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">let newObj = &#123; ...z &#125;;</span><br><span class="line"> </span><br><span class="line">// &#123; one: 1, two: 2 &#125;</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/12/08/JavaScript中的对象拷贝/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/10/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/29/">29</a><a class="extend next" rel="next" href="/page/10/">Next &raquo;</a>
     </nav>
   
 
@@ -492,11 +554,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -516,6 +578,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">create-react-app</a>
               </li>
              
@@ -524,15 +590,7 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">es6</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -540,11 +598,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ios</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -557,6 +615,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ios</a>
               </li>
              
               <li class="article-tag-list-item">

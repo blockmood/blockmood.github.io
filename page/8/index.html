@@ -148,6 +148,84 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-react之shouldComponentUpdate性能优化详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/06/react之shouldComponentUpdate性能优化详解/">react之shouldComponentUpdate性能优化详解</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/06/react之shouldComponentUpdate性能优化详解/" class="archive-article-date">
+  	<time datetime="2018-01-06T00:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在<code>react</code>中最重要的俩个生命周期方法，一个是<code>render()</code>，它决定的是组件该渲染什么，而另一个<code>shouldComponentUpdate</code>则决定组件什么时候不需要重新渲染。</p>
+<p><code>react</code>组件类的父类<code>Component</code>提供了<code>shouldComponentUpdate</code>的默认实现，这个默认实现就是返回一个<code>true</code>，也就说，每次更新的时候都需要调用所有的生命周期函数，也包括<code>render()</code>方法，然后根据<code>render()</code>返回的结果计算<code>Virtual DOM</code>。</p>
+<p>当然，默认方法提供了一种最保险的办法，毕竟<code>react</code>不知道组件的内部实现，就算全部重新渲染一遍浪费一点，但至少保证不会出错。</p>
+<p>但是要达到更好的性能，就有必要定义我们自己的<code>shouldComponentUpdate</code>的方法，让它在需要更新的时候才返回<code>true</code>，这样节省了大量的计算资源。</p>
+<p>假设对于一个组件而言，影响组件渲染的<code>prop</code>只有<code>completed</code>和<code>text</code>,所以只要确保这俩个prop没有改变，<code>shouldComponentUpdate</code>就可以返回<code>false</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">shouldComponentUpdate(nextProps,nextState)&#123;</span><br><span class="line">	return (nextProps.completed !== this.props.completed) ||</span><br><span class="line">	(nextState.text !== this.props.text)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根据自己组件内部不同状态，实现的方法也不同，但是大体意思都一致。</p>
+<p>如果每一个组件都要重新实现<code>shouldComponentUpdate</code>，从代码的脚本是一件非常麻烦的事情，但是如果我们使用了<code>react-redux</code>库，一切都变的简单了。</p>
+<h3 id="react-redux、shouldComponentUpdate-默认实现"><a href="#react-redux、shouldComponentUpdate-默认实现" class="headerlink" title="react-redux、shouldComponentUpdate 默认实现"></a>react-redux、shouldComponentUpdate 默认实现</h3><p><code>react-redux</code>默认实现了<code>shouldComponentUpdate</code>，实现的逻辑是比对传递给展示组件的<code>props</code>和上一次的<code>props</code>,因为展示组件完全是一个无状态组件，组件渲染什么完全由<code>props</code>决定,如果<code>props</code>没有变化，那就可以认为组件渲染没有变化。</p>
+<p>相比<code>react</code>的<code>shouldComponentUpdate</code>的实现，<code>react-redux</code>的默认实现当前比较牛逼一些，但是在对比<code>props</code>方面，用的依然是浅比较，也就是<code>===</code>,若果<code>prop</code>的值是数字或者是字符串，只要值相同，都会返回<code>true</code>，但是如果是对象形式，浅比较只看这俩个对象的引用地址是不是相同，如果不是，哪怕这俩个对象的内容一致，都会返回<code>false</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Foo style=&#123;&#123;color:red&#125;&#125;/&gt;</span><br></pre></td></tr></table></figure>
+<p>像上面这样的方法，Foo组件利用<code>react-redux</code>提供的<code>shouldComponentUpdate</code>默认实现，每一次渲染都会认为这个prop发生变化，因为每次都会产生一个新的对象。</p>
+<p>既然这样，那为什么不用深比较呢？</p>
+<p>但其实这是一个比较正确的决定，因为对象到底有多少层无法预料，如果一直使用递归所有层次进行深层次的比较的话，无疑消耗的性能可能大。</p>
+<p>这时，有一个库，<code>Immutable</code>,可以帮我们实现简单而又不需要消耗太多性能的深比较。</p>
+<h3 id="Immutable-js"><a href="#Immutable-js" class="headerlink" title="Immutable.js"></a>Immutable.js</h3><p>在<code>javascript</code>中对象一般是可变的，因为都是使用的引用赋值，新的对象简单引用了原始对象，假设改变了新的对象，原始对象也会随着改变。</p>
+<p><code>Immutable Data</code>就是一旦创建，就不能再改变的数据，对<code>Immutable</code>的对象进行 修改 添加 或者删除，都会返回一个新的<code>Immutable</code>对象，<code>Immutable</code>的实现原理就是持久化数据结构，也就是旧数据在改变的情况下，要保证旧数据可用并且不改变。为了避免深拷贝把所有节点都复制一遍带来的性能问题，<code>Immutable</code>使用了结构共享，就是如果对象树中的一个节点发生变化，只修这个节点和受这个节点所影响的父节点，其他节点则进行共享。</p>
+<p>前面我们说了可在<code>shouldComponentUpdate</code>中使用浅比较来比较<code>prop</code>，但是有一定的局限性，但是深比较的话又比较损耗性能，这时就可以在<code>shouldComponentUpdate</code>中使用<code>Immutable</code>来实现深层比较。</p>
+<p><code>Immutable</code>提供了简洁，高效的判断数据变化方法，只要<code>===</code>和<code>is</code>简便的API就可以知道是否要执行<code>render()，</code>这个操作几乎零成本，所以可以极大的提高性能。</p>
+<p><a href="https://github.com/lucaong/immutable" target="_blank" rel="noopener">Immutable API</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/06/react之shouldComponentUpdate性能优化详解/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-react事件机制详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -312,183 +390,9 @@
 
 
   
-    <article id="post-JavaScript高性能优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/28/JavaScript高性能优化/">JavaScript高性能优化</a>
-    </h1>
-  
-
-        
-        <a href="/2017/12/28/JavaScript高性能优化/" class="archive-article-date">
-  	<time datetime="2017-12-28T00:42:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>本文章列出了《高性能javascript》一书中的一些常用性能优化，并分为几大类归类总结一下。（持续更新….）</p>
-<h2 id="加载和执行"><a href="#加载和执行" class="headerlink" title="加载和执行"></a>加载和执行</h2><p>javascript代码执行过程会阻塞浏览器的其他进程，比如界面的绘制，每次遇到<code>&lt;script&gt;</code>标签，页面都必须停下来等待代码下载并执行,然后才继续处理其他部分，尽管如此，还是有几种办法能够减少对javascript对性能的影响。</p>
-<blockquote>
-<p>1.<code>&lt;body/&gt;</code>标签闭合之前，将所有的<code>&lt;script&gt;</code>标签放到页面的底部，能够确保脚本执行前页面已经渲染</p>
-</blockquote>
-<blockquote>
-<p>2.合并脚本，页面中<code>&lt;script&gt;</code>标签越少，加载速度也就越快。</p>
-</blockquote>
-<blockquote>
-<p>3.有多种无阻塞下载javascript的方法</p>
-<ul>
-<li>使用<code>&lt;script&gt;</code>的defer属性</li>
-<li>使用动态的<code>&lt;script&gt;</code>元素来下载并执行代码</li>
-<li>使用XHR对象下来javascript代码并注入到页面</li>
-</ul>
-</blockquote>
-<h2 id="数据存储"><a href="#数据存储" class="headerlink" title="数据存储"></a>数据存储</h2><p>在javascript中，数据存储的位置会对代码性能整体产生重大影响，数据存储分为4中方式，字面量、变量、数组项、对象成员。</p>
-<blockquote>
-<p>1.访问字面量和局部变量的速度最快</p>
-</blockquote>
-<blockquote>
-<p>2.由于局部变量存储在作用域链的起始位置（属性搜索机制），所有访问局部变量比访问跨域变量的速度更快，由于全局变量总处于作用域链的最末端，所以访问速度是最慢的。</p>
-</blockquote>
-<blockquote>
-<p>3.循环嵌套对象成员会明显的影响性能（可能会导致引用计数无法回收干净），净量少用</p>
-</blockquote>
-<blockquote>
-<p>4.属性或者方法在原型链中的位置越深，访问的速度也就越慢</p>
-</blockquote>
-<blockquote>
-<p>5.通常，可以把常用的对象成员，数组元素，跨域变量保存在局部变量中来改善<code>javascript</code>的性能。</p>
-</blockquote>
-<h2 id="DOM编程"><a href="#DOM编程" class="headerlink" title="DOM编程"></a>DOM编程</h2><p>访问DOM是Web应用的重要部分，但是每次穿越<code>ECMAScript</code>和<code>DOM</code>之间，都需要一定的性能，为了减少<code>DOM</code>编程带来的性能损失，总结为以下几点：</p>
-<blockquote>
-<p>1.最小化<code>DOM</code>访问次数，尽可能在<code>javascript</code>端处理</p>
-</blockquote>
-<blockquote>
-<p>2.如果需要多次访问<code>DOM</code>节点，请使用局部变量存储它的引用</p>
-</blockquote>
-<blockquote>
-<p>3.小心处理<code>HTML</code>集合，因为他实时连接着底层文档，把集合长度缓存到一个变量中，并在迭代中使用他。</p>
-</blockquote>
-<blockquote>
-<p>4.如果有可能的话，尽可能使用更快速的<code>API</code></p>
-</blockquote>
-<blockquote>
-<p>5.尽量减少重绘和重排的次数，批量修改样式时，“离线” 操作<code>DOM</code>树，使用缓存，并减少布局重排次数。</p>
-</blockquote>
-<blockquote>
-<p>6.动画中使用绝对定位，使用拖放代理</p>
-</blockquote>
-<blockquote>
-<p>7.使用事件委托来减少事件处理程序。</p>
-</blockquote>
-<h2 id="算法和流程控制"><a href="#算法和流程控制" class="headerlink" title="算法和流程控制"></a>算法和流程控制</h2><p><code>javascript</code>和与他编程语言一样，代码的写法和算法会影响运行时间，与其他语言不同的是，<code>javascript</code>的运行资源有限。</p>
-<blockquote>
-<p>1.<code>for</code>、<code>where</code>、<code>do-while</code>循环性能相当</p>
-</blockquote>
-<blockquote>
-<p>2.避免使用<code>for-in</code>循环，除非是你需要遍历一个属性数量未知的对象</p>
-</blockquote>
-<blockquote>
-<p>3.减少循环性能的最佳方式是减少迭代的运算量和减少循环迭代的次数</p>
-</blockquote>
-<blockquote>
-<p>4.通常来说<code>switch</code>总是比<code>if-else</code>快</p>
-</blockquote>
-<blockquote>
-<p>5.浏览器调用栈大小限制了递归算法，调用栈错误会导致其他程序终止运行（净量少用） IE调用栈与系统内存空闲有关，现代浏览器则跟调用栈大小有关。</p>
-</blockquote>
-<h2 id="字符串和正则表达式"><a href="#字符串和正则表达式" class="headerlink" title="字符串和正则表达式"></a>字符串和正则表达式</h2><blockquote>
-<p>1.当连接数量巨大或者尺寸巨大的字符串时，数组项合并是唯一在IE7及更早版本中性能合理的方法</p>
-</blockquote>
-<blockquote>
-<p>2.如果不需要考虑IE7及更早版本的性能，数组项合并是最慢的字符串连接方法之一。推荐使用简单的+和+=操作符来替换，避免不必要的中间字符串。</p>
-</blockquote>
-<blockquote>
-<p>3.正则部分（持续更新….）</p>
-</blockquote>
-<h2 id="快速响应的用户界面"><a href="#快速响应的用户界面" class="headerlink" title="快速响应的用户界面"></a>快速响应的用户界面</h2><p><code>javascript</code>和用户界面在同一个进程中运行，因此一次只能处理一件事情。这意味着当<code>javascript</code>代码正在运行时，用户界面不能响应输入。反之也一样。</p>
-<blockquote>
-<p>1.任何<code>javascript</code>任务都不应该执行超过100毫秒，过长的时间会导致<code>UI</code>更新出现明显的迟钝。</p>
-</blockquote>
-<blockquote>
-<p>2.<code>javascript</code>长时间运行会导致用户体验出现混乱或者脱节。</p>
-</blockquote>
-<blockquote>
-<p>3.定时器可用来安排代码延迟执行，它使得你可以把长时间运行的脚本分解成一系列的小人物（<code>setInterval</code>和<code>setTimeout</code>都是用于执行任务的，除了前者会不断向<code>UI</code>队列中添加任务，本质区别在于如果<code>UI</code>队列中已经存在<code>setInterval</code>创建的任务，那么后续任务不会被添加到<code>UI</code>队列中。）</p>
-</blockquote>
-<blockquote>
-<p>4.<code>Web Worker</code>是新版浏览器的特性，它允许你在UI线程外部执行<code>javascript</code>代码，从而避免锁定UI</p>
-</blockquote>
-<h2 id="编程实践"><a href="#编程实践" class="headerlink" title="编程实践"></a>编程实践</h2><blockquote>
-<p>1.通过避免使用<code>eval()</code>和<code>Function()</code>构造器来避免双重求值带来的性能消耗(每次都会创建一个解释器/编译器实例),同样的，给<code>setTimeout()</code>和<code>setInterval()</code>传递函数而不是字符串作为参数</p>
-</blockquote>
-<blockquote>
-<p>2.尽量直接使用对象和数组字面量形式。</p>
-</blockquote>
-<blockquote>
-<p>3.尽量保证使用原生方法，原生的方法比任何优化代码速度都要快。</p>
-</blockquote>
-<h2 id="构建并部署高性能应用"><a href="#构建并部署高性能应用" class="headerlink" title="构建并部署高性能应用"></a>构建并部署高性能应用</h2><blockquote>
-<p>1.合并<code>javascript</code>文件减少<code>http</code>请求数</p>
-</blockquote>
-<blockquote>
-<p>2.压缩<code>javascript</code>文件大小</p>
-</blockquote>
-<blockquote>
-<p>3.在服务器端压缩<code>javascript</code>文件（<code>Gzip</code>）编码</p>
-</blockquote>
-<blockquote>
-<p>4.设置<code>Http</code>响应头来缓存<code>javascript</code>文件，通过向文件名添加时间戳处理缓存</p>
-</blockquote>
-<blockquote>
-<p>5.使用<code>CDN</code>(<code>CDN</code>不仅可以提升性能，它也为你管理文件的压缩和缓存)</p>
-</blockquote>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能优化</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/12/28/JavaScript高性能优化/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/29/">29</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
     </nav>
   
 
@@ -586,11 +490,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -610,6 +514,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">create-react-app</a>
               </li>
              
@@ -618,15 +526,7 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">es6</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -634,11 +534,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ios</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -651,6 +551,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ios</a>
               </li>
              
               <li class="article-tag-list-item">
