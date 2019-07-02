@@ -148,6 +148,72 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-webpack+vue模块化构建项目" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/02/webpack+vue模块化构建项目/">webpack+vue模块化构建项目</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/02/webpack+vue模块化构建项目/" class="archive-article-date">
+  	<time datetime="2017-06-02T06:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="开始-确认已经安装node环境和npm包管理工具"><a href="#开始-确认已经安装node环境和npm包管理工具" class="headerlink" title="开始(确认已经安装node环境和npm包管理工具)"></a>开始(确认已经安装node环境和npm包管理工具)</h3><p>拓展：npm install 在安装 npm 包时，有两种命令参数可以把它们的信息写入 package.json 文件，一个是npm install –save ，另一个是 npm install –save-dev，他们表面上的区别是–save 会把依赖包名称添加到 package.json 文件 dependencies 键下，–save-dev 则添加到 package.json 文件 devDependencies 键下，–save-dev 是你开发时候依赖的东西，–save 是你发布之后还依赖的东西。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1、新建项目文件名为demo</span><br><span class="line">2、npm init -y 初始化项目</span><br><span class="line">3、npm install --save vue 默认安装最新版vue</span><br><span class="line">4、npm install --save-dev webpack webpack-dev-server //安装webpack，webpack-dev-server（一个小型服务器）</span><br><span class="line">5、npm install --save-dev babel-core babel-loader babel-preset-es2015 //安装babel的作用是将es6的语法编译成浏览器认识的语法es5</span><br><span class="line">6、npm install --save-dev vue-loader vue-template-compiler //用来解析vue的组件，.vue后缀的文件</span><br><span class="line">7、npm install --save-dev css-loader style-loader   //用来解析css</span><br><span class="line">8、npm install --save-dev url-loader file-loader    //用于打包文件和图片</span><br><span class="line">9、npm install --save-dev sass-loader node-sass     //用于编译sass</span><br><span class="line"></span><br><span class="line">以下等等(省略)</span><br></pre></td></tr></table></figure></p>
+<h3 id="项目目录结构"><a href="#项目目录结构" class="headerlink" title="项目目录结构"></a>项目目录结构</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">demo</span><br><span class="line">-src</span><br><span class="line">--assets</span><br><span class="line">---img</span><br><span class="line">---sass</span><br><span class="line">---style</span><br><span class="line">--components</span><br><span class="line">---...</span><br><span class="line">--views //这里放详情页面</span><br><span class="line">---...</span><br><span class="line">--App.vue</span><br><span class="line">--main.js</span><br><span class="line">-index.html</span><br><span class="line">-package.json</span><br><span class="line">-webpack.config.js</span><br></pre></td></tr></table></figure>
+<h3 id="package-json"><a href="#package-json" class="headerlink" title="package.json"></a>package.json</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>: <span class="string">"demo"</span>,</span><br><span class="line">  <span class="string">"version"</span>: <span class="string">"1.0.0"</span>,</span><br><span class="line">  <span class="string">"description"</span>: <span class="string">""</span>,</span><br><span class="line">  <span class="string">"main"</span>: <span class="string">"index.js"</span>,</span><br><span class="line">  <span class="string">"scripts"</span>: &#123;</span><br><span class="line">    <span class="string">"test"</span>: <span class="string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span>,</span><br><span class="line">	<span class="string">"dev"</span>: <span class="string">"cross-env NODE_ENV=development webpack-dev-server --open --hot"</span>,</span><br><span class="line">	<span class="string">"build"</span>: <span class="string">"webpack"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"keywords"</span>: [],</span><br><span class="line">  <span class="string">"author"</span>: <span class="string">""</span>,</span><br><span class="line">  <span class="string">"license"</span>: <span class="string">"ISC"</span>,</span><br><span class="line">  <span class="string">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="string">"vue"</span>: <span class="string">"^2.3.3"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="string">"babel-core"</span>: <span class="string">"^6.24.1"</span>,</span><br><span class="line">    <span class="string">"babel-loader"</span>: <span class="string">"^7.0.0"</span>,</span><br><span class="line">    <span class="string">"babel-preset-es2015"</span>: <span class="string">"^6.24.1"</span>,</span><br><span class="line">    <span class="string">"cross-env"</span>: <span class="string">"^5.0.0"</span>,</span><br><span class="line">    <span class="string">"css-loader"</span>: <span class="string">"^0.28.4"</span>,</span><br><span class="line">    <span class="string">"file-loader"</span>: <span class="string">"^0.11.1"</span>,</span><br><span class="line">    <span class="string">"style-loader"</span>: <span class="string">"^0.18.1"</span>,</span><br><span class="line">    <span class="string">"url-loader"</span>: <span class="string">"^0.5.8"</span>,</span><br><span class="line">    <span class="string">"vue-loader"</span>: <span class="string">"^12.2.1"</span>,</span><br><span class="line">    <span class="string">"vue-template-compiler"</span>: <span class="string">"^2.3.3"</span>,</span><br><span class="line">    <span class="string">"webpack"</span>: <span class="string">"^2.6.1"</span>,</span><br><span class="line">    <span class="string">"webpack-dev-server"</span>: <span class="string">"^2.4.5"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="webpack-config-js"><a href="#webpack-config-js" class="headerlink" title="webpack.config.js"></a>webpack.config.js</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">var path = require(<span class="string">'path'</span>)</span><br><span class="line">var webpack = require(<span class="string">'webpack'</span>)</span><br><span class="line"></span><br><span class="line">module.exports = &#123;</span><br><span class="line">    entry: <span class="string">'./src/main.js'</span>,</span><br><span class="line">    output: &#123;</span><br><span class="line">        path: path.resolve(__dirname, <span class="string">'./dist'</span>),</span><br><span class="line">        publicPath: <span class="string">'/dist/'</span>,</span><br><span class="line">        filename: <span class="string">'build.js'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    module: &#123;</span><br><span class="line">        rules: [</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">test</span>: /\.vue$/,</span><br><span class="line">                loader: <span class="string">'vue-loader'</span>,</span><br><span class="line">                options: &#123;</span><br><span class="line">                    loaders: &#123;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">test</span>: /\.js$/,</span><br><span class="line">                loader: <span class="string">'babel-loader'</span>,</span><br><span class="line">                exclude: /node_modules/</span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">test</span>: /\.(png|jpg|gif|svg)$/,</span><br><span class="line">                loader: <span class="string">'file-loader'</span>,</span><br><span class="line">                options: &#123;</span><br><span class="line">                    name: <span class="string">'[name].[ext]?[hash]'</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            ,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">test</span>: /\.css$/,</span><br><span class="line">                loader: <span class="string">"style-loader!css-loader"</span></span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    resolve: &#123;</span><br><span class="line">        <span class="built_in">alias</span>: &#123;</span><br><span class="line">            <span class="string">'vue$'</span>: <span class="string">'vue/dist/vue.esm.js'</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    devServer: &#123;</span><br><span class="line">        historyApiFallback: <span class="literal">true</span>,</span><br><span class="line">        noInfo: <span class="literal">true</span>,</span><br><span class="line">        inline: <span class="literal">true</span></span><br><span class="line">    &#125;,</span><br><span class="line">    performance: &#123;</span><br><span class="line">        hints: <span class="literal">false</span></span><br><span class="line">    &#125;,</span><br><span class="line">    devtool: <span class="string">'#eval-source-map'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (process.env.NODE_ENV === <span class="string">'production'</span>) &#123;</span><br><span class="line">    module.exports.devtool = <span class="string">'#source-map'</span></span><br><span class="line">    // http://vue-loader.vuejs.org/en/workflow/production.html</span><br><span class="line">    module.exports.plugins = (module.exports.plugins || []).concat([</span><br><span class="line">        new webpack.DefinePlugin(&#123;</span><br><span class="line">            <span class="string">'process.env'</span>: &#123;</span><br><span class="line">                NODE_ENV: <span class="string">'"production"'</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;),</span><br><span class="line">        new webpack.optimize.UglifyJsPlugin(&#123;</span><br><span class="line">            sourceMap: <span class="literal">true</span>,</span><br><span class="line">            compress: &#123;</span><br><span class="line">                warnings: <span class="literal">false</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;),</span><br><span class="line">        new webpack.LoaderOptionsPlugin(&#123;</span><br><span class="line">            minimize: <span class="literal">true</span></span><br><span class="line">        &#125;)</span><br><span class="line">    ])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里webpack配置文件不明白的，可以看 <a href="http://www.jianshu.com/p/42e11515c10f" target="_blank" rel="noopener">webpack入门</a>，至于更多的配置，可百度。</p>
+<h3 id="项目跑起来"><a href="#项目跑起来" class="headerlink" title="项目跑起来"></a>项目跑起来</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1、webpack</span><br><span class="line"></span><br><span class="line">2、webpack-dev-server</span><br></pre></td></tr></table></figure>
+<h3 id="转换npm命令"><a href="#转换npm命令" class="headerlink" title="转换npm命令"></a>转换npm命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install cross-env --save-dev</span><br></pre></td></tr></table></figure>
+<p>package.json文件配置添加：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"dev"</span>: <span class="string">"cross-env NODE_ENV=development webpack-dev-server --open --hot"</span>,</span><br><span class="line"><span class="string">"build"</span>: <span class="string">"webpack"</span></span><br></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/02/webpack+vue模块化构建项目/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-webpack之sass-loader模块加载" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -273,71 +339,6 @@
 
 
   
-    <article id="post-axios在项目中的使用方法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/26/axios在项目中的使用方法/">axios使用</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/26/axios在项目中的使用方法/" class="archive-article-date">
-  	<time datetime="2017-05-25T16:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在VUE2.0出来以后，官方就不推荐使用vue-resource了，而是使用axios ,使用方法都大同小异，在项目中有俩种使用方法，教程地址: <a href="https://www.npmjs.com/package/axios" target="_blank" rel="noopener">axios</a></p>
-<h3 id="第一种-配置文件"><a href="#第一种-配置文件" class="headerlink" title="第一种(配置文件)"></a>第一种(配置文件)</h3><p>这里使用的是vue-webpack脚手架，在src目录下，新建一个api目录，里面分别创建这俩个文件 api.js  / config.js,详情看代码。</p>
-<h4 id="api-js"><a href="#api-js" class="headerlink" title="api.js"></a>api.js</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import axios from <span class="string">'axios'</span>		//导入axios模块</span><br><span class="line">import config from <span class="string">'./config'</span>	//导入配置文件</span><br><span class="line">import qs from <span class="string">'qs'</span></span><br><span class="line"></span><br><span class="line">//axios(config);</span><br><span class="line">class API &#123;</span><br><span class="line">	getList (param) &#123;</span><br><span class="line">		console.log(config);   //这里打印的是配置文件中的信息</span><br><span class="line">		//发送请求</span><br><span class="line">		<span class="built_in">return</span> axios.post(config.url,&#123;</span><br><span class="line">			id:param</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">export</span> default API;</span><br></pre></td></tr></table></figure>
-<h4 id="config-js-这里配置信息可参考上面的连接地址"><a href="#config-js-这里配置信息可参考上面的连接地址" class="headerlink" title="config.js   //这里配置信息可参考上面的连接地址"></a>config.js   //这里配置信息可参考上面的连接地址</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line">import Qs from <span class="string">'qs'</span></span><br><span class="line"><span class="built_in">export</span> default&#123;</span><br><span class="line">	// `url` is the server URL that will be used <span class="keyword">for</span> the request </span><br><span class="line">  url: <span class="string">'http://localhost:80/cms/getinfo.php'</span>,</span><br><span class="line"> </span><br><span class="line">  // `method` is the request method to be used when making the request </span><br><span class="line">  method: <span class="string">'get'</span>, // default </span><br><span class="line"> </span><br><span class="line">  // `baseURL` will be prepended to `url` unless `url` is absolute. </span><br><span class="line">  // It can be convenient to <span class="built_in">set</span> `baseURL` <span class="keyword">for</span> an instance of axios to pass relative URLs </span><br><span class="line">  // to methods of that instance. </span><br><span class="line">  baseURL: <span class="string">'https://some-domain.com/api/'</span>,</span><br><span class="line"> </span><br><span class="line">  // `transformRequest` allows changes to the request data before it is sent to the server </span><br><span class="line">  // This is only applicable <span class="keyword">for</span> request methods <span class="string">'PUT'</span>, <span class="string">'POST'</span>, and <span class="string">'PATCH'</span> </span><br><span class="line">  // The last <span class="keyword">function</span> <span class="keyword">in</span> the array must <span class="built_in">return</span> a string or an instance of Buffer, ArrayBuffer, </span><br><span class="line">  // FormData or Stream </span><br><span class="line">  transformRequest: [<span class="keyword">function</span> (data) &#123;</span><br><span class="line">    // Do whatever you want to transform the data </span><br><span class="line"> </span><br><span class="line">    <span class="built_in">return</span> data;</span><br><span class="line">  &#125;],</span><br><span class="line"> </span><br><span class="line">  // `transformResponse` allows changes to the response data to be made before </span><br><span class="line">  // it is passed to <span class="keyword">then</span>/catch </span><br><span class="line">  transformResponse: [<span class="keyword">function</span> (data) &#123;</span><br><span class="line">    // Do whatever you want to transform the data </span><br><span class="line"> </span><br><span class="line">    <span class="built_in">return</span> data;</span><br><span class="line">  &#125;],</span><br><span class="line"> </span><br><span class="line">  // `headers` are custom headers to be sent </span><br><span class="line">  headers: &#123;<span class="string">'X-Requested-With'</span>: <span class="string">'XMLHttpRequest'</span>&#125;,</span><br><span class="line">  headers: &#123;<span class="string">'Content-Type'</span>: <span class="string">'application/x-www-form-urlencoded'</span>&#125;,</span><br><span class="line"> </span><br><span class="line">  // `params` are the URL parameters to be sent with the request </span><br><span class="line">  // Must be a plain object or a URLSearchParams object </span><br><span class="line">  params: &#123;</span><br><span class="line">    ID: 12345</span><br><span class="line">  &#125;,</span><br><span class="line"> </span><br><span class="line">  // `paramsSerializer` is an optional <span class="keyword">function</span> <span class="keyword">in</span> charge of serializing `params` </span><br><span class="line">  // (e.g. https://www.npmjs.com/package/qs, http://api.jquery.com/jquery.param/) </span><br><span class="line">  paramsSerializer: <span class="keyword">function</span>(params) &#123;</span><br><span class="line">    <span class="built_in">return</span> Qs.stringify(params, &#123;arrayFormat: <span class="string">'brackets'</span>&#125;)</span><br><span class="line">  &#125;,</span><br><span class="line"> </span><br><span class="line">  // `data` is the data to be sent as the request body </span><br><span class="line">  // Only applicable <span class="keyword">for</span> request methods <span class="string">'PUT'</span>, <span class="string">'POST'</span>, and <span class="string">'PATCH'</span> </span><br><span class="line">  // When no `transformRequest` is <span class="built_in">set</span>, must be of one of the following types: </span><br><span class="line">  // - string, plain object, ArrayBuffer, ArrayBufferView, URLSearchParams </span><br><span class="line">  // - Browser only: FormData, File, Blob </span><br><span class="line">  // - Node only: Stream, Buffer </span><br><span class="line">  data: &#123;</span><br><span class="line">    firstName: <span class="string">'Fred'</span></span><br><span class="line">  &#125;,</span><br><span class="line"> </span><br><span class="line">  // `timeout` specifies the number of milliseconds before the request <span class="built_in">times</span> out. </span><br><span class="line">  // If the request takes longer than `timeout`, the request will be aborted. </span><br><span class="line">  timeout: 1000,</span><br><span class="line"> </span><br><span class="line">  // `withCredentials` indicates whether or not cross-site Access-Control requests </span><br><span class="line">  // should be made using credentials </span><br><span class="line">  withCredentials: <span class="literal">false</span>, // default </span><br><span class="line"> </span><br><span class="line">  // `adapter` allows custom handling of requests <span class="built_in">which</span> makes testing easier. </span><br><span class="line">  // Return a promise and supply a valid response (see lib/adapters/README.md). </span><br><span class="line">  adapter: <span class="keyword">function</span> (config) &#123;</span><br><span class="line">    /* ... */</span><br><span class="line">  &#125;,</span><br><span class="line"> </span><br><span class="line">  // `auth` indicates that HTTP Basic auth should be used, and supplies credentials. </span><br><span class="line">  // This will <span class="built_in">set</span> an `Authorization` header, overwriting any existing </span><br><span class="line">  // `Authorization` custom headers you have <span class="built_in">set</span> using `headers`. </span><br><span class="line">  auth: &#123;</span><br><span class="line">    username: <span class="string">'janedoe'</span>,</span><br><span class="line">    password: <span class="string">'s00pers3cret'</span></span><br><span class="line">  &#125;,</span><br><span class="line"> </span><br><span class="line">  // `responseType` indicates the <span class="built_in">type</span> of data that the server will respond with </span><br><span class="line">  // options are <span class="string">'arraybuffer'</span>, <span class="string">'blob'</span>, <span class="string">'document'</span>, <span class="string">'json'</span>, <span class="string">'text'</span>, <span class="string">'stream'</span> </span><br><span class="line">  responseType: <span class="string">'json'</span>, // default </span><br><span class="line"> </span><br><span class="line">  // `xsrfCookieName` is the name of the cookie to use as a value <span class="keyword">for</span> xsrf token </span><br><span class="line">  xsrfCookieName: <span class="string">'XSRF-TOKEN'</span>, // default </span><br><span class="line"> </span><br><span class="line">  // `xsrfHeaderName` is the name of the http header that carries the xsrf token value </span><br><span class="line">  xsrfHeaderName: <span class="string">'X-XSRF-TOKEN'</span>, // default </span><br><span class="line"> </span><br><span class="line">  // `onUploadProgress` allows handling of progress events <span class="keyword">for</span> uploads </span><br><span class="line">  onUploadProgress: <span class="keyword">function</span> (progressEvent) &#123;</span><br><span class="line">    // Do whatever you want with the native progress event </span><br><span class="line">  &#125;,</span><br><span class="line"> </span><br><span class="line">  // `onDownloadProgress` allows handling of progress events <span class="keyword">for</span> downloads </span><br><span class="line">  onDownloadProgress: <span class="keyword">function</span> (progressEvent) &#123;</span><br><span class="line">    // Do whatever you want with the native progress event </span><br><span class="line">  &#125;,</span><br><span class="line"> </span><br><span class="line">  // `maxContentLength` defines the max size of the http response content allowed </span><br><span class="line">  maxContentLength: 2000,</span><br><span class="line"> </span><br><span class="line">  // `validateStatus` defines whether to resolve or reject the promise <span class="keyword">for</span> a given </span><br><span class="line">  // HTTP response status code. If `validateStatus` returns `<span class="literal">true</span>` (or is <span class="built_in">set</span> to `null` </span><br><span class="line">  // or `undefined`), the promise will be resolved; otherwise, the promise will be </span><br><span class="line">  // rejected. </span><br><span class="line">  validateStatus: <span class="keyword">function</span> (status) &#123;</span><br><span class="line">    <span class="built_in">return</span> status &gt;= 200 &amp;&amp; status &lt; 300; // default </span><br><span class="line">  &#125;,</span><br><span class="line"> </span><br><span class="line">  // `maxRedirects` defines the maximum number of redirects to follow <span class="keyword">in</span> node.js. </span><br><span class="line">  // If <span class="built_in">set</span> to 0, no redirects will be followed. </span><br><span class="line">  maxRedirects: 5, // default </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="组件中调用"><a href="#组件中调用" class="headerlink" title="组件中调用"></a>组件中调用</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import API from <span class="string">'../api/API'</span>	//导入模块</span><br><span class="line"><span class="built_in">let</span> api = new API()      		//实例化对象，然后对象调用不同的方法。</span><br></pre></td></tr></table></figure>
-<h3 id="第二种方法-组件注入试"><a href="#第二种方法-组件注入试" class="headerlink" title="第二种方法(组件注入试)"></a>第二种方法(组件注入试)</h3><p>在src中的main.js做如下配置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import axios from <span class="string">'axios'</span>;		//导入模块</span><br><span class="line">Vue.prototype.<span class="variable">$http</span> = axios;	// 把axios的信息赋值到<span class="variable">$http</span>上，我们组件中就可以使用 this.<span class="variable">$http</span>方法</span><br></pre></td></tr></table></figure></p>
-<p>以上就是俩种使用方法，不过目前我还没解决跨域问题，如果有知道的可以告诉我一下。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/26/axios在项目中的使用方法/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/24/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span><a class="page-number" href="/page/26/">26</a><a class="page-number" href="/page/27/">27</a><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/26/">Next &raquo;</a>
@@ -434,19 +435,15 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Centos</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">react-router</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -458,11 +455,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color2">Centos</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -474,11 +471,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">es6</a>
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+                <a href="javascript:void(0)" class="js-tag color4">es6</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -486,15 +483,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">iScrool</a>
+                <a href="javascript:void(0)" class="js-tag color4">ios</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ios</a>
+                <a href="javascript:void(0)" class="js-tag color3">iScrool</a>
               </li>
              
               <li class="article-tag-list-item">

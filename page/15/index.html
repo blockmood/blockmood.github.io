@@ -148,6 +148,91 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-react-redux" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/14/react-redux/">react-redux</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/14/react-redux/" class="archive-article-date">
+  	<time datetime="2017-09-13T16:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="react-redux提供了俩个最主要的功能"><a href="#react-redux提供了俩个最主要的功能" class="headerlink" title="react-redux提供了俩个最主要的功能"></a>react-redux提供了俩个最主要的功能</h3><blockquote>
+<p>connect : 连接容器组件和展示组件</p>
+</blockquote>
+<blockquote>
+<p>Provider: 提供包含store的context</p>
+</blockquote>
+<h1 id="Provider"><a href="#Provider" class="headerlink" title="Provider"></a>Provider</h1><p>在组件中导入store是非常不利于复用的，所以react提供了一个叫context的功能，能够完美解决这个问题。</p>
+<p>因为redux应用中只有一个store，因此所有的组件如果要使用store的话，只能访问这唯一的store,很自然，希望顶层的组件来扮演这个context提供者的角色，只要顶层组件提供包含store的context，那就覆盖了整个应用的所有组件。</p>
+<p>创建Provider.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import &#123;PropTypes,Component&#125; from &apos;react&apos;</span><br><span class="line"></span><br><span class="line">class Provider extends Component&#123;</span><br><span class="line"></span><br><span class="line">    getChildContext()&#123;				//这个函数返回的就是代表context对象</span><br><span class="line">        return &#123;</span><br><span class="line">            store:this.props.store</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render()&#123;</span><br><span class="line">        return this.props.children	//把渲染的工作交给子组件</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Provider.childContextTypes = &#123;</span><br><span class="line">  store: PropTypes.object</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">export default Provider</span><br></pre></td></tr></table></figure>
+<p>然后再入口文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">	&lt;CounterPanel /&gt;</span><br><span class="line">&lt;/Provider&gt;</span><br></pre></td></tr></table></figure>
+<p>底层组件使用</p>
+<p>为了让底层组件能够访问到context，必须给context-Types的类型和Provider.childContextTypes一样的值，俩者必须一致，不然就无法访问到context</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CounterContainer.contextTypes = &#123;</span><br><span class="line">  store: PropTypes.object</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>还有构造函数里面必须带上context这个参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">constructor(props,context)&#123;</span><br><span class="line">	super(props,context)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后我们就可以通过this.context.store来访问这个store</p>
+<h1 id="connect"><a href="#connect" class="headerlink" title="connect"></a>connect</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export default connect(mapStateToTypes, mapDispatchToTypes)(Counter);</span><br></pre></td></tr></table></figure>
+<p>connect是react-redux提供的一个方法，这个方法接收俩个参数，mapStateToTypes和mapDispatchToTypes，执行结果依然是一个函数，然后才可以再后面又加一个括号，这个括号里面就是展示组件。</p>
+<h4 id="这个函数做了什么呢？"><a href="#这个函数做了什么呢？" class="headerlink" title="这个函数做了什么呢？"></a>这个函数做了什么呢？</h4><p>作为一个容器组件，做的事情无外乎就是俩件事情。</p>
+<blockquote>
+<p>1.把store上的状态转化为内层展示组件的props</p>
+</blockquote>
+<blockquote>
+<p>2.把内存展示组件中的用户动作转化为派送给store的动作。</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">redux</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/09/14/react-redux/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-redux" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -275,66 +360,6 @@
 
 
   
-    <article id="post-webpack之代理请求接口" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/04/webpack之代理请求接口/">webpack之代理请求接口</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/04/webpack之代理请求接口/" class="archive-article-date">
-  	<time datetime="2017-08-04T05:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>前提依赖axios，<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var axios = require(<span class="string">'axios'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>原理大概为 去们请求axios服务，axios伪造host等信息请求数据，大概配置如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">//请求代理</span><br><span class="line">var apiRoutes = express.Router()</span><br><span class="line">apiRoutes.get(<span class="string">'/getDiscList'</span>, <span class="keyword">function</span> (req, res) &#123;</span><br><span class="line">  var url = <span class="string">'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'</span></span><br><span class="line">  axios.get(url, &#123;</span><br><span class="line">    headers: &#123;</span><br><span class="line">      referer: <span class="string">'https://c.y.qq.com/'</span>,</span><br><span class="line">      host: <span class="string">'c.y.qq.com'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    params: req.query</span><br><span class="line">  &#125;).<span class="keyword">then</span>((response) =&gt; &#123;</span><br><span class="line">    res.json(response.data)</span><br><span class="line">  &#125;).catch((e) =&gt; &#123;</span><br><span class="line">    console.log(e)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.use(<span class="string">'/api'</span>,apiRoutes)</span><br></pre></td></tr></table></figure>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/04/webpack之代理请求接口/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/14/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/16/">Next &raquo;</a>
@@ -431,19 +456,15 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Centos</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">react-router</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -455,11 +476,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color2">Centos</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -471,11 +492,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">es6</a>
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+                <a href="javascript:void(0)" class="js-tag color4">es6</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -483,15 +504,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">iScrool</a>
+                <a href="javascript:void(0)" class="js-tag color4">ios</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ios</a>
+                <a href="javascript:void(0)" class="js-tag color3">iScrool</a>
               </li>
              
               <li class="article-tag-list-item">

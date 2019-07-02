@@ -148,6 +148,87 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-react事件机制详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/04/react事件机制详解/">react事件机制详解</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/04/react事件机制详解/" class="archive-article-date">
+  	<time datetime="2018-01-04T02:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><code>Virtual DOM</code> 在内存中是以对象的形式存在的，如果想要在这些对象上添加事件，也很简单，因为react基于<code>Virtual DOM</code>实现了一个<code>SyntheticEvent</code>(合成事件)层,我们所定义的事件处理器都会接收一个<code>SyntheticEvent</code>的实例,并且与原生浏览器事件拥有同样的接口，同样支持事件冒泡机制，这表示我们完全可以使用原生<code>stopPropagation()</code>和<code>preventDefault()</code>来中断它。</p>
+<h3 id="合成事件实现机制"><a href="#合成事件实现机制" class="headerlink" title="合成事件实现机制"></a>合成事件实现机制</h3><p>在<code>react</code>底层，主要对合成事件做了俩件事</p>
+<blockquote>
+<p>1.事件委派</p>
+</blockquote>
+<blockquote>
+<p>2.自动绑定</p>
+</blockquote>
+<h4 id="事件委派"><a href="#事件委派" class="headerlink" title="事件委派"></a>事件委派</h4><p>在绑定事件的时候，它并不会把事件直接绑定到真实的节点上，而是把所有事件都绑定到结构的最外层，使用一个统一的事件监听器，这个监听器上维持了一个映射来保存所有组件内部事件监听和处理函数，当组件挂载或者卸载时，只是在这个事件监听器里添加或者删除一些事件对象，当事件触发时，首先被这个统一的事件监听器处理，然后在映射里找到真实的事件处理函数并调用，这样做简化了事件处理和回收机制，对性能也有很大的提升</p>
+<h4 id="自动绑定"><a href="#自动绑定" class="headerlink" title="自动绑定"></a>自动绑定</h4><p>在<code>react</code>中，每个方法的上下文都会指向该组件的实例，即自动绑定<code>this</code>到当前组件，但是<code>es6</code>(class)和纯函数时，这种自动绑定就不存在了，所有需要我们手动绑定，有以下几种方法。</p>
+<blockquote>
+<p>1.<code>bind()</code>方法</p>
+</blockquote>
+<blockquote>
+<p>2.构造函数绑定</p>
+</blockquote>
+<blockquote>
+<p>3.<code>::</code>语法糖绑定（es7）</p>
+</blockquote>
+<blockquote>
+<p>4.箭头函数绑定</p>
+</blockquote>
+<p>当然在<code>react</code>中完全可以使用原生事件，在<code>componentDidMount</code>中，等组件挂载好以后，可以使用<code>addEventListener</code>绑定事件，但是注意一定要在组件卸载时<code>componentWillUnmount</code>中手动卸载事件，否则可能导致内存泄漏</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/04/react事件机制详解/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-JavaScript之实例化本质" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -405,66 +486,6 @@
 
 
   
-    <article id="post-react-router+React Transition Group实现动画" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/27/react-router+React Transition Group实现动画/">react-router+React Transition Group实现动画</a>
-    </h1>
-  
-
-        
-        <a href="/2017/12/27/react-router+React Transition Group实现动画/" class="archive-article-date">
-  	<time datetime="2017-12-27T07:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">import React from &apos;react&apos;</span><br><span class="line">import &#123;Route,Switch&#125; from &apos;react-router-dom&apos;</span><br><span class="line">import Home from &apos;./Home&apos;</span><br><span class="line">import About from &apos;./About&apos;</span><br><span class="line">import &#123;TransitionGroup,CSSTransition &#125; from &apos;react-transition-group&apos;</span><br><span class="line">import &apos;./index1.css&apos;</span><br><span class="line"></span><br><span class="line">const RouterMap = () =&gt; (</span><br><span class="line">    &lt;Route render=&#123;(&#123;location&#125;)=&gt;</span><br><span class="line">        &lt;TransitionGroup&gt;</span><br><span class="line">            &lt;CSSTransition key=&#123;location.pathname.split(&apos;/&apos;)[1]&#125; timeout=&#123;&#123;enter:300,exit:10&#125;&#125; </span><br><span class="line">                classNames=&#123;`fade-$&#123;location.pathname ? location.pathname.split(&apos;/&apos;)[1] : &apos;&apos;&#125;`&#125; </span><br><span class="line">                mountOnEnter=&#123;false&#125; </span><br><span class="line">                unmountOnExit=&#123;false&#125;</span><br><span class="line">            &gt;</span><br><span class="line">                &lt;Switch location=&#123;location&#125;&gt;</span><br><span class="line">                    &lt;Route exact path=&quot;/&quot; component=&#123;Home&#125; /&gt;</span><br><span class="line">                    &lt;Route path=&quot;/about&quot; component=&#123;About&#125; /&gt;</span><br><span class="line">                &lt;/Switch&gt;</span><br><span class="line">            &lt;/CSSTransition&gt;</span><br><span class="line">        &lt;/TransitionGroup&gt;</span><br><span class="line">    &#125;/&gt;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">export default RouterMap</span><br></pre></td></tr></table></figure>
-<p><a href="https://reactcommunity.org/react-transition-group/" target="_blank" rel="noopener">详细文档</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">react-router</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/12/27/react-router+React Transition Group实现动画/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
@@ -561,19 +582,15 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Centos</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">react-router</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -585,11 +602,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color2">Centos</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -601,11 +618,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">es6</a>
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+                <a href="javascript:void(0)" class="js-tag color4">es6</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -613,15 +630,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">iScrool</a>
+                <a href="javascript:void(0)" class="js-tag color4">ios</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ios</a>
+                <a href="javascript:void(0)" class="js-tag color3">iScrool</a>
               </li>
              
               <li class="article-tag-list-item">

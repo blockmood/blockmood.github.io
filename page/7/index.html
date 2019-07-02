@@ -148,6 +148,111 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-react源码解读" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/09/react源码解读/">react源码解读</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/09/react源码解读/" class="archive-article-date">
+  	<time datetime="2018-01-09T00:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在<code>react</code>中，每个文件的命名风格与含义可相互解释，整体代码的结构看如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">--------</span><br><span class="line">|---addons			//包含一系列的工具插件</span><br><span class="line">|---isomorphic			//包含一系列同构方法</span><br><span class="line">|---shared			//包含一些公共或者常用方法</span><br><span class="line">|---test			//包含测试方法</span><br><span class="line">|---core/test			//包含错误提示</span><br><span class="line">|---renderers			//·react·核心部分</span><br><span class="line">|--------dom</span><br><span class="line">|--------------client		//包含DOM操作</span><br><span class="line">|--------------server		//包含服务端渲染的实现和方法</span><br><span class="line">|--------------shared		//包含文本组件，标签组件，DOM属性操作，CSS属性操作</span><br><span class="line">|--------shared</span><br><span class="line">|--------------event		//包含事件方法</span><br><span class="line">|--------------reconciler	//称为`协调器`,包含react自定义组件，组件生命周期，setState机制，DOM diff算法等</span><br><span class="line">--------</span><br></pre></td></tr></table></figure>
+<p>可以说，上诉结构中<code>reconciler</code>是<code>react</code>中最重要的部分。</p>
+<p>在Web开发中，要将更新的数据实时的显示到UI上，就不可避免的需要操作DOM，而频繁的操作DOM则是造成性能瓶颈的主要原因之一。为此，<code>react</code>引入了<code>Virtual DOM</code>机制。毫不夸张的说<code>Virtual DOM</code>是<code>react</code>的精髓,而<code>reconciler</code>就是实现它的主要源码。</p>
+<p><code>Virtual DOM</code>实际上是在浏览器端用<code>javascript</code>实现的一套DOM API，它就类似一个虚拟空间，它也包括一整套的<code>Virtual DOM</code>模型，生命周期管理和维护，高性能的diff算法，以及把<code>Virtual DOM</code>绘制到真实DOM元素的Patch方法。</p>
+<p>我们在基于<code>react</code>开发时，所有的DOM树都是通过<code>Virtual DOM</code>来实现的。<code>react</code>在<code>Virtual DOM</code>上实现了diff算法，当数据更新时，会通过diff去寻找变更的节点，并只对变化的部分进行一个替换，而不是重新渲染整个DOM树。</p>
+<p>关于DOM diff算法比对，有俩种比较情况</p>
+<blockquote>
+<p>1.节点类型不同的情况</p>
+</blockquote>
+<blockquote>
+<p>2.节点类型相同的情况</p>
+</blockquote>
+<h3 id="节点类型不同的情况"><a href="#节点类型不同的情况" class="headerlink" title="节点类型不同的情况"></a>节点类型不同的情况</h3><p>在<code>Virtual DOM</code>中，每一个节点都可以当做以下所有节点的根节点，如果树形结构的根节点不相同，就不需要考虑原来的那个根节点是不是移动到其他地方去了，它会认为这个根节点已经没用了，可以扔掉，需要重新构建新的DOM树，原有树形结构上的<code>react</code>组件会经历卸载过程。</p>
+<p>也就是说，你有可能对<code>Virtual DOM</code>只是一个更新的过程，但是却有可能引发这个属性结构上的某些组件的”装载”和”卸载”的过程。</p>
+<p>举个列子：</p>
+<p>在更新之前</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">	&lt;Todos /&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<p>想要更新成这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;span&gt;</span><br><span class="line">	&lt;Todos /&gt;</span><br><span class="line">&lt;/span&gt;</span><br></pre></td></tr></table></figure>
+<p>在做比较的时候，一看根节点原来是<code>div</code>现在换成了<code>span</code>，类型不一样，那么这个算法就必须废弃掉之前的<code>div</code>节点，包括下面的所有子节点，然后构建<code>span</code>节点以及所有子节点。</p>
+<p>很明显，这是一个浪费，因为<code>div</code>和<code>span</code>其实是一模一样的，它俩其实不做什么实质的功能，就是一个元素，仅仅因为类型不同就必须把<code>&lt;Todos /&gt;</code>卸载和重新装载。</p>
+<p>所有，我们一定要避免上面这样的情景出现，一定要避免包含组件的根节点被随意改变。</p>
+<h3 id="节点类型相同的情况"><a href="#节点类型相同的情况" class="headerlink" title="节点类型相同的情况"></a>节点类型相同的情况</h3><p>如果俩个树形结构的节点相同，<code>react</code>就会认为原来的根节点只需要更新过程，不会将其卸载。</p>
+<p>这里分为俩种情况，一种是<code>DOM</code>元素，一种是<code>react</code>组件</p>
+<h4 id="DOM元素"><a href="#DOM元素" class="headerlink" title="DOM元素"></a>DOM元素</h4><p>假设我们原来的DOM元素类似下面情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&#123;&#123;color:red&#125;&#125; ckassName=&quot;welcome&quot;&gt;</span><br><span class="line">hello world</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<p>改变之后的元素是这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&#123;&#123;color:green&#125;&#125; ckassName=&quot;hello&quot;&gt;</span><br><span class="line">hello worldsss</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<p>可以看到，俩者之间的差距是<code>div</code>中的内容发送了变化，另外<code>style</code>和<code>class</code>也发生了改变。<code>react</code>可以对比发现这些属性内容的变化，在操作<code>DOM</code>树上节点的时候，只是去修改这些发生变化的部分，让<code>DOM</code>操作尽可能减少。</p>
+<h4 id="react组件"><a href="#react组件" class="headerlink" title="react组件"></a>react组件</h4><p>如果是<code>react</code>组件的话，<code>react</code>只能根据新节点的<code>props</code>去更新原来根节点的组件实例，然后引发这个组件的更新过程，也就是按以下顺序引发函数</p>
+<blockquote>
+<p>componentWillReceiveProps</p>
+</blockquote>
+<blockquote>
+<p>shouldComponentUpdate</p>
+</blockquote>
+<blockquote>
+<p>componentWillUpdate</p>
+</blockquote>
+<blockquote>
+<p>render </p>
+</blockquote>
+<blockquote>
+<p>componentDidUpdate</p>
+</blockquote>
+<p>在这个过程中，如果<code>shouldComponentUpdate</code>返回false的话，更新过程就此打住，不会再继续，所以每个组件都有必要重视<code>shouldComponentUpdate</code>，如果发现没有必要的渲染，就让他返回false</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/09/react源码解读/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-react动态组件key详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -291,87 +396,6 @@
 
 
   
-    <article id="post-react事件机制详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/04/react事件机制详解/">react事件机制详解</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/04/react事件机制详解/" class="archive-article-date">
-  	<time datetime="2018-01-04T02:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><code>Virtual DOM</code> 在内存中是以对象的形式存在的，如果想要在这些对象上添加事件，也很简单，因为react基于<code>Virtual DOM</code>实现了一个<code>SyntheticEvent</code>(合成事件)层,我们所定义的事件处理器都会接收一个<code>SyntheticEvent</code>的实例,并且与原生浏览器事件拥有同样的接口，同样支持事件冒泡机制，这表示我们完全可以使用原生<code>stopPropagation()</code>和<code>preventDefault()</code>来中断它。</p>
-<h3 id="合成事件实现机制"><a href="#合成事件实现机制" class="headerlink" title="合成事件实现机制"></a>合成事件实现机制</h3><p>在<code>react</code>底层，主要对合成事件做了俩件事</p>
-<blockquote>
-<p>1.事件委派</p>
-</blockquote>
-<blockquote>
-<p>2.自动绑定</p>
-</blockquote>
-<h4 id="事件委派"><a href="#事件委派" class="headerlink" title="事件委派"></a>事件委派</h4><p>在绑定事件的时候，它并不会把事件直接绑定到真实的节点上，而是把所有事件都绑定到结构的最外层，使用一个统一的事件监听器，这个监听器上维持了一个映射来保存所有组件内部事件监听和处理函数，当组件挂载或者卸载时，只是在这个事件监听器里添加或者删除一些事件对象，当事件触发时，首先被这个统一的事件监听器处理，然后在映射里找到真实的事件处理函数并调用，这样做简化了事件处理和回收机制，对性能也有很大的提升</p>
-<h4 id="自动绑定"><a href="#自动绑定" class="headerlink" title="自动绑定"></a>自动绑定</h4><p>在<code>react</code>中，每个方法的上下文都会指向该组件的实例，即自动绑定<code>this</code>到当前组件，但是<code>es6</code>(class)和纯函数时，这种自动绑定就不存在了，所有需要我们手动绑定，有以下几种方法。</p>
-<blockquote>
-<p>1.<code>bind()</code>方法</p>
-</blockquote>
-<blockquote>
-<p>2.构造函数绑定</p>
-</blockquote>
-<blockquote>
-<p>3.<code>::</code>语法糖绑定（es7）</p>
-</blockquote>
-<blockquote>
-<p>4.箭头函数绑定</p>
-</blockquote>
-<p>当然在<code>react</code>中完全可以使用原生事件，在<code>componentDidMount</code>中，等组件挂载好以后，可以使用<code>addEventListener</code>绑定事件，但是注意一定要在组件卸载时<code>componentWillUnmount</code>中手动卸载事件，否则可能导致内存泄漏</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/04/react事件机制详解/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
@@ -468,19 +492,15 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Centos</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">react-router</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -492,11 +512,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color2">Centos</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -508,11 +528,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">es6</a>
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+                <a href="javascript:void(0)" class="js-tag color4">es6</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -520,15 +540,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">iScrool</a>
+                <a href="javascript:void(0)" class="js-tag color4">ios</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ios</a>
+                <a href="javascript:void(0)" class="js-tag color3">iScrool</a>
               </li>
              
               <li class="article-tag-list-item">

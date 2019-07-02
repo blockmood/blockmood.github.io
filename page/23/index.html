@@ -148,6 +148,71 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-http之请求篇" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/21/http之请求篇/">http之请求篇</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/21/http之请求篇/" class="archive-article-date">
+  	<time datetime="2017-06-21T01:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一个http请求，是由三部分组成的，<br>1、请求行<br>2、消息头<br>3、实体内容</p>
+<p>先来看一段请求<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//表示发送的是get请求，请求的资源是1.php</span><br><span class="line">GET /http/1.php HTTP/1.1</span><br><span class="line">//表示客户端可以接收哪些数据类型</span><br><span class="line">Accept: text/html, application/xhtml+xml, */*</span><br><span class="line">//表示 我是从哪里来的（可以做防盗链，很有用，一般是连接过来才有）</span><br><span class="line">Referer: http://localhost/http/1.php</span><br><span class="line">//页面可以支持什么语言</span><br><span class="line">Accept-Language: zh-CN</span><br><span class="line">//告诉服务器我的浏览器的版本</span><br><span class="line">User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)</span><br><span class="line">//表示接收什么样的数据压缩格式</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">//主机</span><br><span class="line">Host: localhost</span><br><span class="line">//连接形式(长连接，表示不要立马断掉我们的请求)</span><br><span class="line">Connection: Keep-Alive</span><br></pre></td></tr></table></figure></p>
+<p>这段请求中<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /http/1.php HTTP/1.1</span><br></pre></td></tr></table></figure></p>
+<p>称之为请求行</p>
+<p>下面的内容<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Accept: text/html, application/xhtml+xml, */*</span><br><span class="line">Accept-Language: zh-CN</span><br><span class="line">User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)</span><br><span class="line">UA-CPU: AMD64</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Host: localhost</span><br><span class="line">Connection: Keep-Alive</span><br></pre></td></tr></table></figure></p>
+<p>称之为 消息头</p>
+<p>最后剩下一个实体内容（也称为 一个空行）</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">http</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/21/http之请求篇/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-es6之箭头函数" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -308,72 +373,6 @@
 
 
   
-    <article id="post-JavaScript中defer的作用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/13/JavaScript中defer的作用/">JavaScript中defer的作用</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/13/JavaScript中defer的作用/" class="archive-article-date">
-  	<time datetime="2017-06-13T05:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-13</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>很多人都已经把 Javascript的用的炉火纯青了，但见到defer未必就知道他是做什么用的；很多人也都遇到过这样的问题，需要直接执行别且操作DOM对象的js 总是报找不到对象的错误，原因大家也都知道就是页面还有没有加载完毕，js的操作对象还在下载中。但很多人都不知道，添加defer标签就能轻而易举的解决这个问题。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">"../CGI-bin/delscript.js"</span> defer&gt;&lt;/script&gt;</span><br><span class="line">中的defer作用是文档加载完毕了再执行脚本,这样回避免找不到对象的问题---有点问题</span><br><span class="line"></span><br><span class="line">&lt;button id=<span class="string">"myButton"</span> onclick=<span class="string">"alert('ok')"</span>&gt;<span class="built_in">test</span>&lt;/button&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">myButton.click();</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">myButton.click();</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;button id=<span class="string">"myButton"</span> onclick=<span class="string">"alert('ok')"</span>&gt;<span class="built_in">test</span>&lt;/button&gt;</span><br><span class="line"></span><br><span class="line">&lt;script defer&gt;</span><br><span class="line"><span class="keyword">function</span> document.body.<span class="function"><span class="title">onload</span></span>() &#123;</span><br><span class="line">alert(document.body.offsetHeight);</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
-<p>加上 defer 等于在页面完全在入后再执行，相当于 window.onload ，但应用上比 window.onload 更灵活！<br>defer是脚本程序强大功能中的一个“无名英雄”。它告诉浏览器Script段包含了无需立即执行的代码，并且，与SRC属性联合使用，它还可以使这些脚本在后台被下载，前台的内容则正常显示给用户。<br>–但是 文档加载完毕了再执行脚本</p>
-<p>请注意两点：<br>1、不要在defer型的脚本程序段中调用document.write命令，因为document.write将产生直接输出效果。<br>2、而且，不要在defer型脚本程序段中包括任何立即执行脚本要使用的全局变量或者函数。 </p>
-<p>一个常用的优化性能的方法是：当脚本不需要立即运行时，在<code>&lt;SCRIPT&gt;</code>标签中设置“defer”属性。 (立即脚本没有被包含在一个function块中,因此会在加载过程中执行。) 设置“defer”属性后，IE就不必等待该脚本装载和执行完毕。这样页面加载会更快。一般来说，这也表明立即脚本最好放在function块中，并在 document或者body对象的onload 句柄中处理该函数。在有一些脚本需要依赖用户操作而执行时—-例如点击按钮，或者移动鼠标到某个区域—-使用该属性非常有用。但当有一些脚本需要在页面加载过程中或加载完成后执行，使用defer属性得到的好处就不太大。</p>
-<p><code>script</code>中的defer属性默认情况下是false的。按照DHTML编程宝典中的描述，对于Defer属性是这样写的：<br>Using the attribute at design time can improve the download performance of a page because the browser does not need to parse and execute the script and can continue downloading and parsing the page instead.<br>也就是说：如果是编写脚本的时候加入defer属性，那么浏览器在下载脚本的时候就不必立即对其进行处理，而是继续对页面进行下载和解析，这样会提高下载的性能。<br>这样的情况有很多种。比如你定义了很多javascript变量，或者在引用文件（.inc）中写了很多的脚本需要处理，那不妨在这些脚本中加入defer属性，对性能的提高肯定有所帮助。<br>举例如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=<span class="string">"javascript"</span> defer&gt;</span><br><span class="line">var object = new Object();</span><br><span class="line">....</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
-<p>因为defer属性默认是为false的，那么在这里<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=<span class="string">"javascript"</span> defer&gt;</span><br></pre></td></tr></table></figure></p>
-<p>显式声明defer属性后等同于<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=<span class="string">"javascript"</span> defer=<span class="literal">true</span>&gt;</span><br></pre></td></tr></table></figure></p>
-<p>声明了defer属性之后，需要判断是否有别的变量引用了defer脚本块中的变量，否则的话会导致脚本错误的产生。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/13/JavaScript中defer的作用/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/22/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="page-number" href="/page/22/">22</a><span class="page-number current">23</span><a class="page-number" href="/page/24/">24</a><a class="page-number" href="/page/25/">25</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/24/">Next &raquo;</a>
@@ -470,19 +469,15 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Centos</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">react-router</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -494,11 +489,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color2">Centos</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -510,11 +505,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">es6</a>
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+                <a href="javascript:void(0)" class="js-tag color4">es6</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -522,15 +517,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">iScrool</a>
+                <a href="javascript:void(0)" class="js-tag color4">ios</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ios</a>
+                <a href="javascript:void(0)" class="js-tag color3">iScrool</a>
               </li>
              
               <li class="article-tag-list-item">

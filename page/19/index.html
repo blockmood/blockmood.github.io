@@ -148,6 +148,80 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-webpack独立打包和缓存处理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/10/webpack独立打包和缓存处理/">webpack独立打包和缓存处理</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/10/webpack独立打包和缓存处理/" class="archive-article-date">
+  	<time datetime="2017-07-10T03:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="独立打包"><a href="#独立打包" class="headerlink" title="独立打包"></a>独立打包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">var webpack = require(<span class="string">'webpack'</span>);</span><br><span class="line">var path = require(<span class="string">'path'</span>);</span><br><span class="line"> </span><br><span class="line">module.exports = &#123;</span><br><span class="line"> entry: &#123;</span><br><span class="line">  main: <span class="string">'./app/index.js'</span>,</span><br><span class="line">  vendor: [<span class="string">'jquery'</span>]</span><br><span class="line"> &#125;,</span><br><span class="line"> output: &#123;</span><br><span class="line">  filename: <span class="string">'[name].js'</span>,</span><br><span class="line">  path: path.resolve(__dirname, <span class="string">'dist'</span>)</span><br><span class="line"> &#125;,</span><br><span class="line"> plugins:[</span><br><span class="line">  new webpack.optimize.CommonsChunkPlugin(&#123;</span><br><span class="line">   name: <span class="string">'vendor'</span></span><br><span class="line">  &#125;),</span><br><span class="line"> ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上方我们将原本的单入口文件改成了多入口文件，并加入了vendor属性。vendor属性用于配置打包第三方类库，写入数组的类库名将统一打包到一个文件里。<br>同时我们将输出的filename用[name]变量来自动生成文件名，最后我们添加了一个CommonsChunkPlugin的插件，用于提取vendor。<br>配置完成后我们运行webpack命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Hash: ee1daf95c1986768927a</span><br><span class="line">Version: webpack 2.3.2</span><br><span class="line">Time: 573ms</span><br><span class="line">  Asset  Size Chunks     Chunk Names</span><br><span class="line">  main.js 340 bytes  0 [emitted]   main</span><br><span class="line">vendor.js  274 kB  1 [emitted] [big] vendor</span><br><span class="line"> [0] ./~/jquery/dist/jquery.js 267 kB &#123;1&#125; [built]</span><br><span class="line"> [1] ./app/hello.js 53 bytes &#123;0&#125; [built]</span><br><span class="line"> [2] ./app/index.js 114 bytes &#123;0&#125; [built]</span><br><span class="line"> [3] multi jquery 28 bytes &#123;1&#125; [built]</span><br></pre></td></tr></table></figure></p>
+<p>最终发现我们成功将jQuery打包到了vendor.js中，实现了独立打包，但是问题又来了：每次打包后生成的文件名都是一样的，浏览器可能缓存上一次的结果而无法加载最新数据。</p>
+<h3 id="添加hash"><a href="#添加hash" class="headerlink" title="添加hash"></a>添加hash</h3><p>为了解决上述问题，我们需要为打包后的文件名添加hash值，这样每次修改后打包的文件hash值将改变，修改配置文件如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">module.exports = &#123;</span><br><span class="line"> ...</span><br><span class="line">  output: &#123;</span><br><span class="line">   filename: <span class="string">'[name].[chunkHash:5].js'</span>,</span><br><span class="line">   path: path.resolve(__dirname, <span class="string">'dist'</span>)</span><br><span class="line">  &#125;,</span><br><span class="line"> ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上方我们在输出文件名中增加了[chunkHash:5]变量，表示打包后的文件中加入保留5位的hash值。我们再次运行打包命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Hash: c7d1295f2f9a27c412d2</span><br><span class="line">Version: webpack 2.3.2</span><br><span class="line">Time: 603ms</span><br><span class="line">   Asset  Size Chunks     Chunk Names</span><br><span class="line"> main.2a7ad.js 337 bytes  0 [emitted]   main</span><br><span class="line">vendor.49eb4.js  274 kB  1 [emitted] [big] vendor</span><br><span class="line"> [0] ./~/jquery/dist/jquery.js 267 kB &#123;1&#125; [built]</span><br><span class="line"> [1] ./app/hello.js 50 bytes &#123;0&#125; [built]</span><br><span class="line"> [2] ./app/index.js 114 bytes &#123;0&#125; [built]</span><br><span class="line"> [3] multi jquery 28 bytes &#123;1&#125; [built]</span><br></pre></td></tr></table></figure>
+<p>上方我们发现打包后的文件成功加上了hash值，这样每次修改文件后hash值也会跟着变，就不怕浏览器缓存了，但是当我们尝试去修改一个js文件后再次打包，问题又来了：vendor.js的hash值也变了，我们并没有修改jQuery的源码。</p>
+<h3 id="修改vendor配置"><a href="#修改vendor配置" class="headerlink" title="修改vendor配置"></a>修改vendor配置</h3><p>上述问题产生的原因是因为CommonsChunkPlugin插件是用于提取公共代码的，上方我们只是提取了vendor作为公共代码。为了继续解决上述问题，其实方法很简单，我们需要修改CommonsChunkPlugin的配置，如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">module.exports = &#123;</span><br><span class="line"> ...</span><br><span class="line">  plugins:[</span><br><span class="line">   new webpack.optimize.CommonsChunkPlugin(&#123;</span><br><span class="line">    names: [<span class="string">'vendor'</span>, <span class="string">'manifest'</span>]</span><br><span class="line">   &#125;),</span><br><span class="line">  ]</span><br><span class="line"> ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如此我们修改一下hello.js中的代码，发现vendor的hash值并未改变，并且多了一个manifest.js的小文件。manifest.js为webpack的启动文件代码，它会直接影响到hash值，用mainfest单独抽出来了，这样vendor的hash就不会变了。</p>
+<h3 id="生成index-html"><a href="#生成index-html" class="headerlink" title="生成index.html"></a>生成index.html</h3><p>通过以上对webpack配置文件的一系列修改，我们成功实现了webpack的独立打包与缓存处理，但是还差最后一步。<br>因为我们最终打包后生成的文件名中带有hash值，每次都是会变的，所以我们不能像目前这样在index.html中写死路径。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">&lt;body&gt;</span><br><span class="line"> &lt;script src=<span class="string">"./dist/main.js"</span>&gt;&lt;/script&gt;</span><br><span class="line"> &lt;script src=<span class="string">"./dist/vendor.js"</span>&gt;&lt;/script&gt;</span><br><span class="line"> &lt;script src=<span class="string">"./dist/manifest.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>以上写法是不对的，因为缺少了可变的hash值，因此我们希望每次打包后index.html中的路径也会自动加上hash值，解决方法如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">var HtmlWebpackPlugin = require(<span class="string">'html-webpack-plugin'</span>);</span><br><span class="line"> </span><br><span class="line">module.exports = &#123;</span><br><span class="line"> ...</span><br><span class="line">  plugins:[</span><br><span class="line">   ...</span><br><span class="line">   new HtmlWebpackPlugin(&#123;</span><br><span class="line">    title: <span class="string">'demo'</span>,</span><br><span class="line">    template: <span class="string">'index.html'</span> // 模板路径</span><br><span class="line">   &#125;),</span><br><span class="line">   ...</span><br><span class="line">  ]</span><br><span class="line"> ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上方我们引入了html-webpack-plugin这一个插件，该插件可以帮助我们根据模板生成html文件。在plugins设置中，title配置了生成html中的title部分，template为模板html的路径地址。<br>我们需要下载html-webpack-plugin：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install html-webpack-plugin --save-dev</span><br></pre></td></tr></table></figure></p>
+<p>安装和配置完毕后，运行打包命令：webpack<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Hash: 0c4b91e206579b31544d</span><br><span class="line">Version: webpack 2.3.2</span><br><span class="line">Time: 856ms</span><br><span class="line">   Asset  Size Chunks     Chunk Names</span><br><span class="line"> vendor.e1868.js  268 kB  0 [emitted] [big] vendor</span><br><span class="line"> main.44412.js 337 bytes  1 [emitted]   main</span><br><span class="line">manifest.ed186.js 5.81 kB  2 [emitted]   manifest</span><br><span class="line">  index.html 292 bytes   [emitted]</span><br><span class="line"> [0] ./~/jquery/dist/jquery.js 267 kB &#123;0&#125; [built]</span><br><span class="line"> [1] ./app/hello.js 50 bytes &#123;1&#125; [built]</span><br><span class="line"> [2] ./app/index.js 114 bytes &#123;1&#125; [built]</span><br><span class="line"> [3] multi jquery 28 bytes &#123;0&#125; [built]</span><br></pre></td></tr></table></figure></p>
+<p>我们发现在dist目录下生成了一个index.html文件，打开该文件后代码如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line"> &lt;meta charset=<span class="string">"UTF-8"</span>&gt;</span><br><span class="line"> &lt;title&gt;demo&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span> src=<span class="string">"manifest.ed186.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span> src=<span class="string">"vendor.e1868.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span> src=<span class="string">"main.44412.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>至此我们实现了每次打包后index.html中的路径也会自动加上hash值的功能，因此dist目录下的index.html即为以后的首页文件，最后我们在浏览器中打开该文件成功显示：</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/10/webpack独立打包和缓存处理/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-webpack多页面项目构建" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -269,65 +343,6 @@
 
 
   
-    <article id="post-gulp配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/06/gulp配置/">gulp配置</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/06/gulp配置/" class="archive-article-date">
-  	<time datetime="2017-07-06T00:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="package-json"><a href="#package-json" class="headerlink" title="package.json"></a>package.json</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>: <span class="string">"gulp"</span>,</span><br><span class="line">  <span class="string">"version"</span>: <span class="string">"1.0.0"</span>,</span><br><span class="line">  <span class="string">"description"</span>: <span class="string">""</span>,</span><br><span class="line">  <span class="string">"main"</span>: <span class="string">"index.js"</span>,</span><br><span class="line">  <span class="string">"scripts"</span>: &#123;</span><br><span class="line">    <span class="string">"test"</span>: <span class="string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"author"</span>: <span class="string">"iceStone &lt;ice@wedn.net&gt; (http://wedn.net/)"</span>,</span><br><span class="line">  <span class="string">"license"</span>: <span class="string">"ISC"</span>,</span><br><span class="line">  <span class="string">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="string">"browser-sync"</span>: <span class="string">"^2.11.1"</span>,</span><br><span class="line">    <span class="string">"del"</span>: <span class="string">"^2.2.0"</span>,</span><br><span class="line">    <span class="string">"gulp"</span>: <span class="string">"^3.9.0"</span>,</span><br><span class="line">    <span class="string">"gulp-autoprefixer"</span>: <span class="string">"^3.1.0"</span>,</span><br><span class="line">    <span class="string">"gulp-base64"</span>: <span class="string">"^0.1.3"</span>,</span><br><span class="line">    <span class="string">"gulp-concat"</span>: <span class="string">"^2.6.0"</span>,</span><br><span class="line">    <span class="string">"gulp-cssnano"</span>: <span class="string">"^2.1.0"</span>,</span><br><span class="line">    <span class="string">"gulp-htmlmin"</span>: <span class="string">"^1.3.0"</span>,</span><br><span class="line">    <span class="string">"gulp-imagemin"</span>: <span class="string">"^3.3.0"</span>,</span><br><span class="line">    <span class="string">"gulp-less"</span>: <span class="string">"^3.0.5"</span>,</span><br><span class="line">	<span class="string">"gulp-rev"</span>: <span class="string">"^7.1.2"</span>,</span><br><span class="line">    <span class="string">"gulp-rev-collector"</span>: <span class="string">"^1.2.2"</span>,</span><br><span class="line">    <span class="string">"gulp-uglify"</span>: <span class="string">"^3.0.0"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="gulpfile-js"><a href="#gulpfile-js" class="headerlink" title="gulpfile.js"></a>gulpfile.js</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">var gulp = require(<span class="string">'gulp'</span>);</span><br><span class="line">var less = require(<span class="string">'gulp-less'</span>);</span><br><span class="line">var cssnano = require(<span class="string">'gulp-cssnano'</span>);</span><br><span class="line">var base64 = require(<span class="string">'gulp-base64'</span>);</span><br><span class="line">var imagemin = require(<span class="string">'gulp-imagemin'</span>);</span><br><span class="line">var concat = require(<span class="string">'gulp-concat'</span>);</span><br><span class="line">var uglify = require(<span class="string">'gulp-uglify'</span>);</span><br><span class="line">var htmlmin = require(<span class="string">'gulp-htmlmin'</span>);</span><br><span class="line">var browserSync = require(<span class="string">'browser-sync'</span>);</span><br><span class="line">var rev = require(<span class="string">'gulp-rev'</span>);</span><br><span class="line">var revCollector = require(<span class="string">'gulp-rev-collector'</span>);</span><br><span class="line"></span><br><span class="line">gulp.task(<span class="string">'css'</span>,[<span class="string">'images'</span>],<span class="function"><span class="title">function</span></span>() &#123;</span><br><span class="line">  gulp.src([<span class="string">'src/css/*.less'</span>, <span class="string">'!src/css/_*.less'</span>])</span><br><span class="line">     .pipe(less())</span><br><span class="line">  	 .pipe(base64(&#123;</span><br><span class="line">  		extensions: [<span class="string">'png'</span>, /\.jpg<span class="comment">#datauri$/i],</span></span><br><span class="line">  		exclude:    [/\.server\.(com|net)\/dynamic\//, <span class="string">'--live.jpg'</span>],</span><br><span class="line">  		maxImageSize: 800*1024,</span><br><span class="line">  		debug: <span class="literal">true</span></span><br><span class="line">  	&#125;))</span><br><span class="line">    .pipe(concat(<span class="string">'style.min.css'</span>))</span><br><span class="line">    .pipe(cssnano())</span><br><span class="line">    .pipe(gulp.dest(<span class="string">'dist/css'</span>))</span><br><span class="line">    .pipe(browserSync.reload(&#123;	</span><br><span class="line">      stream: <span class="literal">true</span></span><br><span class="line">    &#125;));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">gulp.task(<span class="string">'images'</span>,<span class="function"><span class="title">function</span></span>()&#123;</span><br><span class="line">	gulp.src(<span class="string">'./src/images/*'</span>)</span><br><span class="line">	 .pipe(gulp.dest(<span class="string">'dist/images'</span>))</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">gulp.task(<span class="string">'js'</span>, <span class="function"><span class="title">function</span></span>() &#123;</span><br><span class="line">  gulp.src(<span class="string">'src/js/*.js'</span>)</span><br><span class="line">    .pipe(concat(<span class="string">'all.js'</span>))</span><br><span class="line">    .pipe(uglify())</span><br><span class="line">    .pipe(gulp.dest(<span class="string">'dist/js'</span>))</span><br><span class="line">    .pipe(browserSync.reload(&#123;</span><br><span class="line">      stream: <span class="literal">true</span></span><br><span class="line">    &#125;));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">gulp.task(<span class="string">'html'</span>, <span class="function"><span class="title">function</span></span>() &#123;</span><br><span class="line">  gulp.src(<span class="string">'src/*.html'</span>)</span><br><span class="line">    .pipe(htmlmin(&#123;</span><br><span class="line">      collapseWhitespace: <span class="literal">true</span>,</span><br><span class="line">      removeComments: <span class="literal">true</span></span><br><span class="line">    &#125;))</span><br><span class="line">    .pipe(gulp.dest(<span class="string">'dist'</span>))</span><br><span class="line">    .pipe(browserSync.reload(&#123;</span><br><span class="line">      stream: <span class="literal">true</span></span><br><span class="line">    &#125;));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">gulp.task(<span class="string">'md5'</span>,<span class="function"><span class="title">function</span></span>()&#123;</span><br><span class="line">    gulp.src(<span class="string">'dist/css/*.css'</span>)</span><br><span class="line">      .pipe(rev())</span><br><span class="line">      .pipe(gulp.dest(<span class="string">'dist/css/'</span>))</span><br><span class="line">      .pipe(rev.manifest())</span><br><span class="line">      .pipe(gulp.dest(<span class="string">'dist/config'</span>))</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">gulp.task(<span class="string">'top'</span>,<span class="function"><span class="title">function</span></span>()&#123;</span><br><span class="line">    gulp.src([<span class="string">'./dist/config/*.json'</span>, <span class="string">'./dist/*.html'</span>])</span><br><span class="line">      .pipe(revCollector())</span><br><span class="line">      .pipe(gulp.dest(<span class="string">'./dist/'</span>))</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">gulp.task(<span class="string">'server'</span>, <span class="function"><span class="title">function</span></span>() &#123;</span><br><span class="line">  browserSync(&#123;</span><br><span class="line">    server: &#123;</span><br><span class="line">      baseDir: [<span class="string">'dist'</span>]										</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;, <span class="keyword">function</span>(err, bs) &#123;</span><br><span class="line">    console.log(bs.options.getIn([<span class="string">"urls"</span>, <span class="string">"local"</span>]));	</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  gulp.watch(<span class="string">'src/*.html'</span>,[<span class="string">'html'</span>]);</span><br><span class="line">  gulp.watch(<span class="string">'src/css/*.less'</span>,[<span class="string">'css'</span>]);</span><br><span class="line">  gulp.watch(<span class="string">'src/js/*.js'</span>,[<span class="string">'js'</span>]);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">gulp</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/06/gulp配置/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/18/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><a class="page-number" href="/page/21/">21</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/20/">Next &raquo;</a>
@@ -424,19 +439,15 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Centos</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">react-router</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -448,11 +459,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color2">Centos</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -464,11 +475,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">es6</a>
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+                <a href="javascript:void(0)" class="js-tag color4">es6</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -476,15 +487,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">iScrool</a>
+                <a href="javascript:void(0)" class="js-tag color4">ios</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ios</a>
+                <a href="javascript:void(0)" class="js-tag color3">iScrool</a>
               </li>
              
               <li class="article-tag-list-item">

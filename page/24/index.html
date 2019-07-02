@@ -148,6 +148,72 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JavaScript中defer的作用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/13/JavaScript中defer的作用/">JavaScript中defer的作用</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/13/JavaScript中defer的作用/" class="archive-article-date">
+  	<time datetime="2017-06-13T05:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-13</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>很多人都已经把 Javascript的用的炉火纯青了，但见到defer未必就知道他是做什么用的；很多人也都遇到过这样的问题，需要直接执行别且操作DOM对象的js 总是报找不到对象的错误，原因大家也都知道就是页面还有没有加载完毕，js的操作对象还在下载中。但很多人都不知道，添加defer标签就能轻而易举的解决这个问题。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">"../CGI-bin/delscript.js"</span> defer&gt;&lt;/script&gt;</span><br><span class="line">中的defer作用是文档加载完毕了再执行脚本,这样回避免找不到对象的问题---有点问题</span><br><span class="line"></span><br><span class="line">&lt;button id=<span class="string">"myButton"</span> onclick=<span class="string">"alert('ok')"</span>&gt;<span class="built_in">test</span>&lt;/button&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">myButton.click();</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">myButton.click();</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;button id=<span class="string">"myButton"</span> onclick=<span class="string">"alert('ok')"</span>&gt;<span class="built_in">test</span>&lt;/button&gt;</span><br><span class="line"></span><br><span class="line">&lt;script defer&gt;</span><br><span class="line"><span class="keyword">function</span> document.body.<span class="function"><span class="title">onload</span></span>() &#123;</span><br><span class="line">alert(document.body.offsetHeight);</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<p>加上 defer 等于在页面完全在入后再执行，相当于 window.onload ，但应用上比 window.onload 更灵活！<br>defer是脚本程序强大功能中的一个“无名英雄”。它告诉浏览器Script段包含了无需立即执行的代码，并且，与SRC属性联合使用，它还可以使这些脚本在后台被下载，前台的内容则正常显示给用户。<br>–但是 文档加载完毕了再执行脚本</p>
+<p>请注意两点：<br>1、不要在defer型的脚本程序段中调用document.write命令，因为document.write将产生直接输出效果。<br>2、而且，不要在defer型脚本程序段中包括任何立即执行脚本要使用的全局变量或者函数。 </p>
+<p>一个常用的优化性能的方法是：当脚本不需要立即运行时，在<code>&lt;SCRIPT&gt;</code>标签中设置“defer”属性。 (立即脚本没有被包含在一个function块中,因此会在加载过程中执行。) 设置“defer”属性后，IE就不必等待该脚本装载和执行完毕。这样页面加载会更快。一般来说，这也表明立即脚本最好放在function块中，并在 document或者body对象的onload 句柄中处理该函数。在有一些脚本需要依赖用户操作而执行时—-例如点击按钮，或者移动鼠标到某个区域—-使用该属性非常有用。但当有一些脚本需要在页面加载过程中或加载完成后执行，使用defer属性得到的好处就不太大。</p>
+<p><code>script</code>中的defer属性默认情况下是false的。按照DHTML编程宝典中的描述，对于Defer属性是这样写的：<br>Using the attribute at design time can improve the download performance of a page because the browser does not need to parse and execute the script and can continue downloading and parsing the page instead.<br>也就是说：如果是编写脚本的时候加入defer属性，那么浏览器在下载脚本的时候就不必立即对其进行处理，而是继续对页面进行下载和解析，这样会提高下载的性能。<br>这样的情况有很多种。比如你定义了很多javascript变量，或者在引用文件（.inc）中写了很多的脚本需要处理，那不妨在这些脚本中加入defer属性，对性能的提高肯定有所帮助。<br>举例如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=<span class="string">"javascript"</span> defer&gt;</span><br><span class="line">var object = new Object();</span><br><span class="line">....</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<p>因为defer属性默认是为false的，那么在这里<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=<span class="string">"javascript"</span> defer&gt;</span><br></pre></td></tr></table></figure></p>
+<p>显式声明defer属性后等同于<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=<span class="string">"javascript"</span> defer=<span class="literal">true</span>&gt;</span><br></pre></td></tr></table></figure></p>
+<p>声明了defer属性之后，需要判断是否有别的变量引用了defer脚本块中的变量，否则的话会导致脚本错误的产生。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/13/JavaScript中defer的作用/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-es6之数组扩展" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -280,72 +346,6 @@
 
 
   
-    <article id="post-webpack+vue模块化构建项目" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/02/webpack+vue模块化构建项目/">webpack+vue模块化构建项目</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/02/webpack+vue模块化构建项目/" class="archive-article-date">
-  	<time datetime="2017-06-02T06:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="开始-确认已经安装node环境和npm包管理工具"><a href="#开始-确认已经安装node环境和npm包管理工具" class="headerlink" title="开始(确认已经安装node环境和npm包管理工具)"></a>开始(确认已经安装node环境和npm包管理工具)</h3><p>拓展：npm install 在安装 npm 包时，有两种命令参数可以把它们的信息写入 package.json 文件，一个是npm install –save ，另一个是 npm install –save-dev，他们表面上的区别是–save 会把依赖包名称添加到 package.json 文件 dependencies 键下，–save-dev 则添加到 package.json 文件 devDependencies 键下，–save-dev 是你开发时候依赖的东西，–save 是你发布之后还依赖的东西。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1、新建项目文件名为demo</span><br><span class="line">2、npm init -y 初始化项目</span><br><span class="line">3、npm install --save vue 默认安装最新版vue</span><br><span class="line">4、npm install --save-dev webpack webpack-dev-server //安装webpack，webpack-dev-server（一个小型服务器）</span><br><span class="line">5、npm install --save-dev babel-core babel-loader babel-preset-es2015 //安装babel的作用是将es6的语法编译成浏览器认识的语法es5</span><br><span class="line">6、npm install --save-dev vue-loader vue-template-compiler //用来解析vue的组件，.vue后缀的文件</span><br><span class="line">7、npm install --save-dev css-loader style-loader   //用来解析css</span><br><span class="line">8、npm install --save-dev url-loader file-loader    //用于打包文件和图片</span><br><span class="line">9、npm install --save-dev sass-loader node-sass     //用于编译sass</span><br><span class="line"></span><br><span class="line">以下等等(省略)</span><br></pre></td></tr></table></figure></p>
-<h3 id="项目目录结构"><a href="#项目目录结构" class="headerlink" title="项目目录结构"></a>项目目录结构</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">demo</span><br><span class="line">-src</span><br><span class="line">--assets</span><br><span class="line">---img</span><br><span class="line">---sass</span><br><span class="line">---style</span><br><span class="line">--components</span><br><span class="line">---...</span><br><span class="line">--views //这里放详情页面</span><br><span class="line">---...</span><br><span class="line">--App.vue</span><br><span class="line">--main.js</span><br><span class="line">-index.html</span><br><span class="line">-package.json</span><br><span class="line">-webpack.config.js</span><br></pre></td></tr></table></figure>
-<h3 id="package-json"><a href="#package-json" class="headerlink" title="package.json"></a>package.json</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>: <span class="string">"demo"</span>,</span><br><span class="line">  <span class="string">"version"</span>: <span class="string">"1.0.0"</span>,</span><br><span class="line">  <span class="string">"description"</span>: <span class="string">""</span>,</span><br><span class="line">  <span class="string">"main"</span>: <span class="string">"index.js"</span>,</span><br><span class="line">  <span class="string">"scripts"</span>: &#123;</span><br><span class="line">    <span class="string">"test"</span>: <span class="string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span>,</span><br><span class="line">	<span class="string">"dev"</span>: <span class="string">"cross-env NODE_ENV=development webpack-dev-server --open --hot"</span>,</span><br><span class="line">	<span class="string">"build"</span>: <span class="string">"webpack"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"keywords"</span>: [],</span><br><span class="line">  <span class="string">"author"</span>: <span class="string">""</span>,</span><br><span class="line">  <span class="string">"license"</span>: <span class="string">"ISC"</span>,</span><br><span class="line">  <span class="string">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="string">"vue"</span>: <span class="string">"^2.3.3"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="string">"babel-core"</span>: <span class="string">"^6.24.1"</span>,</span><br><span class="line">    <span class="string">"babel-loader"</span>: <span class="string">"^7.0.0"</span>,</span><br><span class="line">    <span class="string">"babel-preset-es2015"</span>: <span class="string">"^6.24.1"</span>,</span><br><span class="line">    <span class="string">"cross-env"</span>: <span class="string">"^5.0.0"</span>,</span><br><span class="line">    <span class="string">"css-loader"</span>: <span class="string">"^0.28.4"</span>,</span><br><span class="line">    <span class="string">"file-loader"</span>: <span class="string">"^0.11.1"</span>,</span><br><span class="line">    <span class="string">"style-loader"</span>: <span class="string">"^0.18.1"</span>,</span><br><span class="line">    <span class="string">"url-loader"</span>: <span class="string">"^0.5.8"</span>,</span><br><span class="line">    <span class="string">"vue-loader"</span>: <span class="string">"^12.2.1"</span>,</span><br><span class="line">    <span class="string">"vue-template-compiler"</span>: <span class="string">"^2.3.3"</span>,</span><br><span class="line">    <span class="string">"webpack"</span>: <span class="string">"^2.6.1"</span>,</span><br><span class="line">    <span class="string">"webpack-dev-server"</span>: <span class="string">"^2.4.5"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="webpack-config-js"><a href="#webpack-config-js" class="headerlink" title="webpack.config.js"></a>webpack.config.js</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">var path = require(<span class="string">'path'</span>)</span><br><span class="line">var webpack = require(<span class="string">'webpack'</span>)</span><br><span class="line"></span><br><span class="line">module.exports = &#123;</span><br><span class="line">    entry: <span class="string">'./src/main.js'</span>,</span><br><span class="line">    output: &#123;</span><br><span class="line">        path: path.resolve(__dirname, <span class="string">'./dist'</span>),</span><br><span class="line">        publicPath: <span class="string">'/dist/'</span>,</span><br><span class="line">        filename: <span class="string">'build.js'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    module: &#123;</span><br><span class="line">        rules: [</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">test</span>: /\.vue$/,</span><br><span class="line">                loader: <span class="string">'vue-loader'</span>,</span><br><span class="line">                options: &#123;</span><br><span class="line">                    loaders: &#123;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">test</span>: /\.js$/,</span><br><span class="line">                loader: <span class="string">'babel-loader'</span>,</span><br><span class="line">                exclude: /node_modules/</span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">test</span>: /\.(png|jpg|gif|svg)$/,</span><br><span class="line">                loader: <span class="string">'file-loader'</span>,</span><br><span class="line">                options: &#123;</span><br><span class="line">                    name: <span class="string">'[name].[ext]?[hash]'</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            ,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">test</span>: /\.css$/,</span><br><span class="line">                loader: <span class="string">"style-loader!css-loader"</span></span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    resolve: &#123;</span><br><span class="line">        <span class="built_in">alias</span>: &#123;</span><br><span class="line">            <span class="string">'vue$'</span>: <span class="string">'vue/dist/vue.esm.js'</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    devServer: &#123;</span><br><span class="line">        historyApiFallback: <span class="literal">true</span>,</span><br><span class="line">        noInfo: <span class="literal">true</span>,</span><br><span class="line">        inline: <span class="literal">true</span></span><br><span class="line">    &#125;,</span><br><span class="line">    performance: &#123;</span><br><span class="line">        hints: <span class="literal">false</span></span><br><span class="line">    &#125;,</span><br><span class="line">    devtool: <span class="string">'#eval-source-map'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (process.env.NODE_ENV === <span class="string">'production'</span>) &#123;</span><br><span class="line">    module.exports.devtool = <span class="string">'#source-map'</span></span><br><span class="line">    // http://vue-loader.vuejs.org/en/workflow/production.html</span><br><span class="line">    module.exports.plugins = (module.exports.plugins || []).concat([</span><br><span class="line">        new webpack.DefinePlugin(&#123;</span><br><span class="line">            <span class="string">'process.env'</span>: &#123;</span><br><span class="line">                NODE_ENV: <span class="string">'"production"'</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;),</span><br><span class="line">        new webpack.optimize.UglifyJsPlugin(&#123;</span><br><span class="line">            sourceMap: <span class="literal">true</span>,</span><br><span class="line">            compress: &#123;</span><br><span class="line">                warnings: <span class="literal">false</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;),</span><br><span class="line">        new webpack.LoaderOptionsPlugin(&#123;</span><br><span class="line">            minimize: <span class="literal">true</span></span><br><span class="line">        &#125;)</span><br><span class="line">    ])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里webpack配置文件不明白的，可以看 <a href="http://www.jianshu.com/p/42e11515c10f" target="_blank" rel="noopener">webpack入门</a>，至于更多的配置，可百度。</p>
-<h3 id="项目跑起来"><a href="#项目跑起来" class="headerlink" title="项目跑起来"></a>项目跑起来</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1、webpack</span><br><span class="line"></span><br><span class="line">2、webpack-dev-server</span><br></pre></td></tr></table></figure>
-<h3 id="转换npm命令"><a href="#转换npm命令" class="headerlink" title="转换npm命令"></a>转换npm命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install cross-env --save-dev</span><br></pre></td></tr></table></figure>
-<p>package.json文件配置添加：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"dev"</span>: <span class="string">"cross-env NODE_ENV=development webpack-dev-server --open --hot"</span>,</span><br><span class="line"><span class="string">"build"</span>: <span class="string">"webpack"</span></span><br></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/02/webpack+vue模块化构建项目/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/23/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/25/">Next &raquo;</a>
@@ -442,19 +442,15 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Centos</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">react-router</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -466,11 +462,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color2">Centos</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -482,11 +478,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">es6</a>
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+                <a href="javascript:void(0)" class="js-tag color4">es6</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -494,15 +490,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">iScrool</a>
+                <a href="javascript:void(0)" class="js-tag color4">ios</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ios</a>
+                <a href="javascript:void(0)" class="js-tag color3">iScrool</a>
               </li>
              
               <li class="article-tag-list-item">

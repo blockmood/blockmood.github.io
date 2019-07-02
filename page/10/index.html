@@ -148,6 +148,81 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-关于JSX" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/22/关于JSX/">关于JSX</a>
+    </h1>
+  
+
+        
+        <a href="/2017/11/22/关于JSX/" class="archive-article-date">
+  	<time datetime="2017-11-22T04:12:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前一直郁闷为啥react以及其他框架都会选择JSX这么个东西，网上搜的一些文章也说不到点子上，今天我自己就整理一下，这就意味我又要玩转一门新的静态编译语言。</p>
+<blockquote>
+<p>virtual element : 虚拟元素</p>
+</blockquote>
+<blockquote>
+<p>virtual DOM : 虚拟DOM</p>
+</blockquote>
+<p>react为了方便view层的组件化，承载了html结构化页面的职责，这与其他模板语言有着相似之处，但是不同之处在于 react 是通过创建与更新虚拟元素来管理整个虚拟DOM的。</p>
+<p>其中的虚拟元素可以理解为真实元素对应，它的构建和更新都是在内存中完成的，并不会真正渲染到DOM中去，而react创建的虚拟元素分为俩类: DOM元素 和 组件元素</p>
+<h4 id="DOM元素"><a href="#DOM元素" class="headerlink" title="DOM元素"></a>DOM元素</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">//真实元素</span><br><span class="line">&lt;button className=&quot;btn btn-blue&quot;&gt;</span><br><span class="line">	&lt;em&gt;confirm&lt;/em&gt;</span><br><span class="line">&lt;/button&gt;</span><br><span class="line"></span><br><span class="line">//虚拟元素</span><br><span class="line">&#123;</span><br><span class="line">	type:button,</span><br><span class="line">	props:&#123;</span><br><span class="line">		className:&apos;btn btn-blue&apos;,</span><br><span class="line">		children:&#123;</span><br><span class="line">			type:em,</span><br><span class="line">			props:&#123;</span><br><span class="line">				children:&apos;confirm&apos;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="组件元素"><a href="#组件元素" class="headerlink" title="组件元素"></a>组件元素</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">const Button =&gt; (&#123;color,text&#125;)&#123;</span><br><span class="line">	return &#123;</span><br><span class="line">		type:button,</span><br><span class="line">		props:&#123;</span><br><span class="line">			className:color,</span><br><span class="line">			children:&#123;</span><br><span class="line">				type:em,</span><br><span class="line">				props:&#123;</span><br><span class="line">					children:text</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当我们要生成虚拟元素的时候，就只需调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Button(&#123;color:&apos;btn btn-blue&apos;,text:&apos;confirm&apos;&#125;)</span><br></pre></td></tr></table></figure>
+<p>所有的DOM元素和组件元素都同理。</p>
+<p>可以看到，编译器会把这种语法解析成json对象，以便于构建出虚拟元素，这样就可以创建虚拟DOM了。</p>
+<p>所谓react组件，就是最终通过React,createElement()方法，递归渲染虚拟元素的方式构建出完全的DOM树。</p>
+<p>在react组件中完全可以利用这方式书写html格式，只是太繁琐，所以才出现了JSX，让我们跟写html是一样的。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">JSX</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/11/22/关于JSX/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-iScrool各种坑" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -278,65 +353,6 @@
 
 
   
-    <article id="post-react-router可选参数" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/11/14/react-router可选参数/">react-router 4.0 以上可选参数配置</a>
-    </h1>
-  
-
-        
-        <a href="/2017/11/14/react-router可选参数/" class="archive-article-date">
-  	<time datetime="2017-11-14T07:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="低版本"><a href="#低版本" class="headerlink" title="低版本"></a>低版本</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Route path=&quot;/search/:category(/:keyword)&quot; component=&#123;Search&#125;/&gt;</span><br></pre></td></tr></table></figure>
-<h4 id="高版本"><a href="#高版本" class="headerlink" title="高版本"></a>高版本</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Route path=&quot;/search/:category/:keyword?&quot; component=&#123;Search&#125;/&gt;</span><br></pre></td></tr></table></figure>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">react-router</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/11/14/react-router可选参数/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/9/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/11/">Next &raquo;</a>
@@ -433,19 +449,15 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Centos</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">react-router</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -457,11 +469,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color2">Centos</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -473,11 +485,11 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">es6</a>
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+                <a href="javascript:void(0)" class="js-tag color4">es6</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -485,15 +497,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">iScrool</a>
+                <a href="javascript:void(0)" class="js-tag color4">ios</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ios</a>
+                <a href="javascript:void(0)" class="js-tag color3">iScrool</a>
               </li>
              
               <li class="article-tag-list-item">
