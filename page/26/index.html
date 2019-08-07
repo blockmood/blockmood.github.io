@@ -148,68 +148,6 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-php ajax跨域问题最佳解决方案" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/26/php ajax跨域问题最佳解决方案/">php ajax跨域问题最佳解决方案</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/26/php ajax跨域问题最佳解决方案/" class="archive-article-date">
-  	<time datetime="2017-05-26T08:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>本文通过设置Access-Control-Allow-Origin来实现跨域,例如：客户端的域名是<code>client.runoob.com</code>，而请求的域名是<code>server.runoob.com</code>。如果直接使用ajax访问，会有以下错误：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">XMLHttpRequest cannot load http://server.runoob.com/server.php. No <span class="string">'Access-Control-Allow-Origin'</span> header is present on the requested resource.Origin <span class="string">'http://client.runoob.com'</span> is therefore not allowed access.</span><br></pre></td></tr></table></figure></p>
-<h3 id="1、允许单个域名访问"><a href="#1、允许单个域名访问" class="headerlink" title="1、允许单个域名访问"></a>1、允许单个域名访问</h3><p>指定某域名<code>http://client.runoob.com</code>跨域访问，则只需在<code>http://server.runoob.com/server.php</code>文件头部添加如下代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">header(<span class="string">'Access-Control-Allow-Origin:http://client.runoob.com'</span>);</span><br></pre></td></tr></table></figure></p>
-<h3 id="2、允许多个域名访问"><a href="#2、允许多个域名访问" class="headerlink" title="2、允许多个域名访问"></a>2、允许多个域名访问</h3><p>指定多个域名 <code>http://client1.runoob.com</code>、 <code>http://client2.runoob.com</code>等跨域访问，则只需在<code>http://server.runoob.com/server.php</code>文件头部添加如下代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$origin</span> = isset(<span class="variable">$_SERVER</span>[<span class="string">'HTTP_ORIGIN'</span>])? <span class="variable">$_SERVER</span>[<span class="string">'HTTP_ORIGIN'</span>] : <span class="string">''</span>;  </span><br><span class="line">  </span><br><span class="line"><span class="variable">$allow_origin</span> = array(  </span><br><span class="line">    <span class="string">'http://client1.runoob.com'</span>,  </span><br><span class="line">    <span class="string">'http://client2.runoob.com'</span>  </span><br><span class="line">);  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">if</span>(in_array(<span class="variable">$origin</span>, <span class="variable">$allow_origin</span>))&#123;  </span><br><span class="line">    header(<span class="string">'Access-Control-Allow-Origin:'</span>.<span class="variable">$origin</span>);       </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="3、允许所有域名访问"><a href="#3、允许所有域名访问" class="headerlink" title="3、允许所有域名访问"></a>3、允许所有域名访问</h3><p>允许所有域名访问则只需在<code>http://server.runoob.com/server.php</code>文件头部添加如下代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">header(<span class="string">'Access-Control-Allow-Origin:*'</span>);</span><br></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">php</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/26/php ajax跨域问题最佳解决方案/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
     <article id="post-axios在项目中的使用方法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -336,9 +274,75 @@
 
 
   
+    <article id="post-JavaScript之原型详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/24/JavaScript之原型详解/">JavaScript之原型详解</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/24/JavaScript之原型详解/" class="archive-article-date">
+  	<time datetime="2017-05-24T00:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本篇文章主要介绍的是函数对象中的原型(prototype)属性,对于JavaScript,理解原型是一个非常重要的环节，所以我今天把自己的经验分享出来，先看一段代码。</p>
+<h3 id="原型属性"><a href="#原型属性" class="headerlink" title="原型属性"></a>原型属性</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> foo(a,b)&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">console.log(foo.lenght);    		  //输出2</span><br><span class="line">console.log(foo.constructor);   	  //输出Function</span><br><span class="line">console.log(typeof foo.constructor);  //输出Object</span><br></pre></td></tr></table></figure>
+<p>以上的代码，其实在函数定义时就被创建了，属性中就包括prototype属性，它的初始值是一个空的对象。<br>当然我们也可以自己添加属性，如:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">foo.prototype = &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们可以赋予这个空对象一些属性和方法，并且与foo函数本身不会造成什么影响。</p>
+<h3 id="利用原型添加属性和方法"><a href="#利用原型添加属性和方法" class="headerlink" title="利用原型添加属性和方法"></a>利用原型添加属性和方法</h3><p>定义一个构造函数，并用构造函数来创建出构造对象，这种的做法是通过new关键字返回一个函数的对象，利用这个对象就可以调用this返回其对象的方法或者属性，这样就有了一种赋予对象一种新的方法或者属性的功能。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> Gadget(name,color)&#123;</span><br><span class="line">	this.name = name;</span><br><span class="line">	this.color = color;</span><br><span class="line">	this.say = <span class="function"><span class="title">function</span></span>()&#123;</span><br><span class="line">		<span class="built_in">return</span> this.name + this.color;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">Gadget.prototype = &#123;</span><br><span class="line">	price:100,</span><br><span class="line">	rating:3,</span><br><span class="line">	getInfo:<span class="function"><span class="title">function</span></span>()&#123;</span><br><span class="line">		<span class="built_in">return</span> this.price + this.rating;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>向原型中添加完属性和方法之后，就可以访问了，这里构造函数自身的属性优先级要高于原型的属性。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var newtoy = new Gadget(<span class="string">'yuexing'</span>,<span class="string">'blue'</span>);</span><br><span class="line">console.log(newtoy.say());   //输出 yuexing blue</span><br><span class="line">console.log(newtoy.name);    //输出yuexing</span><br><span class="line">console.log(newtoy.price);   //输出100</span><br><span class="line">console.log(newtoy.getInfo());   //输出100 3</span><br></pre></td></tr></table></figure></p>
+<p>对于原型来说，最重要的一个概念就是“驻留”，由于在javascrit中，对象都是通过引用方式来传递值的，也就是传递的实际是一个地址，因此我们所创建的对象中的原型，没有一份属于自己的原型副本，这就意味着我们随时可以对原型进行添加和修改，并且对象会继承者原型这一切的改变。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Gadget.prototype.get = <span class="keyword">function</span>(what)&#123;</span><br><span class="line">	<span class="built_in">return</span> this[what];</span><br><span class="line">&#125;</span><br><span class="line">var newtoy = new Gadget(<span class="string">'yuexing'</span>,<span class="string">'blue'</span>);</span><br><span class="line">console.log(newtoy.get(<span class="string">'price'</span>));    //输出100</span><br></pre></td></tr></table></figure></p>
+<h3 id="自身属性和原型属性"><a href="#自身属性和原型属性" class="headerlink" title="自身属性和原型属性"></a>自身属性和原型属性</h3><p>在之前的getInfo方法中，我你们用的是this指针来完成对象访问的，但是执行使用Gadget.prototype也可以直接访问,这难道有什么不同么？<br>当我们访问newtoy的某个属性的时候，JavaScript引擎会遍历该对象的所有属性，并查找一个叫name 和 color的属性，如果找到了就立即返回值，如果找不到，Javascrit引擎就会去查询创建当前对象的原型属性，等价于我们直接访问（Gadget.prototype），如果在原型中找到了就立即返回原型中的值，这个结构会一直持续下去，并且最终取决于原型链的长度，但其最后肯定是Object对象，因为他是最高级的父级对象。至于它为什么会向上查找，因为这里有一个神秘的_ <em>proto</em> _的属性，下节再说这个属性。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/24/JavaScript之原型详解/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/25/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="page-number" href="/page/25/">25</a><span class="page-number current">26</span><a class="page-number" href="/page/27/">27</a><a class="page-number" href="/page/28/">28</a><a class="page-number" href="/page/29/">29</a><a class="extend next" rel="next" href="/page/27/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/25/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="page-number" href="/page/25/">25</a><span class="page-number current">26</span><a class="page-number" href="/page/27/">27</a><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/27/">Next &raquo;</a>
     </nav>
   
 
@@ -436,6 +440,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">react-router</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Centos</a>
               </li>
              
@@ -445,10 +453,6 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Flux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">react-router</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -468,19 +472,15 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">react</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">es6</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -504,15 +504,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">react</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">redux</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">npm</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">npm</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">

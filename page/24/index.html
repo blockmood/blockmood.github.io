@@ -148,92 +148,6 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-es6之Set和WeakSet" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/13/es6之Set和WeakSet/">es6之Set和WeakSet</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/13/es6之Set和WeakSet/" class="archive-article-date">
-  	<time datetime="2017-06-13T07:11:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-13</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h3><p>ES6提供了新的数据结构Set。它类似于数组，但是成员的值都是唯一的，没有重复的值。</p>
-<p>Set本身是一个构造函数，用来生成Set数据结构。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var s = new Set();</span><br><span class="line"></span><br><span class="line">[2, 3, 5, 4, 5, 2, 2].map(x =&gt; s.add(x));</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="built_in">let</span> i of s) &#123;</span><br><span class="line">  console.log(i);</span><br><span class="line">&#125;</span><br><span class="line">// 2 3 5 4</span><br></pre></td></tr></table></figure></p>
-<p>上面代码通过add方法向Set结构加入成员，结果表明Set结构不会添加重复的值。</p>
-<p>Set函数可以接受一个数组（或类似数组的对象）作为参数，用来初始化。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// 例一</span><br><span class="line">var <span class="built_in">set</span> = new Set([1, 2, 3, 4, 4]);</span><br><span class="line">[...<span class="built_in">set</span>]</span><br><span class="line">// [1, 2, 3, 4]</span><br><span class="line"></span><br><span class="line">// 例二</span><br><span class="line">var items = new Set([1, 2, 3, 4, 5, 5, 5, 5]);</span><br><span class="line">items.size // 5</span><br><span class="line"></span><br><span class="line">// 例三</span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">divs</span></span> () &#123;</span><br><span class="line">  <span class="built_in">return</span> [...document.querySelectorAll(<span class="string">'div'</span>)];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var <span class="built_in">set</span> = new Set(divs());</span><br><span class="line">set.size // 56</span><br><span class="line"></span><br><span class="line">// 类似于</span><br><span class="line">divs().forEach(div =&gt; set.add(div));</span><br><span class="line">set.size // 56</span><br></pre></td></tr></table></figure></p>
-<p>上面代码中，例一和例二都是Set函数接受数组作为参数，例三是接受类似数组的对象作为参数。</p>
-<p>上面代码中，也展示了一种去除数组重复成员的方法。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 去除数组的重复成员</span><br><span class="line">[...new Set(array)]</span><br></pre></td></tr></table></figure></p>
-<p>向Set加入值的时候，不会发生类型转换，所以5和”5”是两个不同的值。Set内部判断两个值是否不同，使用的算法叫做“Same-value equality”，它类似于精确相等运算符（===），主要的区别是NaN等于自身，而精确相等运算符认为NaN不等于自身。在Set内部，两个NaN是相等。</p>
-<h4 id="Set实例的属性和方法"><a href="#Set实例的属性和方法" class="headerlink" title="Set实例的属性和方法"></a>Set实例的属性和方法</h4><p>Set结构的实例有以下属性。</p>
-<p>Set.prototype.constructor：构造函数，默认就是Set函数。<br>Set.prototype.size：返回Set实例的成员总数。<br>Set实例的方法分为两大类：操作方法（用于操作数据）和遍历方法（用于遍历成员）。下面先介绍四个操作方法。</p>
-<p>add(value)：添加某个值，返回Set结构本身。<br>delete(value)：删除某个值，返回一个布尔值，表示删除是否成功。<br>has(value)：返回一个布尔值，表示该值是否为Set的成员。<br>clear()：清除所有成员，没有返回值。<br>上面这些属性和方法的实例如下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">s.add(1).add(2).add(2);</span><br><span class="line">// 注意2被加入了两次</span><br><span class="line"></span><br><span class="line">s.size // 2</span><br><span class="line"></span><br><span class="line">s.has(1) // <span class="literal">true</span></span><br><span class="line">s.has(2) // <span class="literal">true</span></span><br><span class="line">s.has(3) // <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">s.delete(2);</span><br><span class="line">s.has(2) // <span class="literal">false</span></span><br></pre></td></tr></table></figure></p>
-<p>Array.from方法可以将Set结构转为数组。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var items = new Set([1, 2, 3, 4, 5]);</span><br><span class="line">var array = Array.from(items);</span><br></pre></td></tr></table></figure></p>
-<p>这就提供了去除数组重复成员的另一种方法。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> dedupe(array) &#123;</span><br><span class="line">  <span class="built_in">return</span> Array.from(new Set(array));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dedupe([1, 1, 2, 3]) // [1, 2, 3]</span><br></pre></td></tr></table></figure></p>
-<h4 id="遍历操作"><a href="#遍历操作" class="headerlink" title="遍历操作"></a>遍历操作</h4><p>Set结构的实例有四个遍历方法，可以用于遍历成员。</p>
-<p>keys()：返回一个键名的遍历器<br>values()：返回一个键值的遍历器<br>entries()：返回一个键值对的遍历器<br>forEach()：使用回调函数遍历每个成员<br>key方法、value方法、entries方法返回的都是遍历器对象。由于Set结构没有键名，只有键值（或者说键名和键值是同一个值），所以key方法和value方法的行为完全一致。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">let</span> <span class="built_in">set</span> = new Set([<span class="string">'red'</span>, <span class="string">'green'</span>, <span class="string">'blue'</span>]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="built_in">let</span> item of set.keys()) &#123;</span><br><span class="line">  console.log(item);</span><br><span class="line">&#125;</span><br><span class="line">// red</span><br><span class="line">// green</span><br><span class="line">// blue</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="built_in">let</span> item of set.values()) &#123;</span><br><span class="line">  console.log(item);</span><br><span class="line">&#125;</span><br><span class="line">// red</span><br><span class="line">// green</span><br><span class="line">// blue</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="built_in">let</span> item of set.entries()) &#123;</span><br><span class="line">  console.log(item);</span><br><span class="line">&#125;</span><br><span class="line">// [<span class="string">"red"</span>, <span class="string">"red"</span>]</span><br><span class="line">// [<span class="string">"green"</span>, <span class="string">"green"</span>]</span><br><span class="line">// [<span class="string">"blue"</span>, <span class="string">"blue"</span>]</span><br></pre></td></tr></table></figure></p>
-<p>Set结构的实例默认可遍历，它的默认遍历器生成函数就是它的values方法。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Set.prototype[Symbol.iterator] === Set.prototype.values</span><br><span class="line">// <span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
-<p>这意味着，可以省略values方法，直接用for…of循环遍历Set。</p>
-<h3 id="WeakSet"><a href="#WeakSet" class="headerlink" title="WeakSet"></a>WeakSet</h3><p>WeakSet结构与Set类似，也是不重复的值的集合。但是，它与Set有两个区别。</p>
-<p>首先，WeakSet的成员只能是对象，而不能是其他类型的值。</p>
-<p>其次，WeakSet中的对象都是弱引用，即垃圾回收机制不考虑WeakSet对该对象的引用，也就是说，如果其他对象都不再引用该对象，那么垃圾回收机制会自动回收该对象所占用的内存，不考虑该对象还存在于WeakSet之中。这个特点意味着，无法引用WeakSet的成员，因此WeakSet是不可遍历的。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var ws = new WeakSet();</span><br><span class="line">ws.add(1)</span><br><span class="line">// TypeError: Invalid value used <span class="keyword">in</span> weak <span class="built_in">set</span></span><br><span class="line">ws.add(Symbol())</span><br><span class="line">// TypeError: invalid value used <span class="keyword">in</span> weak <span class="built_in">set</span></span><br></pre></td></tr></table></figure>
-<p>上面代码试图向WeakSet添加一个数值和Symbol值，结果报错，因为WeakSet只能放置对象。</p>
-<p>WeakSet是一个构造函数，可以使用new命令，创建WeakSet数据结构。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var ws = new WeakSet();</span><br></pre></td></tr></table></figure>
-<p>作为构造函数，WeakSet可以接受一个数组或类似数组的对象作为参数。（实际上，任何具有iterable接口的对象，都可以作为WeakSet的参数。）该数组的所有成员，都会自动成为WeakSet实例对象的成员。</p>
-<p>WeakSet结构有以下三个方法。</p>
-<p>WeakSet.prototype.add(value)：向WeakSet实例添加一个新成员。<br>WeakSet.prototype.delete(value)：清除WeakSet实例的指定成员。<br>WeakSet.prototype.has(value)：返回一个布尔值，表示某个值是否在WeakSet实例之中。<br>下面是一个例子。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">var ws = new WeakSet();</span><br><span class="line">var obj = &#123;&#125;;</span><br><span class="line">var foo = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">ws.add(window);</span><br><span class="line">ws.add(obj);</span><br><span class="line"></span><br><span class="line">ws.has(window); // <span class="literal">true</span></span><br><span class="line">ws.has(foo);    // <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">ws.delete(window);</span><br><span class="line">ws.has(window);    // <span class="literal">false</span></span><br></pre></td></tr></table></figure></p>
-<p>WeakSet没有size属性，没有办法遍历它的成员。</p>
-<p>WeakSet不能遍历，是因为成员都是弱引用，随时可能消失，遍历机制无法保证成员的存在，很可能刚刚遍历结束，成员就取不到了。WeakSet的一个用处，是储存DOM节点，而不用担心这些节点从文档移除时，会引发内存泄漏。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">es6</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/13/es6之Set和WeakSet/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
     <article id="post-JavaScript中defer的作用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -371,9 +285,70 @@
 
 
   
+    <article id="post-JavaScript之FileReader接口" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/06/JavaScript之FileReader接口/">JavaScript之FileReader接口</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/06/JavaScript之FileReader接口/" class="archive-article-date">
+  	<time datetime="2017-06-06T07:10:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>记得以前做网站时，曾经需要实现一个图片上传到服务器前，先预览的功能。当时用html的file标签一直实现不了，最后舍弃了这个标签，使用了其他方式来实现了这个功能。今天无意发现了一个知识点，用html的file标签就能实现图片上传前预览，感觉很棒，记录一下！就是通过file标签和js的FileReader接口，把选择的图片文件调用readAsDataURL方法，把图片数据转成base64字符串形式显示在页面上。</p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=<span class="string">"border:2px dashed red;"</span>&gt;</span><br><span class="line">          &lt;p&gt;</span><br><span class="line">              图片上传前预览：&lt;input <span class="built_in">type</span>=<span class="string">"file"</span> id=<span class="string">"xdaTanFileImg"</span> onchange=<span class="string">"xmTanUploadImg(this)"</span>/&gt;</span><br><span class="line">          &lt;/p&gt;</span><br><span class="line">          &lt;img id=<span class="string">"xmTanImg"</span>/&gt;</span><br><span class="line">          &lt;div id=<span class="string">"xmTanDiv"</span>&gt;&lt;/div&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">      &lt;hr /&gt;</span><br><span class="line">      &lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span>&gt;            </span><br><span class="line">          //判断浏览器是否支持FileReader接口</span><br><span class="line">          <span class="keyword">if</span> (typeof FileReader == <span class="string">'undefined'</span>) &#123;</span><br><span class="line">              document.getElementById(<span class="string">"xmTanDiv"</span>).InnerHTML = <span class="string">"&lt;h1&gt;当前浏览器不支持FileReader接口&lt;/h1&gt;"</span>;</span><br><span class="line">              //使选择控件不可操作</span><br><span class="line">              document.getElementById(<span class="string">"xdaTanFileImg"</span>).setAttribute(<span class="string">"disabled"</span>, <span class="string">"disabled"</span>);</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          //选择图片</span><br><span class="line">          <span class="keyword">function</span> xmTanUploadImg(obj) &#123;</span><br><span class="line">              var file = obj.files[0];</span><br><span class="line">              </span><br><span class="line">              console.log(obj);console.log(file);</span><br><span class="line">              console.log(<span class="string">"file.size = "</span> + file.size);  //file.size 单位为byte</span><br><span class="line"></span><br><span class="line">              var reader = new FileReader();</span><br><span class="line"></span><br><span class="line">              //读取文件过程方法</span><br><span class="line">              reader.onloadstart = <span class="keyword">function</span> (e) &#123;</span><br><span class="line">                  console.log(<span class="string">"开始读取...."</span>);</span><br><span class="line">              &#125;</span><br><span class="line">              reader.onprogress = <span class="keyword">function</span> (e) &#123;</span><br><span class="line">                  console.log(<span class="string">"正在读取中...."</span>);</span><br><span class="line">              &#125;</span><br><span class="line">              reader.onabort = <span class="keyword">function</span> (e) &#123;</span><br><span class="line">                  console.log(<span class="string">"中断读取...."</span>);</span><br><span class="line">              &#125;</span><br><span class="line">              reader.onerror = <span class="keyword">function</span> (e) &#123;</span><br><span class="line">                  console.log(<span class="string">"读取异常...."</span>);</span><br><span class="line">              &#125;</span><br><span class="line">              reader.onload = <span class="keyword">function</span> (e) &#123;</span><br><span class="line">                  console.log(<span class="string">"成功读取...."</span>);</span><br><span class="line"></span><br><span class="line">                  var img = document.getElementById(<span class="string">"xmTanImg"</span>);</span><br><span class="line">                  img.src = e.target.result;</span><br><span class="line">                  //或者 img.src = this.result;  //e.target == this</span><br><span class="line">              &#125;</span><br><span class="line">		//图片数据转成base64字符串形式。</span><br><span class="line">              reader.readAsDataURL(file)</span><br><span class="line">          &#125;</span><br><span class="line">      &lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>另外 FileReader除了有函数readAsDataURL，另外还有另外两个函数readAsBinaryString 和 readAsText，分别可以将选择的文件读取成二进制和文本格式 </p>
+<h3 id="代码实现-1"><a href="#代码实现-1" class="headerlink" title="代码实现"></a>代码实现</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">&lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line">            //判断浏览器是否支持FileReader接口</span><br><span class="line">            <span class="keyword">if</span> (typeof FileReader == <span class="string">'undefined'</span>) &#123;</span><br><span class="line">                document.getElementById(<span class="string">"xmTanContentDiv"</span>).InnerHTML = <span class="string">"&lt;p&gt;当前浏览器不支持FileReader接口！&lt;/p&gt;"</span>;</span><br><span class="line">                document.getElementById(<span class="string">"xmTanFile"</span>).setAttribute(<span class="string">"disabled"</span>, <span class="string">"disabled"</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            //选择文件</span><br><span class="line">            <span class="keyword">function</span> xmTanUploadFile(obj)&#123;</span><br><span class="line">                <span class="keyword">if</span> (obj.files.length &lt; 1) <span class="built_in">return</span>;</span><br><span class="line"></span><br><span class="line">                var file = obj.files[0];</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">if</span> (file.size &gt; 1024 * 1024) &#123;</span><br><span class="line">                    alert(<span class="string">"文件大于1M， 太大了，小点吧！"</span>);</span><br><span class="line">                    obj.value = <span class="string">""</span>;</span><br><span class="line">                    <span class="built_in">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            //读取文件为二进制</span><br><span class="line">            <span class="keyword">function</span> <span class="function"><span class="title">readAsBinaryString</span></span>() &#123;</span><br><span class="line">                var obj = document.getElementById(<span class="string">"xmTanFile"</span>);</span><br><span class="line">                <span class="keyword">if</span> (obj.files.length &lt; 1) <span class="built_in">return</span>;</span><br><span class="line"></span><br><span class="line">                var file = obj.files[0];</span><br><span class="line">                var reader = new FileReader();</span><br><span class="line"></span><br><span class="line">                //将文件以二进制形式读入页面</span><br><span class="line">                reader.readAsBinaryString(file);</span><br><span class="line">                reader.onload = <span class="keyword">function</span> (f) &#123;</span><br><span class="line">                    document.getElementById(<span class="string">"xmTanContentDiv"</span>).innerHTML = this.result;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            //读取文件为文本</span><br><span class="line">            <span class="keyword">function</span> <span class="function"><span class="title">readAsText</span></span>() &#123;</span><br><span class="line">                var obj = document.getElementById(<span class="string">"xmTanFile"</span>);</span><br><span class="line">                <span class="keyword">if</span> (obj.files.length &lt; 1) <span class="built_in">return</span>;</span><br><span class="line"></span><br><span class="line">                var file = obj.files[0];</span><br><span class="line">                var reader = new FileReader();</span><br><span class="line"></span><br><span class="line">                //将文件以文本形式读入页面</span><br><span class="line">                reader.readAsText(file);</span><br><span class="line">                reader.onload = <span class="keyword">function</span> (f) &#123;</span><br><span class="line">                    document.getElementById(<span class="string">"xmTanContentDiv"</span>).innerHTML = this.result;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &lt;/script&gt;</span><br><span class="line">        &lt;div style=<span class="string">"border: 2px dashed red; padding: 20px 0px;"</span>&gt;</span><br><span class="line">            &lt;label&gt;选择文件：&lt;/label&gt;</span><br><span class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"file"</span> id=<span class="string">"xmTanFile"</span> accept=<span class="string">".html,.js,.css,.txt,.cs,.xml"</span> onchange=<span class="string">"xmTanUploadFile(this)"</span>/&gt;</span><br><span class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"button"</span> value=<span class="string">"读取成二进制数据"</span> onclick=<span class="string">"readAsBinaryString()"</span> /&gt;</span><br><span class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"button"</span> value=<span class="string">"读取成文本数据"</span> onclick=<span class="string">"readAsText()"</span> /&gt;</span><br><span class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"button"</span> value=<span class="string">"隐藏读取内容"</span> onclick=<span class="string">"document.getElementById('xmTanContentDiv').style.display = 'none';"</span>/&gt;</span><br><span class="line">            &lt;input <span class="built_in">type</span>=<span class="string">"button"</span> value=<span class="string">"显示读取内容"</span> onclick=<span class="string">"document.getElementById('xmTanContentDiv').style.display = 'block';"</span>/&gt;</span><br><span class="line">            &lt;div id=<span class="string">"xmTanContentDiv"</span>&gt;&lt;/div&gt;</span><br><span class="line">        &lt;/div&gt;</span><br></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/06/JavaScript之FileReader接口/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/23/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/29/">29</a><a class="extend next" rel="next" href="/page/25/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/23/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/25/">Next &raquo;</a>
     </nav>
   
 
@@ -471,6 +446,10 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">react-router</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Centos</a>
               </li>
              
@@ -480,10 +459,6 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Flux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">react-router</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -503,19 +478,15 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">react</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">es6</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gulp</a>
+                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -539,15 +510,19 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">react</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">redux</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">npm</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">npm</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
