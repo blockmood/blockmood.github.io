@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Yue Xing">
 <meta property="og:description" content="前提 vscode 安装了eslint .  .vscode 统一检测安装插件 extensions.json123456&amp;#123;  &amp;quot;recommendations&amp;quot;:[    &amp;quot;dbaeumer.vscode-eslint&amp;quot;,    &amp;quot;stylelint.vscode-stylelint&amp;quot;  ]&amp;#125; vscode 文件下">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2022-01-20T03:57:50.729Z">
+<meta property="og:updated_time" content="2022-01-20T04:41:21.316Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Eslint配置">
 <meta name="twitter:description" content="前提 vscode 安装了eslint .  .vscode 统一检测安装插件 extensions.json123456&amp;#123;  &amp;quot;recommendations&amp;quot;:[    &amp;quot;dbaeumer.vscode-eslint&amp;quot;,    &amp;quot;stylelint.vscode-stylelint&amp;quot;  ]&amp;#125; vscode 文件下">
@@ -179,64 +179,10 @@
 <h3 id="vscode-文件下方显示eslint状态-检测是否安装成功"><a href="#vscode-文件下方显示eslint状态-检测是否安装成功" class="headerlink" title="vscode 文件下方显示eslint状态 检测是否安装成功"></a>vscode 文件下方显示eslint状态 检测是否安装成功</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;eslint.alwaysShowStatus&quot;: true,</span><br></pre></td></tr></table></figure>
 <h3 id="项目初始化"><a href="#项目初始化" class="headerlink" title="项目初始化"></a>项目初始化</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eslint --init</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>根据选项选择 如果是react 则需要安装 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 自动修复</span><br></pre></td></tr></table></figure></p>
+<p>根据选项选择 如果是react 则需要安装 <code>eslint-plugin-react@latest</code></p>
 </blockquote>
-<p>“eslint-fix”: “eslint componsents/*<em>/</em>.js –fix”<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 配置</span><br></pre></td></tr></table></figure></p>
-<p>module.exports = {<br>    ‘env’: {<br>        ‘browser’: true,<br>        ‘es2021’: true<br>    },<br>    ‘extends’: ‘plugin:react/recommended’,<br>    ‘parserOptions’: {<br>        ‘ecmaFeatures’: {<br>            ‘jsx’: true<br>        },<br>        ‘ecmaVersion’: 13,w<br>        ‘sourceType’: ‘module’<br>    },<br>    ‘plugins’: [<br>        ‘react’<br>    ],<br>    ‘rules’: {<br>        //关闭换行符操作系统格式问题<br>        ‘linebreak-style’: [<br>            ‘off’,<br>            ‘unix’<br>        ],<br>        ‘quotes’: [<br>            ‘error’,<br>            ‘single’<br>        ],<br>        ‘semi’: [<br>            ‘error’,<br>            ‘always’<br>        ],<br>        // 禁止缩进错误<br>        ‘indent’: 0,<br>        // 关闭不允许使用 no-tabs<br>        ‘no-tabs’: ‘off’,<br>        ‘no-console’: 1,<br>        // 设置不冲突 underscore 库<br>        ‘no-underscore-dangle’:0,<br>        // 箭头函数直接返回的时候不需要 大括号 {}<br>        ‘arrow-body-style’: [2, ‘as-needed’],<br>        ‘no-alert’:’error’,</p>
-<pre><code>    // 设置是否可以重新改变参数的值
-    &apos;no-param-reassign&apos;: 0,
-    // 允许使用 for in
-    &apos;no-restricted-syntax&apos;: 0,
-    &apos;guard-for-in&apos;: 0,
-    // 不需要每次都有返回
-    &apos;consistent-return&apos;:0,
-    // 允许使用 arguments
-    &apos;prefer-rest-params&apos;:0,
-    // 允许返回 await
-    &apos;no-return-await&apos;:0,
-    // 不必在使用前定义 函数
-    &apos;no-use-before-define&apos;: 0,
-    // 允许代码后面空白
-    &apos;no-trailing-spaces&apos;: 0,
-
-    // 关闭大括号内的换行符要求
-    &apos;object-curly-newline&apos;: 0,
-
-    // 有一些 event 的时候，不需要 role 属性，不需要其他解释
-    &apos;jsx-a11y/no-static-element-interactions&apos;:0,
-    &apos;jsx-a11y/click-events-have-key-events&apos;:0,
-    // 类成员之间空行问题
-    &apos;lines-between-class-members&apos;:0,
-
-
-    // 不区分是否在 despendencies
-    &apos;import/no-extraneous-dependencies&apos;: 0,
-    // 引用时候根据根目录基础
-    &apos;import/no-unresolved&apos;: 0,
-
-    // 关闭解构赋值报错
-    &apos;react/destructuring-assignment&apos;: 0,   
-    // 允许在 .js 和 .jsx 文件中使用  jsx
-    &apos;react/jsx-filename-extension&apos;: [1, { &apos;extensions&apos;: [&apos;.js&apos;, &apos;.jsx&apos;] }],
-    // jsx &gt; 紧跟着属性
-    &apos;react/jsx-closing-bracket-location&apos;: [1, &apos;after-props&apos;],
-    // 不区分是否是 无状态组件
-    &apos;react/prefer-stateless-function&apos;: 0,
-    // prop-types忽略children属性
-    &apos;react/prop-types&apos;: [1, { ignore: [&apos;children&apos;]}],
-    // 关闭禁止prop-types类型
-    &apos;react/forbid-prop-types&apos;: 0,
-    // 关闭default-props检查
-    &apos;react/require-default-props&apos;:0
-},
-&apos;settings&apos;:{
-    &apos;react&apos;:{
-        &apos;version&apos;:&apos;999&apos;
-    }
-}
-</code></pre><p>};</p>
-<p><code>`</code></p>
-
+<h3 id="自动修复"><a href="#自动修复" class="headerlink" title="自动修复"></a>自动修复</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;eslint-fix&quot;: &quot;eslint componsents/**/*.js --fix&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line">module.exports = &#123;</span><br><span class="line">    &apos;env&apos;: &#123;</span><br><span class="line">        &apos;browser&apos;: true,</span><br><span class="line">        &apos;es2021&apos;: true</span><br><span class="line">    &#125;,</span><br><span class="line">    &apos;extends&apos;: &apos;plugin:react/recommended&apos;,</span><br><span class="line">    &apos;parserOptions&apos;: &#123;</span><br><span class="line">        &apos;ecmaFeatures&apos;: &#123;</span><br><span class="line">            &apos;jsx&apos;: true</span><br><span class="line">        &#125;,</span><br><span class="line">        &apos;ecmaVersion&apos;: 13,w</span><br><span class="line">        &apos;sourceType&apos;: &apos;module&apos;</span><br><span class="line">    &#125;,</span><br><span class="line">    &apos;plugins&apos;: [</span><br><span class="line">        &apos;react&apos;</span><br><span class="line">    ],</span><br><span class="line">    &apos;rules&apos;: &#123;</span><br><span class="line">        //关闭换行符操作系统格式问题</span><br><span class="line">        &apos;linebreak-style&apos;: [</span><br><span class="line">            &apos;off&apos;,</span><br><span class="line">            &apos;unix&apos;</span><br><span class="line">        ],</span><br><span class="line">        &apos;quotes&apos;: [</span><br><span class="line">            &apos;error&apos;,</span><br><span class="line">            &apos;single&apos;</span><br><span class="line">        ],</span><br><span class="line">        &apos;semi&apos;: [</span><br><span class="line">            &apos;error&apos;,</span><br><span class="line">            &apos;always&apos;</span><br><span class="line">        ],</span><br><span class="line">        // 禁止缩进错误</span><br><span class="line">        &apos;indent&apos;: 0,</span><br><span class="line">        // 关闭不允许使用 no-tabs</span><br><span class="line">        &apos;no-tabs&apos;: &apos;off&apos;,</span><br><span class="line">        &apos;no-console&apos;: 1,</span><br><span class="line">        // 设置不冲突 underscore 库</span><br><span class="line">        &apos;no-underscore-dangle&apos;:0,</span><br><span class="line">        // 箭头函数直接返回的时候不需要 大括号 &#123;&#125;</span><br><span class="line">        &apos;arrow-body-style&apos;: [2, &apos;as-needed&apos;],</span><br><span class="line">        &apos;no-alert&apos;:&apos;error&apos;,</span><br><span class="line"> </span><br><span class="line">        // 设置是否可以重新改变参数的值</span><br><span class="line">        &apos;no-param-reassign&apos;: 0,</span><br><span class="line">        // 允许使用 for in</span><br><span class="line">        &apos;no-restricted-syntax&apos;: 0,</span><br><span class="line">        &apos;guard-for-in&apos;: 0,</span><br><span class="line">        // 不需要每次都有返回</span><br><span class="line">        &apos;consistent-return&apos;:0,</span><br><span class="line">        // 允许使用 arguments</span><br><span class="line">        &apos;prefer-rest-params&apos;:0,</span><br><span class="line">        // 允许返回 await</span><br><span class="line">        &apos;no-return-await&apos;:0,</span><br><span class="line">        // 不必在使用前定义 函数</span><br><span class="line">        &apos;no-use-before-define&apos;: 0,</span><br><span class="line">        // 允许代码后面空白</span><br><span class="line">        &apos;no-trailing-spaces&apos;: 0,</span><br><span class="line"> </span><br><span class="line">        // 关闭大括号内的换行符要求</span><br><span class="line">        &apos;object-curly-newline&apos;: 0,</span><br><span class="line"> </span><br><span class="line">        // 有一些 event 的时候，不需要 role 属性，不需要其他解释</span><br><span class="line">        &apos;jsx-a11y/no-static-element-interactions&apos;:0,</span><br><span class="line">        &apos;jsx-a11y/click-events-have-key-events&apos;:0,</span><br><span class="line">        // 类成员之间空行问题</span><br><span class="line">        &apos;lines-between-class-members&apos;:0,</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        // 不区分是否在 despendencies</span><br><span class="line">        &apos;import/no-extraneous-dependencies&apos;: 0,</span><br><span class="line">        // 引用时候根据根目录基础</span><br><span class="line">        &apos;import/no-unresolved&apos;: 0,</span><br><span class="line"> </span><br><span class="line">        // 关闭解构赋值报错</span><br><span class="line">        &apos;react/destructuring-assignment&apos;: 0,   </span><br><span class="line">        // 允许在 .js 和 .jsx 文件中使用  jsx</span><br><span class="line">        &apos;react/jsx-filename-extension&apos;: [1, &#123; &apos;extensions&apos;: [&apos;.js&apos;, &apos;.jsx&apos;] &#125;],</span><br><span class="line">        // jsx &gt; 紧跟着属性</span><br><span class="line">        &apos;react/jsx-closing-bracket-location&apos;: [1, &apos;after-props&apos;],</span><br><span class="line">        // 不区分是否是 无状态组件</span><br><span class="line">        &apos;react/prefer-stateless-function&apos;: 0,</span><br><span class="line">        // prop-types忽略children属性</span><br><span class="line">        &apos;react/prop-types&apos;: [1, &#123; ignore: [&apos;children&apos;]&#125;],</span><br><span class="line">        // 关闭禁止prop-types类型</span><br><span class="line">        &apos;react/forbid-prop-types&apos;: 0,</span><br><span class="line">        // 关闭default-props检查</span><br><span class="line">        &apos;react/require-default-props&apos;:0</span><br><span class="line">    &#125;,</span><br><span class="line">    &apos;settings&apos;:&#123;</span><br><span class="line">        &apos;react&apos;:&#123;</span><br><span class="line">            &apos;version&apos;:&apos;999&apos;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
       
 
       
@@ -433,15 +379,15 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Eslint</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Centos</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">react-router</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Eslint</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -521,15 +467,15 @@ return o(t,i(n),arguments.length<3?void 0:u(arguments[2]))}})},function(t,n,r){v
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">接口</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">小程序</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">接口</a>
               </li>
             
             <div class="clearfix"></div>
